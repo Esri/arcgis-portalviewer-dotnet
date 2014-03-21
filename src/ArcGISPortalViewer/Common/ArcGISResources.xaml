@@ -1,0 +1,172 @@
+﻿<!--
+    This file contains XAML styles and global keys that simplify ArcGIS application development.
+-->
+
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:common="using:ArcGISPortalViewer.Common"
+    xmlns:controls="using:ArcGISPortalViewer.Controls">    
+  
+    <x:String x:Key="AppName">ArcGIS</x:String>
+    
+    <SolidColorBrush x:Key="AppAccentBrush" Color="#FF26A0DA"/>
+    <SolidColorBrush x:Key="AppAccentForegroundBrush" Color="White"/>
+    <SolidColorBrush x:Key="HyperlinkPointerOverForegroundThemeBrush" Color="#FF5598A2"/>
+    <SolidColorBrush x:Key="ToggleSwitchCurtainBackgroundThemeBrush" Color="#FF26A0DA"/>
+    <SolidColorBrush x:Key="ToggleSwitchCurtainPressedBackgroundThemeBrush" Color="#FF26A0DA"/>
+    <SolidColorBrush x:Key="ToggleSwitchCurtainPointerOverBackgroundThemeBrush" Color="#FF26A0DA"/>
+    <SolidColorBrush x:Key="ListViewItemSelectedBackgroundThemeBrush" Color="#FF26A0DA"/>
+    <SolidColorBrush x:Key="ListViewItemSelectedPointerOverBackgroundThemeBrush" Color="#FF26A0DA"/>
+    <SolidColorBrush x:Key="ListViewItemSelectedPointerOverBorderThemeBrush" Color="#FF26A0DA" />
+    <SolidColorBrush x:Key="ComboBoxSelectedBackgroundThemeBrush" Color="#FF26A0DA" />
+    <SolidColorBrush x:Key="ComboBoxSelectedPointerOverBackgroundThemeBrush" Color="#FF26A0DA" />
+    <SolidColorBrush x:Key="ComboBoxItemSelectedBackgroundThemeBrush" Color="#FF26A0DA" />
+    <SolidColorBrush x:Key="ComboBoxItemSelectedPointerOverBackgroundThemeBrush" Color="#FF26A0DA" />
+    <SolidColorBrush x:Key="SliderTrackDecreaseBackgroundThemeBrush" Color="#FF26A0DA"/>
+    <SolidColorBrush x:Key="ProgressBarForegroundThemeBrush" Color="#FF26A0DA"/>
+    <SolidColorBrush x:Key="ProgressBarIndeterminateForegroundThemeBrush" Color="#FF26A0DA"/>
+    <SolidColorBrush x:Key="SplashScreenBackground" Color="White"/>
+
+    <!-- Search button background when when the control is focused, but the mouse is out of the button. It is also the background of search suggestions when the mouse is over them -->
+    <SolidColorBrush x:Key="SearchBoxButtonBackgroundThemeBrush" Color="#FF26A0DA" />
+    <!-- Search button background when the mouse is over the button (when the control is focused or not) -->
+    <SolidColorBrush x:Key="SearchBoxButtonPointerOverBackgroundThemeBrush" Color="#FF26A0DA" />
+    <!-- Color of highlighted characters in the result suggestions -->
+    <SolidColorBrush x:Key="SearchBoxHitHighlightForegroundThemeBrush" Color="#FF26A0DA" />
+    <!-- Color of highlighted characters in the result suggestions when the mouse is over the element -->
+    <SolidColorBrush x:Key="SearchBoxHitHighlightSelectedForegroundThemeBrush" Color="Black" />
+
+    <common:HtmlToTextConverter x:Key="htmlStripper" />    
+    <common:BiConditionalConverter x:Key="biConditionalConverter" />    
+
+    <Style TargetType="controls:GalleryPreviewControl">
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="ColumnWidth" Value="200" />
+        <Setter Property="RowHeight" Value="120" />
+        <Setter Property="MaxColumnCount" Value="3" />
+        <Setter Property="MaxWidth" Value="720" />
+        <Setter Property="LiveTileItemTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <Grid Background="LightGray">
+                        <Image Stretch="UniformToFill" Source="{Binding ThumbnailUri}" />
+                        <Border VerticalAlignment="Bottom" Background="#AA000000">
+                            <StackPanel Margin="5">
+                                <TextBlock Text="{Binding Title}" FontWeight="Bold" FontSize="16"
+											TextTrimming="WordEllipsis"  
+											Foreground="{StaticResource ApplicationPageBackgroundThemeBrush}"/>
+                                <TextBlock Text="{Binding Snippet, Converter={StaticResource htmlStripper}}"
+											TextWrapping="Wrap" TextTrimming="WordEllipsis"
+											MaxHeight="50" Margin="0,0,10,0"
+											Foreground="{StaticResource ApplicationPageBackgroundThemeBrush}"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="MoreTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <Grid Background="{StaticResource AppAccentBrush}" >
+                        <TextBlock Text="More...." VerticalAlignment="Bottom" HorizontalAlignment="Left" 
+									FontSize="26" TextWrapping="Wrap" LineHeight="20"
+									Style="{StaticResource TitleTextStyle}" Foreground="White" 
+									Margin="15,0,15,25" FontFamily="Segoe UI" FontWeight="ExtraLight"
+									/>
+                    </Grid>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ItemTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <Grid Background="Red">
+                        <Rectangle Fill="Gray" />
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Foreground="#55FFFFFF" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="Segoe UI Symbol">
+										   <Run Text="&#xE12B;" FontSize="72"/>
+                            </TextBlock>
+                        </StackPanel>
+                        <Border Background="Transparent">
+                            <Image Stretch="UniformToFill">
+                                <Image.Source>
+                                    <BitmapImage UriSource="{Binding ThumbnailUri}" />
+                                </Image.Source>
+                            </Image>
+                        </Border>
+                        <Border>
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                    <GradientStop Offset="0" Color="Transparent" />
+                                    <GradientStop Offset="0.25" Color="Transparent" />
+                                    <GradientStop Offset="1" Color="Black" />
+                                </LinearGradientBrush>
+                            </Border.Background>
+                        </Border>
+                        <StackPanel VerticalAlignment="Bottom">
+                            <TextBlock Text="{Binding Title}" TextTrimming="WordEllipsis"
+								   Style="{StaticResource TitleTextStyle}" Foreground="White"
+								   Height="25" Margin="15,0,15,15" />
+                        </StackPanel>
+                    </Grid>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <!--
+        List-appropriate 80 pixel high item template as seen in the SplitPage when Filled, and
+        the following pages when snapped: GroupedItemsPage, GroupDetailPage, and ItemsPage
+    -->
+    <DataTemplate x:Key="MyThumbnailStandard80ItemTemplate">
+        <Grid Margin="6">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Border Background="{StaticResource ListViewItemPlaceholderBackgroundThemeBrush}" Width="60" Height="60">
+                <Image Source="{Binding ThumbnailUri}" Stretch="UniformToFill"/>
+            </Border>
+            <StackPanel Grid.Column="1" Margin="10,0,0,0">
+                <TextBlock Text="{Binding Title}" Style="{StaticResource ItemTextStyle}" MaxHeight="40"/>
+                <TextBlock Text="{Binding Subtitle}" Style="{StaticResource CaptionTextStyle}" TextWrapping="NoWrap"/>
+            </StackPanel>
+        </Grid>
+    </DataTemplate>
+
+    <Style x:Key="StartExtentAppBarButtonStyle" TargetType="Button" BasedOn="{StaticResource AppBarButtonStyle}">
+        <Setter Property="AutomationProperties.AutomationId" Value="MapAppBarButton"/>
+        <Setter Property="AutomationProperties.Name" Value="Start Extent"/>
+        <Setter Property="Content" Value="&#xE128;"/>
+    </Style>
+    
+    <Style x:Key="ClearMapButtonStyle"
+           TargetType="Button"
+           BasedOn="{StaticResource AppBarButtonStyle}">
+        <Setter Property="AutomationProperties.AutomationId"
+                Value="ClearAppBarButton" />
+        <Setter Property="AutomationProperties.Name"
+                Value="Clear" />
+        <Setter Property="Content"
+                Value="&#xE0A4;" />
+        <Setter Property="FontSize"
+                Value="19" />
+        <Setter Property="Padding"
+                Value="0,2,1,3" />
+    </Style>
+    
+    <!--Sort Fields-->
+    <x:String x:Key="SortByRelevance">Sort by relevance</x:String>
+    <x:String x:Key="SortByTitle">Sort by title</x:String>
+    <x:String x:Key="SortByOwner">Sort by owner</x:String>
+    <x:String x:Key="SortByHighestRating">Sort by highest rating</x:String>
+    <x:String x:Key="SortByMostRecent">Sort by most recent</x:String>
+    <x:String x:Key="SortByMostViews">Sort by most views</x:String>
+
+    <!--Search Domains-->
+    <x:String x:Key="SearchOrganization">Search Organization</x:String>
+    <x:String x:Key="SearchArcGISOnline">Search ArcGIS Online</x:String>
+
+
+</ResourceDictionary>
