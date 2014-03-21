@@ -1,0 +1,110 @@
+﻿<UserControl x:Class="ArcGISPortalViewer.Controls.MeasureDisplayControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             d:DesignHeight="610"
+             d:DesignWidth="346">
+    <Grid>
+        <Grid.Resources>
+            <MenuFlyout x:Key="MeasureItemFlyout">
+                <MenuFlyoutItem Text="Delete"
+                                DataContext="{Binding}"
+                                Click="DeleteVertex_Click" />
+            </MenuFlyout>
+        </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <TextBlock Text="Measure"
+                   Style="{StaticResource PageSubheaderTextStyle}"
+                   Margin="0,0,0,10" />
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <TextBlock Text="Tap the map to add a measure point"
+                       Style="{StaticResource ItemTextStyle}" />
+            <ScrollViewer Grid.Row="1"
+                          ZoomMode="Disabled"
+                          Padding="0,10,20,0"
+                          Margin="0,0,-20,0"
+                          FontSize="14">
+                <ItemsControl x:Name="MeasureItems">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Margin="0,0,0,5"
+                                  IsHoldingEnabled="True"
+                                  Holding="MeasureItem_Holding" 
+                                  FlyoutBase.AttachedFlyout="{StaticResource MeasureItemFlyout}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0"
+                                            Orientation="Horizontal"
+                                            HorizontalAlignment="Left">
+                                    <TextBlock Text="{Binding Index}" />
+                                    <TextBlock Text="."
+                                               Margin="0,0,5,0" />
+                                </StackPanel>
+                                <TextBlock Grid.Column="1"
+                                           Text="{Binding CoordinateDisplay}" />
+                                <TextBlock Grid.Column="2"
+                                           HorizontalAlignment="Right"
+                                           Text="{Binding LengthDisplay}" />
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+            <Grid x:Name="ResultSummary"
+                  Grid.Row="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid Margin="30,10,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Total length "
+                               FontWeight="SemiBold"
+                               Style="{StaticResource ItemTextStyle}" />
+                    <TextBlock Grid.Column="1"
+                               HorizontalAlignment="Right"
+                               Text="{Binding TotalLengthDisplay}"
+                               Style="{StaticResource ItemTextStyle}" />
+                </Grid>
+                <Grid Grid.Row="1"
+                      Margin="30,10,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Area "
+                               FontWeight="SemiBold"
+                               Style="{StaticResource ItemTextStyle}" />
+                    <TextBlock Grid.Column="1"
+                               HorizontalAlignment="Right"
+                               Text="{Binding AreaDisplay}"
+                               Style="{StaticResource ItemTextStyle}" />
+                </Grid>
+            </Grid>
+            <Button Grid.Row="3"
+                    Content="Reset"
+                    HorizontalAlignment="Right"
+                    Click="ResetMeasure_Click"
+                    Margin="0,20,0,20" />
+        </Grid>
+    </Grid>
+</UserControl>

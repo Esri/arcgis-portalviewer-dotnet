@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Application x:Class="ArcGISPortalViewer.App" 
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:ignore="http://www.ignore.com"
+             mc:Ignorable="d ignore"             
+             xmlns:vm="using:ArcGISPortalViewer.ViewModel"
+             xmlns:common="using:ArcGISPortalViewer.Common"
+             RequestedTheme="Light">
+    <Application.Resources>
+        <ResourceDictionary>
+            
+            <!--Global View Model Locator-->
+            <vm:ViewModelLocator x:Key="Locator" d:IsDataSource="True" />
+
+            <!--Orginizations-->
+            <!--Set the value of OrganizationUrl to your organization url-->
+            <x:String x:Key="OrganizationUrl">https://www.arcgis.com</x:String>            
+            <!--<x:String x:Key="OrganizationUrl">http://myorg.maps.arcgis.com</x:String>-->
+            <!--<x:String x:Key="OrganizationUrl">https://myportal.esri.com/gis</x:String>-->
+
+            <!--
+                Set the AppServerId and AppRedirectUri to use OAuth2 authentication; 
+                otherwise the standard token based authentication will be assumed
+            -->
+            <!--<x:String x:Key="AppServerId">aopJ9gjPnf89d0FR</x:String>
+            <x:String x:Key="AppRedirectUri">urn:ietf:wg:oauth:2.0:oob</x:String>-->
+
+            <!--Glyphs-->
+            <x:String x:Key="SetViewGlyph">&#xE12E;</x:String>
+                      
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Skins/MainSkin.xaml" />
+                <!-- 
+                    Styles that define common aspects of the platform look and feel
+                    Required by Visual Studio project and item templates
+                 -->
+                <ResourceDictionary Source="Common/StandardStyles.xaml" />
+                <ResourceDictionary Source="Common/ArcGISResources.xaml" />
+                <ResourceDictionary Source="Themes/Generic.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>
