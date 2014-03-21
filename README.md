@@ -2,7 +2,7 @@
 
 This project contains source code for the Portal Viewer sample app built using the Windows Store API in the ArcGIS Runtime SDK for .NET.   Source code is available to illustrate best practices for building an application using MVVM design patterns with the ArcGIS Runtime SDK for .NET.  The app includes functionality to view, search, and interact with maps in an ArcGIS Online organization on on-premises Portal for ArcGIS.              
 
-[![Image of sample app](https://raw.github.com/Esri/arcgis-portalviewer-dotnet/master/arcgis-portalviewer-dotnet.png "Portal Viewer sample app")]
+[![Image of sample app](/arcgis-portalviewer-dotnet.png "Portal Viewer sample app")]
 
 ## Features 
 - View and search for web maps
