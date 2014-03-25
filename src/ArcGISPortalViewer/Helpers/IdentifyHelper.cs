@@ -13,7 +13,9 @@ namespace ArcGISPortalViewer.Helpers
 {
     public static class IdentifyHelper
     {
-        public static async Task<IDictionary<Layer, IEnumerable<IdentifyFeature>>> Identify(MapViewController controller, Point tapPoint, MapPoint mapPoint, IEnumerable<Layer> layers = null, double toleranceInPixels = 5)
+		private const int c_defaultTolerance = 15;
+
+		public static async Task<IDictionary<Layer, IEnumerable<IdentifyFeature>>> Identify(MapViewController controller, Point tapPoint, MapPoint mapPoint, IEnumerable<Layer> layers = null, double toleranceInPixels = 5)
         {
             if (controller == null)
                 throw new ArgumentNullException("controller");
@@ -47,9 +49,13 @@ namespace ArcGISPortalViewer.Helpers
                 
                 var identifyTask = new IdentifyTask(new Uri(dynamicLayer.ServiceUri, UriKind.Absolute));
 
-                var identifyParameter = new IdentifyParameter(mapPoint, controller.Extent, 15, (int)controller.ActualHeight,
-                    (int)controller.ActualWidth, DisplayInformation.GetForCurrentView().LogicalDpi)
-                {
+				var resolution = controller.UnitsPerPixel;
+				var center = controller.Extent.GetCenter();
+				var extent = new Envelope(center.X - resolution * c_defaultTolerance, center.Y - resolution * c_defaultTolerance,
+					center.X + resolution * c_defaultTolerance, center.Y + resolution * c_defaultTolerance, controller.SpatialReference);
+                var identifyParameter = new IdentifyParameter(mapPoint, extent, c_defaultTolerance, c_defaultTolerance,
+                    c_defaultTolerance, DisplayInformation.GetForCurrentView().LogicalDpi)
+				{
                     LayerOption = LayerOption.Visible,
                     LayerTimeOptions = dynamicLayer.LayerTimeOptions,
                     LayerIDs = dynamicLayer.VisibleLayers,
@@ -74,9 +80,12 @@ namespace ArcGISPortalViewer.Helpers
                     return new KeyValuePair<Layer, IEnumerable<IdentifyFeature>>(layer, null);
 
                 var identifyTask = new IdentifyTask(new Uri(tiledlayer.ServiceUri, UriKind.Absolute));
-
-                var identifyParameter = new IdentifyParameter(mapPoint, controller.Extent, 15, (int)controller.ActualHeight,
-                    (int)controller.ActualWidth, DisplayInformation.GetForCurrentView().LogicalDpi)
+				var resolution = controller.UnitsPerPixel;
+				var center = controller.Extent.GetCenter();
+				var extent = new Envelope(center.X - resolution * c_defaultTolerance, center.Y - resolution * c_defaultTolerance,
+					center.X + resolution * c_defaultTolerance, center.Y + resolution * c_defaultTolerance, controller.SpatialReference);
+                var identifyParameter = new IdentifyParameter(mapPoint, extent, c_defaultTolerance, c_defaultTolerance,
+                    c_defaultTolerance, DisplayInformation.GetForCurrentView().LogicalDpi)
                 {
                     LayerOption = LayerOption.Visible,                    
                     TimeExtent = controller.TimeExtent,

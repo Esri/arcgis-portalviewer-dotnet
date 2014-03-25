@@ -95,6 +95,7 @@ namespace ArcGISPortalViewer.ViewModel
         {
             // the map controller is used to avoid using/passing the map control as a property to the MapViewModel
             Controller = new MapViewController();
+			Editor = new MeasureEditor();
             PortalItem = ArcGISPortalViewer.ViewModel.AppViewModel.CurrentAppViewModel.SelectedPortalItem;
             IsSidePaneOpen = false;
             LocationDisplay = new LocationDisplay();
@@ -248,6 +249,11 @@ namespace ArcGISPortalViewer.ViewModel
         /// Gets the location display used to display your location on the map
         /// </summary>
         public Esri.ArcGISRuntime.Location.LocationDisplay LocationDisplay { get; private set; }
+
+		/// <summary>
+		/// Gets the editor used to draw on the map
+		/// </summary>
+		public Esri.ArcGISRuntime.Controls.Editor Editor { get; private set; }
 
         private RelayCommand<object> _checkAutoPanMode;
         public ICommand CheckAutoPanMode
@@ -659,8 +665,8 @@ namespace ArcGISPortalViewer.ViewModel
                 _searchResultLayer.Graphics.Clear();
             if (m_MeasureLayer != null)
                 m_MeasureLayer.Graphics.Clear();
-            if (Controller != null && Controller.Editor != null && Controller.Editor.Cancel.CanExecute(null))
-                Controller.Editor.Cancel.Execute(null);
+            if (Controller != null && Editor != null && Editor.Cancel.CanExecute(null))
+                Editor.Cancel.Execute(null);
             if (Locations != null)
                 Locations.Clear();
             SearchResultStatus = null;

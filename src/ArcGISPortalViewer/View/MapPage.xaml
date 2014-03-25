@@ -20,7 +20,6 @@
 
 	<Page.Resources>
 		<viewModel:MapViewModel x:Key="MapVM" />
-        <helpers:MeasureEditor x:Key="MeasureEditor"/>
         <common:ReverseOrderConverter x:Key="ReverseOrderConverter" />
 		<Style x:Key="ListViewStyle" TargetType="ListView">
 			<Setter Property="helpers:ListViewBehavior.IsItemBroughtIntoViewWhenSelected" Value="true"/>
@@ -34,7 +33,7 @@
                       Map="{Binding WebMapVM.Map}" 
                       helpers:MapViewController.MapView="{Binding Controller}" 
                       LocationDisplay="{Binding LocationDisplay}"
-                      Editor="{StaticResource MeasureEditor}">
+                      Editor="{Binding Editor}">
 			<interactivity:Interaction.Behaviors>
 				<core:EventTriggerBehavior EventName="MapViewTapped">
 					<core:InvokeCommandAction Command="{Binding OnMapTappedCommand}"/>
@@ -225,7 +224,7 @@
                                   ShowCloseButton="false"
                                   Visibility="Visible"
                                   IsCurrentItem="{Binding IsMeasureOpened, Mode=TwoWay, Source={StaticResource MapVM}}">
-					<controls:MeasureDisplayControl Editor="{StaticResource MeasureEditor}"
+					<controls:MeasureDisplayControl Editor="{Binding Editor}"
                                                     IsMeasureEnabled="{Binding IsMeasureOpened}"
                                                     LinearUnitType="{Binding AppVM.LinearUnitType, Source={StaticResource Locator}}"
                                                     CoordinateFormat="{Binding  AppVM.CoordinateFormat, Source={StaticResource Locator}}">
