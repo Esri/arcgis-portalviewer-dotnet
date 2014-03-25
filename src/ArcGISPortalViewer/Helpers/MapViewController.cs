@@ -73,7 +73,7 @@ namespace ArcGISPortalViewer.Helpers
                       await MapView.SetViewAsync(to, TimeSpan.FromSeconds(1.5), margin))) //center on destination
                     return false;
             }
-            return await MapView.SetViewAsync(to, 50000, margin);
+            return await MapView.SetViewAsync(to, scale, margin);
         }
 
         public async Task<bool> FlyToAsync(Geometry flyTo, Thickness margin)
@@ -177,39 +177,6 @@ namespace ArcGISPortalViewer.Helpers
             get { return MapView != null ? MapView.TimeExtent : null; }
         }
 
-        public double ActualHeight
-        {
-            get
-            {
-                MapView map = MapView;
-                if (map != null)
-                {
-                    return map.ActualHeight;
-                }
-                return double.NaN;
-            }
-        }
-
-        public double ActualWidth
-        {
-            get
-            {
-                MapView map = MapView;
-                if (map != null)
-                {
-                    return map.ActualWidth;
-                }
-                return double.NaN;
-            }
-        }
-
-        /// <summary>
-        /// Gets the <see cref="Editor"/>
-        /// </summary>
-        public Editor Editor
-        {
-            get { return MapView != null ? MapView.Editor : null; }
-        }
         #endregion Properties
 
         #region MapView handling
@@ -279,9 +246,11 @@ namespace ArcGISPortalViewer.Helpers
                 if (m_SetViewCommand != null) m_SetViewCommand.OnCanExecuteChanged();
                 OnPropertyChanged("SpatialReference");
             }
-            if (e.PropertyName == "UnitsPerPixel")
+            else if (e.PropertyName == "UnitsPerPixel")
                 OnPropertyChanged("UnitsPerPixel");
-        }
+			else if (e.PropertyName == "TimeExtent")
+				OnPropertyChanged("TimeExtent");
+		}
 
         #endregion
 

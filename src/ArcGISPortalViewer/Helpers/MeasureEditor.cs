@@ -10,6 +10,7 @@ namespace ArcGISPortalViewer.Helpers
     /// <summary>
     /// Sub-class of the <see cref="Editor"/> used in <see cref="MeasureDisplayControl"/>
     /// </summary>
+	[Windows.UI.Xaml.Data.Bindable]
     public class MeasureEditor : Editor
     {
         /// <summary>
