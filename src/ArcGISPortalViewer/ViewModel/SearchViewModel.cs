@@ -365,7 +365,7 @@ namespace ArcGISPortalViewer.ViewModel
                 return false;
 
             // flag some chars as invalid search queries
-            var r = new Regex("[+-^*~!@%$#&()|`]$");
+            var r = new Regex("[+^*~!@%$#&()|`]$");
             if (r.IsMatch(trimmmedSearchText))
                 return false;
 
