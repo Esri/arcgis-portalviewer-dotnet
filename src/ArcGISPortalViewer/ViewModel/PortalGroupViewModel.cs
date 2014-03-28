@@ -28,7 +28,11 @@ namespace ArcGISPortalViewer.ViewModel
                 if (gsItems == null || !gsItems.Any())
                     return;
 
-                var groupSharedItems = new ObservableCollection<ArcGISPortalItem>(gsItems);
+                // filter out any ArcGISPortalItem that is not a WebMap 
+                var webMapItems = gsItems.Where(item => item.Type == ItemType.WebMap);
+
+                // create an observable collection of the WebMap items 
+                var groupSharedItems = new ObservableCollection<ArcGISPortalItem>(webMapItems);
                 if (!groupSharedItems.Any())
                     return;
 
