@@ -41,7 +41,21 @@ namespace ArcGISPortalViewer.ViewModel
         }
         public LocatorFindResult Result { get; private set; }
         public int Index { get; private set; }
-        public string Title { get { return string.Format("{0}. {1}", Index, Result.Name); } }
+        public string Title { get { return string.Format("{0}. {1}", Index, GetAttributes(Result)); } }
+
+        private string GetAttributes(LocatorFindResult result)
+        {
+            if (result == null || !result.Feature.Attributes.Any())
+                return "";
+
+            var v = result.Feature.Attributes;
+            string s = string.Format("{0}{1}{2}{3}",
+                string.IsNullOrEmpty((string)v["PlaceName"]) ? "" : ((string)v["PlaceName"]),
+                string.IsNullOrEmpty((string)v["Type"]) ? "" : ", " + ((string)v["Type"]),
+                string.IsNullOrEmpty((string)v["City"]) ? "" : ", " + ((string)v["City"]),
+                string.IsNullOrEmpty((string)v["Country"]) ? "" : ", " + ((string)v["Country"]));
+            return s;
+        }
     }
 
     public class MapViewModel : ViewModelBase
@@ -748,34 +762,63 @@ namespace ArcGISPortalViewer.ViewModel
                 SearchResultStatus = string.Format("Searching for '{0}'...", text.Trim());
                 var result = await geo.FindAsync(new OnlineLocatorFindParameters(text)
                 {
-                    MaxLocations = 50,
+                    MaxLocations = 25,                    
                     OutSpatialReference = WebMapVM.SpatialReference,
+                    SearchExtent = boundingBox,
                     Location = (MapPoint)GeometryEngine.NormalizeCentralMeridianOfGeometry(boundingBox.GetCenter()),
                     Distance = GetDistance(boundingBox),
+                    OutFields = new List<string>() { "PlaceName", "Type", "City", "Country" }                    
                 }, cancellationToken);
-                int retries = 3;
-                while (result.Count == 0 && --retries > 0) //Try again with larger and larger extent
+
+                // if no results, try again with larger and larger extent
+                var retries = 3;
+                while (result.Count == 0 && --retries > 0)
                 {
                     if (cancellationToken.IsCancellationRequested)
                         return;
                     boundingBox = boundingBox.Expand(2);
                     result = await geo.FindAsync(new OnlineLocatorFindParameters(text)
                     {
-                        MaxLocations = 50,
+                        MaxLocations = 25,
                         OutSpatialReference = WebMapVM.SpatialReference,
+                        SearchExtent = boundingBox,
                         Location = (MapPoint)GeometryEngine.NormalizeCentralMeridianOfGeometry(boundingBox.GetCenter()),
                         Distance = GetDistance(boundingBox),
+                        OutFields = new List<string>() { "PlaceName", "Type", "City", "Country"}
                     }, cancellationToken);
                 }
                 if (cancellationToken.IsCancellationRequested)
                     return;
-                if (result.Count == 0) //Try again unbounded
+
+                if (result.Count == 0) 
                 {
+                    // atfer trying to expand the bounding box several times and finding no results, 
+                    // let us try finding results without the spatial bound.
                     result = await geo.FindAsync(new OnlineLocatorFindParameters(text)
                     {
-                        MaxLocations = 50,
-                        OutSpatialReference = WebMapVM.SpatialReference
+                        MaxLocations = 25,
+                        OutSpatialReference = WebMapVM.SpatialReference,
+                        OutFields = new List<string>() { "PlaceName", "Type", "City", "Country"}
                     }, cancellationToken);
+
+                    if (result.Any())
+                    {
+                        // since the results are not bound by any spatial filter, let us show well known administrative 
+                        // places e.g. countries and cities, and filter out other results e.g. restaurents and business names.
+                        var typesToInclude = new List<string>()
+                        { "", "city", "community", "continent", "country", "county", "district", "locality", "municipality", "national capital", 
+                          "neighborhood", "other populated place", "state capital", "state or province", "territory", "village"};
+                        for (var i = result.Count - 1; i >= 0; --i)
+                        {
+                            // get the result type
+                            var resultType = ((string)result[i].Feature.Attributes["Type"]).Trim().ToLower();
+                            // if the result type exists in the inclusion list above, keep it in the list of results
+                            if (typesToInclude.Contains(resultType))
+                                continue;
+                            // otherwise, remove it from the list of results
+                            result.RemoveAt(i);
+                        }
+                    }
                 }
 
                 if (result.Count == 0)
