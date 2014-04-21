@@ -49,11 +49,19 @@ namespace ArcGISPortalViewer.ViewModel
                 return "";
 
             var v = result.Feature.Attributes;
-            string s = string.Format("{0}{1}{2}{3}",
-                string.IsNullOrEmpty((string)v["PlaceName"]) ? "" : ((string)v["PlaceName"]),
-                string.IsNullOrEmpty((string)v["Type"]) ? "" : ", " + ((string)v["Type"]),
-                string.IsNullOrEmpty((string)v["City"]) ? "" : ", " + ((string)v["City"]),
-                string.IsNullOrEmpty((string)v["Country"]) ? "" : ", " + ((string)v["Country"]));
+            // use the result "name" if the PlaceName attribute is empty.
+            // Reason: when searching for exact addresses and street intersections the attribute fields might
+            // be empty; in particular we don't want to show an empty PlaceName.
+            var placeName = (string)v["PlaceName"];
+            if (string.IsNullOrEmpty(placeName))
+                return Result.Name;
+
+            // use the Placename, Type, City, and Country
+            var s = string.Format("{0}{1}{2}{3}",
+                    placeName,
+                    string.IsNullOrEmpty((string)v["Type"]) ? "" : ", " + ((string)v["Type"]),
+                    string.IsNullOrEmpty((string)v["City"]) ? "" : ", " + ((string)v["City"]),
+                    string.IsNullOrEmpty((string)v["Country"]) ? "" : ", " + ((string)v["Country"]));
             return s;
         }
     }
