@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Esri.ArcGISRuntime.Portal;
 using Esri.ArcGISRuntime.Security;
@@ -272,7 +273,7 @@ namespace ArcGISPortalViewer.Model
                 bool b = await SignInUsingIdentityManager(username, password);
                 if (b)
                 {
-                    Portal = await ArcGISPortal.CreateAsync(App.PortalUri.Uri, null, _credential.Token);
+                    Portal = await ArcGISPortal.CreateAsync(App.PortalUri.Uri, CancellationToken.None, null, _credential.Token);
                     if (Portal != null)
                         CurrentUser = await ArcGISPortalUser.CreateAsync(Portal, _credential.UserName);
 
