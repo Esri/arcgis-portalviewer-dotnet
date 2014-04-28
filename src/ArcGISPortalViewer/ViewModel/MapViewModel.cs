@@ -533,6 +533,7 @@ namespace ArcGISPortalViewer.ViewModel
         {
             CreateSearchResultLayer();
             CreateMeasureResultsLayer();
+            CreateIdentifyResultsLayer();
         }
 
         /// <summary>
@@ -1205,8 +1206,6 @@ namespace ArcGISPortalViewer.ViewModel
                     ShowDetailView = true;
                     SelectedItem = IdentifyItems.First();
                 }
-                if (!WebMapVM.Map.Layers.Contains(IdentifyLayer))
-                    AddGraphicsLayer(IdentifyLayer);
             }            
             finally
             {
@@ -1217,6 +1216,15 @@ namespace ArcGISPortalViewer.ViewModel
         #endregion Public Methods
 
         #region Private Methods
+
+        /// <summary>
+        /// Adds graphics layer to hold identify results.
+        /// </summary>
+        private void CreateIdentifyResultsLayer()
+        {
+            if (!WebMapVM.Map.Layers.Contains(IdentifyLayer))
+                AddGraphicsLayer(IdentifyLayer);
+        }
 
         private void OnPopupTapped(object obj)
         {
