@@ -266,7 +266,7 @@ namespace ArcGISPortalViewer.Controls
             foreach (var measureItem in MeasureItemCollection)
             {
                 measureItem.CoordinateIndex = coordinateIndex++;
-                if (previousPoint != null)
+                if (previousPoint != null && measureItem.Location != null)
                 {
                     measureItem.Length = GeometryEngine.GeodesicLength(
                         new Polyline(new Coordinate[] {previousPoint.Coordinate, measureItem.Location.Coordinate},
@@ -459,6 +459,9 @@ namespace ArcGISPortalViewer.Controls
 
         protected string LocationToString(MapPoint location, CoordinateFormat coordinateFormat)
         {
+            if (location == null)
+                return null;
+
             switch (coordinateFormat)
             {
                 case CoordinateFormat.DecimalDegrees:
