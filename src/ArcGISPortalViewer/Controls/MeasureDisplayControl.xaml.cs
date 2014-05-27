@@ -214,13 +214,14 @@ namespace ArcGISPortalViewer.Controls
             {
                 case GeometryEditAction.AddedVertex:
                 {
-                    MeasureItemCollection.Insert(status.VertexPosition.CoordinateIndex,
-                        new MeasureItem()
-                        {
-                            Location = status.NewVertex,
-                            LinearUnitType = LinearUnitType,
-                            CoordinateFormat = CoordinateFormat
-                        });
+                    if (status.NewVertex != null)
+                        MeasureItemCollection.Insert(status.VertexPosition.CoordinateIndex,
+                            new MeasureItem()
+                            {
+                                Location = status.NewVertex,
+                                LinearUnitType = LinearUnitType,
+                                CoordinateFormat = CoordinateFormat
+                            });
                     break;
                 }
                 case GeometryEditAction.DeletedVertex:
