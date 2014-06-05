@@ -987,16 +987,79 @@ namespace ArcGISPortalViewer.ViewModel
         {
             if (!(commandParameter is EventArgs) || m_MeasureLayer == null)
                 return;
-            m_MeasureLayer.Graphics.Clear();
-            measureHasItems = false;
             if (commandParameter is MeasureUpdatedEventArgs)
             {
-                measureHasItems = true;
+                m_MeasureLayer.Graphics.Clear();
                 var e = commandParameter as MeasureUpdatedEventArgs;
                 if (e.Area is Polygon)
-                    m_MeasureLayer.Graphics.Add(new Graphic() { Geometry = e.Area });
+                    m_MeasureLayer.Graphics.Add(new Graphic() { Geometry = e.Area, Symbol = measureAreaSymbol });
             }
+            if (commandParameter is MeasureCompletedEventArgs)
+            {
+                m_MeasureLayer.Graphics.Clear();
+                var e = commandParameter as MeasureCompletedEventArgs;
+                if (e.Error == null && !e.IsCanceled)
+                {
+                    if (e.Geometry is Polyline)
+                    {
+                        var polyline = e.Geometry as Polyline;
+                        if (polyline != null && polyline.Paths != null && polyline.Paths.Count > 0)
+                        {
+                            var vertices = polyline.Paths[0];
+                            if (vertices != null && vertices.Count > 2)
+                            {
+                                var area = new Polygon(vertices, polyline.SpatialReference);
+                                m_MeasureLayer.Graphics.Add(new Graphic() { Geometry = area, Symbol = measureAreaSymbol });
+                            }
+                            m_MeasureLayer.Graphics.Add(new Graphic() { Geometry = polyline, Symbol = measureLineSymbol });
+                            int i = 0;
+                            foreach (var vertex in vertices)
+                            {
+                                var mapPoint = new MapPoint(vertex, polyline.SpatialReference);
+                                var graphic = new Graphic() { Geometry = mapPoint };
+                                graphic.Symbol = GetVertexSymbol(++i);
+                                m_MeasureLayer.Graphics.Add(graphic);
+                            }
+                        }
+                    }
+                }
+            }
+            measureHasItems = m_MeasureLayer.Graphics.Count > 0;
             base.RaisePropertyChanged("IsClearGraphicsVisible");
+        }
+
+        private FillSymbol _measureAreaSymbol;
+        private FillSymbol measureAreaSymbol
+        {
+            get
+            {
+                if (_measureAreaSymbol == null)
+                {
+                    _measureAreaSymbol = new SimpleFillSymbol()
+                      {
+                          Color = Color.FromArgb(50, 255, 255, 255),
+                          Outline = new SimpleLineSymbol() { Style = SimpleLineStyle.Dot, Width = 1 }
+                      };
+                }
+                return _measureAreaSymbol;
+            }
+        }
+        
+        private LineSymbol _measureLineSymbol;
+        private LineSymbol measureLineSymbol
+        {
+            get
+            {
+                if (_measureLineSymbol == null)
+                {
+                    _measureLineSymbol = new SimpleLineSymbol()
+                     {
+                         Color = Colors.CornflowerBlue,
+                         Width = 4
+                     };
+                }
+                return _measureLineSymbol;
+            }
         }
 
         private GraphicsLayer m_MeasureLayer;
@@ -1011,19 +1074,31 @@ namespace ArcGISPortalViewer.ViewModel
                 m_MeasureLayer = new GraphicsLayer()
                 {
                     ID = "MeasureLayer",
-                    Renderer = new SimpleRenderer()
-                    {
-                        Symbol = new SimpleFillSymbol()
-                        {
-                            Color = Color.FromArgb(50, 255, 255, 255),
-                            Outline = new SimpleLineSymbol() { Style = SimpleLineStyle.Dot, Width = 1 }
-                        }
-                    }
                 };
             }
             AddGraphicsLayer(m_MeasureLayer);
         }
 
+        private Esri.ArcGISRuntime.Symbology.Symbol GetVertexSymbol(int index)
+        {
+            return new CompositeSymbol()
+                       {
+                           Symbols = new SymbolCollection(new Esri.ArcGISRuntime.Symbology.Symbol[]                        
+                            {
+                                new SimpleMarkerSymbol()
+                                {
+                                    Color = Colors.White, Size = 14,
+                                    Outline = new SimpleLineSymbol() {Width = 1.5, Color = Colors.CornflowerBlue},
+                                },
+                                new TextSymbol()
+                                {
+                                    Text =string.Format("{0}", index, System.Globalization.CultureInfo.InvariantCulture),
+                                    HorizontalTextAlignment = HorizontalTextAlignment.Center,
+                                    VerticalTextAlignment = VerticalTextAlignment.Middle
+                                }
+                            })
+                       };
+        }
         #endregion Measure Tool
 
 
