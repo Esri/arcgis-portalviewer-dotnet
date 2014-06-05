@@ -994,7 +994,7 @@ namespace ArcGISPortalViewer.ViewModel
                 if (e.Area is Polygon)
                     m_MeasureLayer.Graphics.Add(new Graphic() { Geometry = e.Area, Symbol = measureAreaSymbol });
             }
-            if (commandParameter is MeasureCompletedEventArgs)
+            else if (commandParameter is MeasureCompletedEventArgs)
             {
                 m_MeasureLayer.Graphics.Clear();
                 var e = commandParameter as MeasureCompletedEventArgs;
