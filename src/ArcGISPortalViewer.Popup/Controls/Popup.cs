@@ -183,6 +183,7 @@ namespace ArcGISPortalViewer.Popup.Controls
                 }
                 if (displayFields == null)
                     return;
+                var attributes = Attributes as IDictionary<string, object>;
                 foreach (var item in displayFields)
                 {
                     var sp = new StackPanel();
@@ -206,7 +207,9 @@ namespace ArcGISPortalViewer.Popup.Controls
                             Source = this
                         });
                     }
-                    if (string.Equals("url", item.FieldName, StringComparison.OrdinalIgnoreCase))
+                    var useHyperlink = attributes != null && attributes.ContainsKey(item.FieldName) &&
+                        attributes[item.FieldName] is string && ((string)attributes[item.FieldName]).StartsWith("http");
+                    if (useHyperlink || string.Equals("url", item.FieldName, StringComparison.OrdinalIgnoreCase))
                     {
                         var hyperlink = new HyperlinkButton();
                         sp.Children.Add(hyperlink);
