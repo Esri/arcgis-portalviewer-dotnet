@@ -760,7 +760,7 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}"/>
-            <TextBlock x:Name="pageTitle" Grid.Column="1" IsHitTestVisible="false" Style="{StaticResource PageHeaderTextStyle}" TextTrimming="WordEllipsis" Padding="0,10,0,2" Margin="0,0,0,36">
+            <TextBlock x:Name="pageTitle" Grid.Column="1" IsHitTestVisible="false" Style="{StaticResource PageHeaderTextStyle}" TextTrimming="WordEllipsis" ToolTipService.ToolTip="{Binding CollectionTitle}" Padding="0,10,0,2" Margin="0,0,0,36">
                 <Run Text="{Binding CollectionTitle}"/> <!-- used Run for the ellispses to appear when the width is set to Auto -->
             </TextBlock>
             <SearchBox Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="270" Height="32" Margin="10,20,20,36" 
