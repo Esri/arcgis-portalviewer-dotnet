@@ -451,7 +451,12 @@ namespace ArcGISPortalViewer.ViewModel
                 if (WebMap == null)
                     return null;
 
-                WebMapVM = await WebMapViewModel.LoadAsync(WebMap, this.PortalItem.ArcGISPortal);
+                var currentPortal = this.PortalItem.ArcGISPortal;
+                if (currentPortal.ArcGISPortalInfo.BingKey == null)
+                    WebMapVM = await WebMapViewModel.LoadAsync(WebMap, currentPortal);
+                else
+                    WebMapVM = await WebMapViewModel.LoadAsync(WebMap, currentPortal, currentPortal.ArcGISPortalInfo.BingKey);
+
                 var errors = WebMapVM.LoadErrors.ToArray();
                 if (errors != null && errors.Any())
                 {
@@ -1222,8 +1227,7 @@ namespace ArcGISPortalViewer.ViewModel
         /// </summary>
         private void CreateIdentifyResultsLayer()
         {
-            if (!WebMapVM.Map.Layers.Contains(IdentifyLayer))
-                AddGraphicsLayer(IdentifyLayer);
+            AddGraphicsLayer(IdentifyLayer);
         }
 
         private void OnPopupTapped(object obj)
