@@ -655,7 +655,7 @@
                         </LinearGradientBrush>
                     </Border.Background>
                 </Border>
-                <TextBlock Text="{Binding Title}" TextTrimming="WordEllipsis"
+                <TextBlock Text="{Binding Title}" TextTrimming="WordEllipsis" ToolTipService.ToolTip="{Binding Title}"
 										VerticalAlignment="Bottom"
 										Style="{StaticResource TitleTextStyle}" Foreground="White" 
 										Height="25" Margin="15,0,15,15" />
