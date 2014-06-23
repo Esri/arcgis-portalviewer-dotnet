@@ -148,6 +148,7 @@ namespace ArcGISPortalViewer.Controls
         private void ResetMeasure()
         {
             ResetDisplay();
+            ResetEditor();
         }
 
         private void ResetDisplay()
@@ -155,6 +156,10 @@ namespace ArcGISPortalViewer.Controls
             MeasureItemCollection.Clear();
             MeasureSummary.TotalLength = 0;
             MeasureSummary.Area = 0;
+        }
+
+        private void ResetEditor()
+        {
             if (Editor != null && Editor.IsActive)
             {
                 if (Editor.Cancel.CanExecute(null))
@@ -165,7 +170,7 @@ namespace ArcGISPortalViewer.Controls
         private async void ExecuteMeasure()
         {
             if (Editor == null) return;
-            ResetDisplay();
+            ResetEditor();
             OnMeasureStarted();
             Exception error = null;
             Polyline polyline = null;
@@ -190,13 +195,8 @@ namespace ArcGISPortalViewer.Controls
             }
             finally
             {
-                Polygon area = null;
-                if (polyline != null && polyline.Paths[0].Count > 2)
-                {
-                  area = new Polygon(polyline.Paths, polyline.SpatialReference);
-                }
+                OnMeasureCompleted(polyline, error, isCanceled);
                 polyline = null;
-                OnMeasureCompleted(area, error, isCanceled);
                 if (IsEnabled)
                     ExecuteMeasure();
             }
@@ -210,6 +210,15 @@ namespace ArcGISPortalViewer.Controls
         private void OnStatusReported(GeometryEditStatus status)
         {
             var polyline = status.NewGeometry as Polyline;
+
+            // Only reset display when first vertex is committed.
+            if (polyline != null && polyline.Paths != null && polyline.Paths.Count > 0)
+            {
+                var vertices = polyline.Paths[0];
+                if (vertices != null && vertices.Count == 1)
+                    ResetDisplay();
+            }
+
             switch (status.GeometryEditAction)
             {
                 case GeometryEditAction.AddedVertex:
@@ -302,10 +311,10 @@ namespace ArcGISPortalViewer.Controls
                 MeasureUpdated(this, new MeasureUpdatedEventArgs(geometry));
         }
 
-        private void OnMeasureCompleted(Geometry area = null, Exception error = null, bool isCanceled = false)
+        private void OnMeasureCompleted(Geometry geometry = null, Exception error = null, bool isCanceled = false)
         {
             if (MeasureCompleted != null)
-                MeasureCompleted(this, new MeasureCompletedEventArgs(area, error, isCanceled));
+                MeasureCompleted(this, new MeasureCompletedEventArgs(geometry, error, isCanceled));
         }
 
         #endregion Events
@@ -335,9 +344,9 @@ namespace ArcGISPortalViewer.Controls
     public sealed class MeasureCompletedEventArgs : EventArgs
     {
         /// <summary>
-        /// Gets the resulting <see cref="Geometry"/> that represent the geodesic area covered during measure.
+        /// Gets the resulting <see cref="Geometry"/>.
         /// </summary>
-        public Geometry Area { get; private set; }
+        public Geometry Geometry { get; private set; }
 
         /// <summary>
         /// Gets the <see cref="Exception"/> that caused measure to fail.
@@ -349,9 +358,9 @@ namespace ArcGISPortalViewer.Controls
         /// </summary>
         public bool IsCanceled { get; private set; }
 
-        internal MeasureCompletedEventArgs(Geometry area = null, Exception error = null, bool isCanceled = false)
+        internal MeasureCompletedEventArgs(Geometry geometry = null, Exception error = null, bool isCanceled = false)
         {
-            Area = area;
+            Geometry = geometry;
             Error = error;
             IsCanceled = isCanceled;
         }
