@@ -278,7 +278,7 @@
 				<Button Style="{StaticResource BackButtonStyle}" VerticalAlignment="Center" 
 						Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" />
 				<TextBlock x:Name="PageTitle" Text="{Binding PortalItem.Title}" Grid.Column="1"
-                        Style="{StaticResource PageHeaderTextStyle}" TextTrimming="WordEllipsis" />
+                        Style="{StaticResource PageHeaderTextStyle}" TextTrimming="WordEllipsis" ToolTipService.ToolTip="{Binding PortalItem.Title}" />
 			</Grid>
 		</AppBar>
 	</common:LayoutAwarePage.TopAppBar>

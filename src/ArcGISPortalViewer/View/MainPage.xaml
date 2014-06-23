@@ -50,7 +50,7 @@
                    HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,10,14"
                    Visibility="{Binding PortalService.OrganizationThumbnail, Converter={StaticResource biConditionalConverter}}"/>
             <TextBlock Grid.Row="0" Grid.Column="2" x:Name="pageTitle" HorizontalAlignment="Left" Style="{StaticResource PageHeaderTextStyle}"
-                       TextTrimming="WordEllipsis" Padding="0,10,10,0" Margin="0,0,0,14">
+                       TextTrimming="WordEllipsis" ToolTipService.ToolTip="{Binding PortalService.OrganizationName}" Padding="0,10,10,0" Margin="0,0,0,14">
                 <Run Text="{Binding PortalService.OrganizationName}"/> <!-- used Run for the ellispses to appear when the width is set to Auto -->
             </TextBlock>
             
