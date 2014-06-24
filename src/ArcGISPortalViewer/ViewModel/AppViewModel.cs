@@ -1,4 +1,9 @@
-﻿using System.Collections.Generic;
+﻿// (c) Copyright ESRI.
+// This source is subject to the Microsoft Public License (Ms-PL).
+// Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
+// All other rights reserved
+
+using System.Collections.Generic;
 using Windows.System;
 using Windows.UI.ViewManagement;
 using ArcGISPortalViewer.Common;

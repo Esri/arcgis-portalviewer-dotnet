@@ -1,4 +1,9 @@
-﻿// The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
+﻿// (c) Copyright ESRI.
+// This source is subject to the Microsoft Public License (Ms-PL).
+// Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
+// All other rights reserved
+
+// The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
 using ArcGISPortalViewer.Common;
 using System;
 using Windows.UI.Xaml.Controls;

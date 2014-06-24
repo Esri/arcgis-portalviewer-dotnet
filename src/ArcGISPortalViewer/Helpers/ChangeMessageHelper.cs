@@ -1,4 +1,9 @@
-﻿using Esri.ArcGISRuntime.Portal;
+﻿// (c) Copyright ESRI.
+// This source is subject to the Microsoft Public License (Ms-PL).
+// Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
+// All other rights reserved
+
+using Esri.ArcGISRuntime.Portal;
 using System.Collections.ObjectModel;
 
 namespace ArcGISPortalViewer.Helpers
