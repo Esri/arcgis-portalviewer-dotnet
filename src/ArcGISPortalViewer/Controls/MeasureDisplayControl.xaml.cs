@@ -212,9 +212,9 @@ namespace ArcGISPortalViewer.Controls
             var polyline = status.NewGeometry as Polyline;
 
             // Only reset display when first vertex is committed.
-            if (polyline != null && polyline.Paths != null && polyline.Paths.Count > 0)
+            if (polyline != null && polyline.Parts != null && polyline.Parts.Count > 0)
             {
-                var vertices = polyline.Paths[0];
+                var vertices = polyline.Parts[0];
                 if (vertices != null && vertices.Count == 1)
                     ResetDisplay();
             }
@@ -242,11 +242,11 @@ namespace ArcGISPortalViewer.Controls
                     MeasureItemCollection.Clear();
                     if (polyline != null)
                     {
-                        foreach (var p in polyline.Paths[0])
+                        foreach (var p in polyline.Parts[0])
                         {
                             MeasureItemCollection.Add(new MeasureItem()
                             {
-                                Location = new MapPoint(p, polyline.SpatialReference),
+                                Location = p,
                                 LinearUnitType = LinearUnitType,
                                 CoordinateFormat = CoordinateFormat
                             });
@@ -265,9 +265,9 @@ namespace ArcGISPortalViewer.Controls
         private void UpdateDisplay(Polyline polyline)
         {
             Polygon area = null;
-            if (polyline != null && polyline.Paths[0].Count > 2)
+            if (polyline != null && polyline.Parts[0].Count > 2)
             {
-                area = new Polygon(polyline.Paths, polyline.SpatialReference);
+                area = new Polygon(polyline.Parts, polyline.SpatialReference);
             }
             OnMeasureUpdated((Geometry)area ?? polyline);
             MapPoint previousPoint = null;
@@ -278,14 +278,14 @@ namespace ArcGISPortalViewer.Controls
                 if (previousPoint != null)
                 {
                     measureItem.Length = GeometryEngine.GeodesicLength(
-                        new Polyline(new Coordinate[] {previousPoint.Coordinate, measureItem.Location.Coordinate},
+                        new Polyline(new PointCollection(){previousPoint, measureItem.Location},
                             measureItem.Location.SpatialReference),
                         GeodeticCurveType.GreatElliptic);
                 }
                 previousPoint = measureItem.Location;
             }
 
-            MeasureSummary.TotalLength = polyline == null || polyline.Paths[0].Count < 2
+            MeasureSummary.TotalLength = polyline == null || polyline.Parts[0].Count < 2
                 ? 0
                 : GeometryEngine.GeodesicLength(polyline);
             MeasureSummary.Area = area == null

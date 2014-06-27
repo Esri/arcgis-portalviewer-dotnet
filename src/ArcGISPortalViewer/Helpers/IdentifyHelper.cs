@@ -107,14 +107,15 @@ namespace ArcGISPortalViewer.Helpers
                 var featureLayer = ((FeatureLayer)layer);
                 var featureIds = await controller.FeatureLayerHitTestAsync(featureLayer, tapPoint, 1000);                
                 var features = await featureLayer.FeatureTable.QueryAsync(featureIds);
+                var schema = featureLayer.FeatureTable.Schema;
 
                 return new KeyValuePair<Layer, IEnumerable<IdentifyFeature>>(layer, features.Select(f => new IdentifyFeature(new IdentifyItem(
                     -1, 
-                    featureLayer.DisplayName, 
-                    f.Schema.Fields.FirstOrDefault(x=>x.Type == FieldType.Oid).Name,
-                    f.Attributes[f.Schema.Fields.FirstOrDefault(x => x.Type == FieldType.Oid).Name].ToString(),
+                    featureLayer.DisplayName,
+                    schema.Fields.FirstOrDefault(x => x.Type == FieldType.Oid).Name,
+                    f.Attributes[schema.Fields.FirstOrDefault(x => x.Type == FieldType.Oid).Name].ToString(),
                     f
-                    ),f.Schema.Fields)));
+                    ), schema.Fields)));
             }
             if (layer is GraphicsLayer)
             {

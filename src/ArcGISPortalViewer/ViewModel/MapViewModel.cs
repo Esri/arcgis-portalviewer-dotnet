@@ -29,6 +29,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Geometry = Esri.ArcGISRuntime.Geometry.Geometry;
+using PointCollection = Esri.ArcGISRuntime.Geometry.PointCollection;
 
 namespace ArcGISPortalViewer.ViewModel
 {
@@ -932,7 +933,7 @@ namespace ArcGISPortalViewer.ViewModel
             // get the distance between the center of the current map extent and one of its corners
             if (extent != null && !extent.IsEmpty)
             {
-                var d = GeometryEngine.GeodesicLength(new Polyline(new Coordinate[] { extent.GetCenter().Coordinate, new Coordinate(extent.XMin, extent.YMin) },
+                var d = GeometryEngine.GeodesicLength(new Polyline(new PointCollection(){ extent.GetCenter(), new MapPoint(extent.XMin, extent.YMin) },
                         extent.SpatialReference), GeodeticCurveType.GreatElliptic);
 
                 // to increase the chances of finding results make sure the smallest returned distance is 5 Kilometers.
@@ -1008,9 +1009,9 @@ namespace ArcGISPortalViewer.ViewModel
                     if (e.Geometry is Polyline)
                     {
                         var polyline = e.Geometry as Polyline;
-                        if (polyline != null && polyline.Paths != null && polyline.Paths.Count > 0)
+                        if (polyline != null && polyline.Parts != null && polyline.Parts.Count > 0)
                         {
-                            var vertices = polyline.Paths[0];
+                            var vertices = polyline.Parts[0];
                             if (vertices != null && vertices.Count > 2)
                             {
                                 var area = new Polygon(vertices, polyline.SpatialReference);
@@ -1020,7 +1021,7 @@ namespace ArcGISPortalViewer.ViewModel
                             int i = 0;
                             foreach (var vertex in vertices)
                             {
-                                var mapPoint = new MapPoint(vertex, polyline.SpatialReference);
+                                var mapPoint = vertex;
                                 var graphic = new Graphic() { Geometry = mapPoint };
                                 graphic.Symbol = GetVertexSymbol(++i);
                                 m_MeasureLayer.Graphics.Add(graphic);
@@ -1393,7 +1394,7 @@ namespace ArcGISPortalViewer.ViewModel
             var selectionGraphic  = feature is GeodatabaseFeature ? ((GeodatabaseFeature)feature).AsGraphic() : new Graphic { Geometry = feature.Geometry };
             switch (selectionGraphic.Geometry.GeometryType)
             {
-                case GeometryType.MultiPoint:
+                case GeometryType.Multipoint:
                 case GeometryType.Point:
                     selectionGraphic.Symbol = _pointSelectionSymbol;
                     break;
