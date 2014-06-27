@@ -1,17 +1,20 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30110.0
+VisualStudioVersion = 12.0.30501.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArcGISPortalViewer", "ArcGISPortalViewer\ArcGISPortalViewer.csproj", "{75CCCE90-11AA-405D-A128-FEA952708D15}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Submodules", "Submodules", "{9D6331E5-0ADE-450F-977B-1D3A62692407}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Esri.ArcGISRuntime.Toolkit", "..\arcgis-toolkit-dotnet\src\WinStore\Esri.ArcGISRuntime.Toolkit\Esri.ArcGISRuntime.Toolkit.csproj", "{AE395530-9918-45B5-8F81-199136BDB367}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Esri.ArcGISRuntime.Toolkit.WindowsStore", "..\arcgis-toolkit-dotnet\src\WinStore\Esri.ArcGISRuntime.Toolkit\Esri.ArcGISRuntime.Toolkit.WindowsStore.csproj", "{AE395530-9918-45B5-8F81-199136BDB367}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArcGISPortalViewer.Popup", "ArcGISPortalViewer.Popup\ArcGISPortalViewer.Popup.csproj", "{E7108835-AF55-4062-81BD-3ADE4116266F}"
 EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		..\arcgis-toolkit-dotnet\src\Common\Esri.ArcGISRuntime.Toolkit\Esri.ArcGISRuntime.Toolkit.Shared.projitems*{ae395530-9918-45b5-8f81-199136bdb367}*SharedItemsImports = 4
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
 		Debug|x64 = Debug|x64
