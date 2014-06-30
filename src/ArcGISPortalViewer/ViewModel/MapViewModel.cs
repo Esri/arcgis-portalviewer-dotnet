@@ -456,13 +456,11 @@ namespace ArcGISPortalViewer.ViewModel
                 WebMap = await WebMap.FromPortalItemAsync(PortalItem);
                 if (WebMap == null)
                     return null;
-
-                var currentPortal = this.PortalItem.ArcGISPortal;
-                if (currentPortal.ArcGISPortalInfo.BingKey == null)
-                    WebMapVM = await WebMapViewModel.LoadAsync(WebMap, currentPortal);
-                else
-                    WebMapVM = await WebMapViewModel.LoadAsync(WebMap, currentPortal, currentPortal.ArcGISPortalInfo.BingKey);
-
+                
+                WebMapVM = await WebMapViewModel.LoadAsync(WebMap, this.PortalItem.ArcGISPortal);
+                if (WebMapVM == null)
+                    return null;
+               
                 var errors = WebMapVM.LoadErrors.ToArray();
                 if (errors != null && errors.Any())
                 {
