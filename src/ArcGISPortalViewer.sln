@@ -1,17 +1,20 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30110.0
+VisualStudioVersion = 12.0.30501.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArcGISPortalViewer", "ArcGISPortalViewer\ArcGISPortalViewer.csproj", "{75CCCE90-11AA-405D-A128-FEA952708D15}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Submodules", "Submodules", "{9D6331E5-0ADE-450F-977B-1D3A62692407}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Esri.ArcGISRuntime.Toolkit", "..\arcgis-toolkit-dotnet\src\WinStore\Esri.ArcGISRuntime.Toolkit\Esri.ArcGISRuntime.Toolkit.csproj", "{AE395530-9918-45B5-8F81-199136BDB367}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Esri.ArcGISRuntime.Toolkit.WindowsStore", "..\arcgis-toolkit-dotnet\src\WinStore\Esri.ArcGISRuntime.Toolkit\Esri.ArcGISRuntime.Toolkit.WindowsStore.csproj", "{2D6828A8-83D2-4DC5-8212-595560086CE7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArcGISPortalViewer.Popup", "ArcGISPortalViewer.Popup\ArcGISPortalViewer.Popup.csproj", "{E7108835-AF55-4062-81BD-3ADE4116266F}"
 EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		..\arcgis-toolkit-dotnet\src\Common\Esri.ArcGISRuntime.Toolkit\Esri.ArcGISRuntime.Toolkit.Shared.projitems*{2d6828a8-83d2-4dc5-8212-595560086ce7}*SharedItemsImports = 4
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
 		Debug|x64 = Debug|x64
@@ -39,18 +42,18 @@ Global
 		{75CCCE90-11AA-405D-A128-FEA952708D15}.Release|x86.ActiveCfg = Release|x86
 		{75CCCE90-11AA-405D-A128-FEA952708D15}.Release|x86.Build.0 = Release|x86
 		{75CCCE90-11AA-405D-A128-FEA952708D15}.Release|x86.Deploy.0 = Release|x86
-		{AE395530-9918-45B5-8F81-199136BDB367}.Debug|ARM.ActiveCfg = Debug|ARM
-		{AE395530-9918-45B5-8F81-199136BDB367}.Debug|ARM.Build.0 = Debug|ARM
-		{AE395530-9918-45B5-8F81-199136BDB367}.Debug|x64.ActiveCfg = Debug|x64
-		{AE395530-9918-45B5-8F81-199136BDB367}.Debug|x64.Build.0 = Debug|x64
-		{AE395530-9918-45B5-8F81-199136BDB367}.Debug|x86.ActiveCfg = Debug|x86
-		{AE395530-9918-45B5-8F81-199136BDB367}.Debug|x86.Build.0 = Debug|x86
-		{AE395530-9918-45B5-8F81-199136BDB367}.Release|ARM.ActiveCfg = Release|ARM
-		{AE395530-9918-45B5-8F81-199136BDB367}.Release|ARM.Build.0 = Release|ARM
-		{AE395530-9918-45B5-8F81-199136BDB367}.Release|x64.ActiveCfg = Release|x64
-		{AE395530-9918-45B5-8F81-199136BDB367}.Release|x64.Build.0 = Release|x64
-		{AE395530-9918-45B5-8F81-199136BDB367}.Release|x86.ActiveCfg = Release|x86
-		{AE395530-9918-45B5-8F81-199136BDB367}.Release|x86.Build.0 = Release|x86
+		{2D6828A8-83D2-4DC5-8212-595560086CE7}.Debug|ARM.ActiveCfg = Debug|ARM
+		{2D6828A8-83D2-4DC5-8212-595560086CE7}.Debug|ARM.Build.0 = Debug|ARM
+		{2D6828A8-83D2-4DC5-8212-595560086CE7}.Debug|x64.ActiveCfg = Debug|x64
+		{2D6828A8-83D2-4DC5-8212-595560086CE7}.Debug|x64.Build.0 = Debug|x64
+		{2D6828A8-83D2-4DC5-8212-595560086CE7}.Debug|x86.ActiveCfg = Debug|x86
+		{2D6828A8-83D2-4DC5-8212-595560086CE7}.Debug|x86.Build.0 = Debug|x86
+		{2D6828A8-83D2-4DC5-8212-595560086CE7}.Release|ARM.ActiveCfg = Release|ARM
+		{2D6828A8-83D2-4DC5-8212-595560086CE7}.Release|ARM.Build.0 = Release|ARM
+		{2D6828A8-83D2-4DC5-8212-595560086CE7}.Release|x64.ActiveCfg = Release|x64
+		{2D6828A8-83D2-4DC5-8212-595560086CE7}.Release|x64.Build.0 = Release|x64
+		{2D6828A8-83D2-4DC5-8212-595560086CE7}.Release|x86.ActiveCfg = Release|x86
+		{2D6828A8-83D2-4DC5-8212-595560086CE7}.Release|x86.Build.0 = Release|x86
 		{E7108835-AF55-4062-81BD-3ADE4116266F}.Debug|ARM.ActiveCfg = Debug|ARM
 		{E7108835-AF55-4062-81BD-3ADE4116266F}.Debug|ARM.Build.0 = Debug|ARM
 		{E7108835-AF55-4062-81BD-3ADE4116266F}.Debug|x64.ActiveCfg = Debug|x64
@@ -68,6 +71,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{AE395530-9918-45B5-8F81-199136BDB367} = {9D6331E5-0ADE-450F-977B-1D3A62692407}
+		{2D6828A8-83D2-4DC5-8212-595560086CE7} = {9D6331E5-0ADE-450F-977B-1D3A62692407}
 	EndGlobalSection
 EndGlobal
