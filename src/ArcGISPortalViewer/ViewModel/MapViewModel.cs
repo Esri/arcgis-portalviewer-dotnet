@@ -531,7 +531,7 @@ namespace ArcGISPortalViewer.ViewModel
                 }
                 catch { }
                 if (baseWebmap != null)
-                    WebMapVM.BaseMap = baseWebmap.BaseMap;
+                    WebMapVM.Basemap = baseWebmap.Basemap;
             }
         }
 
