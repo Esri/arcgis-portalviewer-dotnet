@@ -368,7 +368,7 @@
                     <!--Full Extent-->
 					<Button x:Name="FullExtentButton" Style="{StaticResource StartExtentAppBarButtonStyle}"
                             Command="{Binding OnSetViewCommand}"
-                            CommandParameter="{Binding WebMapVM.Map.InitialExtent}" />
+                            CommandParameter="{Binding WebMapVM.Map.InitialViewpoint}" />
 				</StackPanel>
 			</Grid>
 		</AppBar>

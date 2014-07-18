@@ -1332,6 +1332,10 @@ namespace ArcGISPortalViewer.ViewModel
                 OnSelectedItem(popupItem);
                 var _ = SetViewAsync(popupItem.IdentifyFeature.Item.Feature.Geometry.Extent);
             }
+            else if (obj is Viewpoint)
+            {
+                var _ = SetViewAsync(((Viewpoint)obj).TargetGeometry);
+            }
             else if (obj is Esri.ArcGISRuntime.Geometry.Geometry)
             {
                 var _ = SetViewAsync((Esri.ArcGISRuntime.Geometry.Geometry)obj);
