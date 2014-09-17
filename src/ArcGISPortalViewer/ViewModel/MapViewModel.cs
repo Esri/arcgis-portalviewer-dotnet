@@ -468,8 +468,8 @@ namespace ArcGISPortalViewer.ViewModel
                     string message = null;
                     if (errors.Count() == 1)
                     {
-                        WebMapLayer webMapLayer = errors.First().Key;
-                        var layerName = webMapLayer.Title ?? webMapLayer.Id ?? webMapLayer.Type;
+                        WebMapLayer webMapLayer = errors.First().Key;                                            
+                        var layerName = webMapLayer.Title ?? webMapLayer.Id ?? string.Format("{0}", webMapLayer.LayerType);
                         title = string.Format("Unable to add the layer '{0}' in the map.", layerName);
                         message = errors.First().Value.Message;
                     }
@@ -479,7 +479,7 @@ namespace ArcGISPortalViewer.ViewModel
                         foreach (KeyValuePair<WebMapLayer, Exception> error in errors)
                         {
                             WebMapLayer webMapLayer = error.Key;
-                            var layerName = webMapLayer.Title ?? webMapLayer.Id ?? webMapLayer.Type;
+                            var layerName = webMapLayer.Title ?? webMapLayer.Id ?? string.Format("{0}", webMapLayer.LayerType);
                             message += layerName + ":  " + error.Value.Message + Environment.NewLine;
                         }
                     }
@@ -489,13 +489,13 @@ namespace ArcGISPortalViewer.ViewModel
                 
                 // <start workaround>
                 // This is work around for WebMapViewModel because OutFields is not being set 
-                // on the GeodatabaseFeatureServiceTable in the API this will be fixed after Beta.
+                // on the ServiceFeatureTable in the API this will be fixed after Beta.
                 foreach(var featureLayer in OperationalLayers.OfType<FeatureLayer>())
                 {
                     var webMapLayer = WebMap.OperationalLayers.FirstOrDefault(wml => wml.Id == featureLayer.ID);
                     if(webMapLayer != null && webMapLayer.PopupInfo != null && webMapLayer.PopupInfo.FieldInfos != null && webMapLayer.PopupInfo.FieldInfos.Any())
                     {                                         
-                        var geodatabaseFeatureServiceTable = featureLayer.FeatureTable as GeodatabaseFeatureServiceTable;
+                        var geodatabaseFeatureServiceTable = featureLayer.FeatureTable as ServiceFeatureTable;
                         if(geodatabaseFeatureServiceTable != null && geodatabaseFeatureServiceTable.OutFields == null)
                         {
                             geodatabaseFeatureServiceTable.OutFields = new OutFields(webMapLayer.PopupInfo.FieldInfos.Where(f => f != null).Select(f => f.FieldName));
@@ -783,7 +783,7 @@ namespace ArcGISPortalViewer.ViewModel
                     MaxLocations = 25,                    
                     OutSpatialReference = WebMapVM.SpatialReference,
                     SearchExtent = boundingBox,
-                    Location = (MapPoint)GeometryEngine.NormalizeCentralMeridianOfGeometry(boundingBox.GetCenter()),
+                    Location = (MapPoint)GeometryEngine.NormalizeCentralMeridian(boundingBox.GetCenter()),
                     Distance = GetDistance(boundingBox),
                     OutFields = new List<string>() { "PlaceName", "Type", "City", "Country" }                    
                 }, cancellationToken);
@@ -800,7 +800,7 @@ namespace ArcGISPortalViewer.ViewModel
                         MaxLocations = 25,
                         OutSpatialReference = WebMapVM.SpatialReference,
                         SearchExtent = boundingBox,
-                        Location = (MapPoint)GeometryEngine.NormalizeCentralMeridianOfGeometry(boundingBox.GetCenter()),
+                        Location = (MapPoint)GeometryEngine.NormalizeCentralMeridian(boundingBox.GetCenter()),
                         Distance = GetDistance(boundingBox),
                         OutFields = new List<string>() { "PlaceName", "Type", "City", "Country"}
                     }, cancellationToken);
@@ -1014,8 +1014,8 @@ namespace ArcGISPortalViewer.ViewModel
                         var polyline = e.Geometry as Polyline;
                         if (polyline != null && polyline.Parts != null && polyline.Parts.Count > 0)
                         {
-                            var vertices = polyline.Parts[0];
-                            if (vertices != null && vertices.Count > 2)
+                            var vertices = polyline.Parts[0].GetPoints();
+                            if (vertices != null && vertices.Count() > 2)
                             {
                                 var area = new Polygon(vertices, polyline.SpatialReference);
                                 m_MeasureLayer.Graphics.Add(new Graphic() { Geometry = area, Symbol = measureAreaSymbol });

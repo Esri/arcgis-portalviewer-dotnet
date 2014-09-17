@@ -18,6 +18,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
+using System.Linq;
 
 namespace ArcGISPortalViewer.Controls
 {
@@ -219,8 +220,8 @@ namespace ArcGISPortalViewer.Controls
             // Only reset display when first vertex is committed.
             if (polyline != null && polyline.Parts != null && polyline.Parts.Count > 0)
             {
-                var vertices = polyline.Parts[0];
-                if (vertices != null && vertices.Count == 1)
+                var vertices = polyline.Parts[0].GetPoints();
+                if (vertices != null && vertices.Count() == 1)
                     ResetDisplay();
             }
 
@@ -247,7 +248,8 @@ namespace ArcGISPortalViewer.Controls
                     MeasureItemCollection.Clear();
                     if (polyline != null)
                     {
-                        foreach (var p in polyline.Parts[0])
+                        var vertices = polyline.Parts[0].GetPoints();
+                        foreach (var p in vertices)
                         {
                             MeasureItemCollection.Add(new MeasureItem()
                             {
@@ -476,13 +478,13 @@ namespace ArcGISPortalViewer.Controls
             switch (coordinateFormat)
             {
                 case CoordinateFormat.DecimalDegrees:
-                    return CoordinateConversion.MapPointToDecimalDegrees(location, 5);
+                    return ConvertCoordinate.ToDecimalDegrees(location, 5);
                 case CoordinateFormat.DegreesDecimalMinutes:
-                    return CoordinateConversion.MapPointToDegreesDecimalMinutes(location, 3);
+                    return ConvertCoordinate.ToDegreesDecimalMinutes(location, 3);
                 case CoordinateFormat.Dms:
-                    return CoordinateConversion.MapPointToDegreesMinutesSeconds(location, 1);
+                    return ConvertCoordinate.ToDegreesMinutesSeconds(location, 1);
                 case CoordinateFormat.Mgrs:
-                    return CoordinateConversion.MapPointToMgrs(location, MgrsConversionMode.Automatic, 5, true, true);
+                    return ConvertCoordinate.ToMgrs(location, MgrsConversionMode.Automatic, 5, true, true);
             }
             return null;
         }
