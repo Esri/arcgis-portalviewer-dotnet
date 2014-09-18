@@ -19,7 +19,7 @@ namespace ArcGISPortalViewer.Model
     public class PortalService : IPortalService , INotifyPropertyChanged
     {
         private static PortalService _currentPortalService;
-        private IdentityManager.Credential _credential = null;
+        private Credential _credential = null;
 
         public bool OrganizationResultsOnly = true; 
 
@@ -278,9 +278,13 @@ namespace ArcGISPortalViewer.Model
                 bool b = await SignInUsingIdentityManager(username, password);
                 if (b)
                 {
-                    Portal = await ArcGISPortal.CreateAsync(App.PortalUri.Uri, CancellationToken.None, null, _credential.Token);
+
+                    var credential = _credential is ArcGISTokenCredential ? ((ArcGISTokenCredential)_credential) : null;
+                    var token =credential!= null ? credential.Token: null;
+                    var user = credential!= null ? credential.UserName: null;
+                    Portal = await ArcGISPortal.CreateAsync(App.PortalUri.Uri, CancellationToken.None, token);
                     if (Portal != null)
-                        CurrentUser = await ArcGISPortalUser.CreateAsync(Portal, _credential.UserName);
+                        CurrentUser = await ArcGISPortalUser.CreateAsync(Portal, user);
 
                     SetOrganizationProperties();
                     IsSigningIn = false;
@@ -313,10 +317,10 @@ namespace ArcGISPortalViewer.Model
             // if oauth2 required params are set, register the server for oauth2 authentication.            
             if (App.IsOrgOAuth2)
             {
-                IdentityManager.ServerInfo si = new IdentityManager.ServerInfo();
+                ServerInfo si = new ServerInfo();
                 si.ServerUri = App.PortalUri.Uri.ToString();
-                si.TokenAuthenticationType = IdentityManager.TokenAuthenticationType.OAuthAuthorizationCode;
-                si.OAuthClientInfo = new IdentityManager.OAuthClientInfo() { ClientId = App.AppServerId, RedirectUri = App.AppRedirectUri };
+                si.TokenAuthenticationType = TokenAuthenticationType.OAuthAuthorizationCode;
+                si.OAuthClientInfo = new OAuthClientInfo() { ClientId = App.AppServerId, RedirectUri = App.AppRedirectUri };
                 IdentityManager.Current.RegisterServer(si);
                 //IdentityManager.Current.TokenValidity = 30;
 
@@ -356,20 +360,20 @@ namespace ArcGISPortalViewer.Model
             }                   
             
             // Since credential could not be retrieved, try getting it by challenging the user
-            var credentialRequestInfo = new IdentityManager.CredentialRequestInfo
+            var credentialRequestInfo = new CredentialRequestInfo
             {
                 ServiceUri = App.PortalUri.Uri.ToString(),
-                AuthenticationType = IdentityManager.AuthenticationType.Token,
+                AuthenticationType =  AuthenticationType.Token,
             };
-
+            
             try
             {
-                IdentityManager.Credential credential = await IdentityManager.Current.GetCredentialAsync(credentialRequestInfo, true);
+                var result = await IdentityManager.Current.GetCredentialAsync(credentialRequestInfo, true);
+                var credential = result is ArcGISTokenCredential ? ((ArcGISTokenCredential)result) : null;
                 if (credential != null && !string.IsNullOrEmpty(credential.Token)) // && credential.Token != Token)
                 {
                     //set the credential 
-                    _credential = credential;                    
-
+                    _credential = credential;
                     //store credentials using PasswordVault 
                     if (!App.IsOrgOAuth2) // && IdentityManager.Current.ChallengeMethodCredentialResults.CredentialSaveOption == Windows.Security.Credentials.UI.CredentialSaveOption.Selected)
                         new PasswordVault().Add(new PasswordCredential(App.OrganizationUrl, credential.UserName, credential.Password));

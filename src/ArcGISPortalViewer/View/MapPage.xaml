@@ -40,7 +40,8 @@
 				</core:EventTriggerBehavior>
 			</interactivity:Interaction.Behaviors>
 			<esri:MapView.Overlays>
-				<Grid esri:MapView.MapOverlayAnchor="{Binding AnchorMapPoint}" 
+                <esri:OverlayItemsControl>
+                    <Grid esri:MapView.ViewOverlayAnchor="{Binding AnchorMapPoint}" 
                       Visibility="{Binding IsOverlayVisible, Converter={StaticResource biConditionalConverter}}" 
                       VerticalAlignment="Top" 
                       HorizontalAlignment="Right">
@@ -70,8 +71,9 @@
 					<Grid Grid.Row="1">
 						<Path Fill="White" Data="m 0,0 L 0,30, 30,0 0,0 z" />
 					</Grid>
-				</Grid>
-			</esri:MapView.Overlays>
+                    </Grid>
+                </esri:OverlayItemsControl>
+            </esri:MapView.Overlays>
 		</esri:MapView>
 
         

@@ -58,7 +58,7 @@ namespace ArcGISPortalViewer.Helpers
 				var center = controller.Extent.GetCenter();
 				var extent = new Envelope(center.X - resolution * c_defaultTolerance, center.Y - resolution * c_defaultTolerance,
 					center.X + resolution * c_defaultTolerance, center.Y + resolution * c_defaultTolerance, controller.SpatialReference);
-                var identifyParameter = new IdentifyParameter(mapPoint, extent, c_defaultTolerance, c_defaultTolerance,
+                var identifyParameter = new IdentifyParameters(mapPoint, extent, c_defaultTolerance, c_defaultTolerance,
                     c_defaultTolerance, DisplayInformation.GetForCurrentView().LogicalDpi)
 				{
                     LayerOption = LayerOption.Visible,
@@ -89,7 +89,7 @@ namespace ArcGISPortalViewer.Helpers
 				var center = controller.Extent.GetCenter();
 				var extent = new Envelope(center.X - resolution * c_defaultTolerance, center.Y - resolution * c_defaultTolerance,
 					center.X + resolution * c_defaultTolerance, center.Y + resolution * c_defaultTolerance, controller.SpatialReference);
-                var identifyParameter = new IdentifyParameter(mapPoint, extent, c_defaultTolerance, c_defaultTolerance,
+                var identifyParameter = new IdentifyParameters(mapPoint, extent, c_defaultTolerance, c_defaultTolerance,
                     c_defaultTolerance, DisplayInformation.GetForCurrentView().LogicalDpi)
                 {
                     LayerOption = LayerOption.Visible,                    
