@@ -285,7 +285,7 @@ namespace ArcGISPortalViewer.Controls
                 if (previousPoint != null)
                 {
                     measureItem.Length = GeometryEngine.GeodesicLength(
-                        new Polyline(new PointCollection(){previousPoint, measureItem.Location},
+                        new Polyline(new PointCollection(previousPoint.SpatialReference) {previousPoint, measureItem.Location},
                             measureItem.Location.SpatialReference),
                         GeodeticCurveType.GreatElliptic);
                 }
