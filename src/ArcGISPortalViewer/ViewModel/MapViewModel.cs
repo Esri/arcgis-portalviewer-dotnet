@@ -469,7 +469,7 @@ namespace ArcGISPortalViewer.ViewModel
                     if (errors.Count() == 1)
                     {
                         WebMapLayer webMapLayer = errors.First().Key;
-                        var layerName = webMapLayer.Title ?? webMapLayer.Id ?? webMapLayer.Type;
+                        var layerName = webMapLayer.Title ?? webMapLayer.Id ?? webMapLayer.LayerType.ToString();
                         title = string.Format("Unable to add the layer '{0}' in the map.", layerName);
                         message = errors.First().Value.Message;
                     }
@@ -479,7 +479,7 @@ namespace ArcGISPortalViewer.ViewModel
                         foreach (KeyValuePair<WebMapLayer, Exception> error in errors)
                         {
                             WebMapLayer webMapLayer = error.Key;
-                            var layerName = webMapLayer.Title ?? webMapLayer.Id ?? webMapLayer.Type;
+                            var layerName = webMapLayer.Title ?? webMapLayer.Id ?? webMapLayer.LayerType.ToString();
                             message += layerName + ":  " + error.Value.Message + Environment.NewLine;
                         }
                     }
@@ -494,12 +494,12 @@ namespace ArcGISPortalViewer.ViewModel
                 {
                     var webMapLayer = WebMap.OperationalLayers.FirstOrDefault(wml => wml.Id == featureLayer.ID);
                     if(webMapLayer != null && webMapLayer.PopupInfo != null && webMapLayer.PopupInfo.FieldInfos != null && webMapLayer.PopupInfo.FieldInfos.Any())
-                    {                                         
-                        var geodatabaseFeatureServiceTable = featureLayer.FeatureTable as GeodatabaseFeatureServiceTable;
-                        if(geodatabaseFeatureServiceTable != null && geodatabaseFeatureServiceTable.OutFields == null)
+                    {
+                        var serviceFeatureTable = featureLayer.FeatureTable as ServiceFeatureTable;
+                        if (serviceFeatureTable != null && serviceFeatureTable.OutFields == null)
                         {
-                            geodatabaseFeatureServiceTable.OutFields = new OutFields(webMapLayer.PopupInfo.FieldInfos.Where(f => f != null).Select(f => f.FieldName));
-                            geodatabaseFeatureServiceTable.RefreshFeatures(false);
+                            serviceFeatureTable.OutFields = new OutFields(webMapLayer.PopupInfo.FieldInfos.Where(f => f != null).Select(f => f.FieldName));
+                            serviceFeatureTable.RefreshFeatures(false);
                         }
                     }
                 }
@@ -783,7 +783,7 @@ namespace ArcGISPortalViewer.ViewModel
                     MaxLocations = 25,                    
                     OutSpatialReference = WebMapVM.SpatialReference,
                     SearchExtent = boundingBox,
-                    Location = (MapPoint)GeometryEngine.NormalizeCentralMeridianOfGeometry(boundingBox.GetCenter()),
+                    Location = (MapPoint)GeometryEngine.NormalizeCentralMeridian(boundingBox.GetCenter()),
                     Distance = GetDistance(boundingBox),
                     OutFields = new List<string>() { "PlaceName", "Type", "City", "Country" }                    
                 }, cancellationToken);
@@ -800,7 +800,7 @@ namespace ArcGISPortalViewer.ViewModel
                         MaxLocations = 25,
                         OutSpatialReference = WebMapVM.SpatialReference,
                         SearchExtent = boundingBox,
-                        Location = (MapPoint)GeometryEngine.NormalizeCentralMeridianOfGeometry(boundingBox.GetCenter()),
+                        Location = (MapPoint)GeometryEngine.NormalizeCentralMeridian(boundingBox.GetCenter()),
                         Distance = GetDistance(boundingBox),
                         OutFields = new List<string>() { "PlaceName", "Type", "City", "Country"}
                     }, cancellationToken);
@@ -936,7 +936,7 @@ namespace ArcGISPortalViewer.ViewModel
             // get the distance between the center of the current map extent and one of its corners
             if (extent != null && !extent.IsEmpty)
             {
-                var d = GeometryEngine.GeodesicLength(new Polyline(new PointCollection(){ extent.GetCenter(), new MapPoint(extent.XMin, extent.YMin) },
+                var d = GeometryEngine.GeodesicLength(new Polyline(new PointCollection(extent.SpatialReference){ extent.GetCenter(), new MapPoint(extent.XMin, extent.YMin) },
                         extent.SpatialReference), GeodeticCurveType.GreatElliptic);
 
                 // to increase the chances of finding results make sure the smallest returned distance is 5 Kilometers.
@@ -1012,7 +1012,7 @@ namespace ArcGISPortalViewer.ViewModel
                     if (e.Geometry is Polyline)
                     {
                         var polyline = e.Geometry as Polyline;
-                        if (polyline != null && polyline.Parts != null && polyline.Parts.Count > 0)
+                        if (polyline.Parts != null && polyline.Parts.Count > 0)
                         {
                             var vertices = polyline.Parts[0];
                             if (vertices != null && vertices.Count > 2)
@@ -1022,13 +1022,14 @@ namespace ArcGISPortalViewer.ViewModel
                             }
                             m_MeasureLayer.Graphics.Add(new Graphic() { Geometry = polyline, Symbol = measureLineSymbol });
                             int i = 0;
-                            foreach (var vertex in vertices)
-                            {
-                                var mapPoint = vertex;
-                                var graphic = new Graphic() { Geometry = mapPoint };
-                                graphic.Symbol = GetVertexSymbol(++i);
-                                m_MeasureLayer.Graphics.Add(graphic);
-                            }
+                            if (vertices != null)
+                                foreach (var vertex in vertices)
+                                {
+                                    var mapPoint = vertex;
+                                    var graphic = new Graphic() { Geometry = mapPoint.EndPoint };
+                                    graphic.Symbol = GetVertexSymbol(++i);
+                                    m_MeasureLayer.Graphics.Add(graphic);
+                                }
                         }
                     }
                 }

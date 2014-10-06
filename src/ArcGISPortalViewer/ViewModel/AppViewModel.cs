@@ -445,7 +445,7 @@ namespace ArcGISPortalViewer.ViewModel
                 App.AppRedirectUri = GetKeyValueFromResources("AppRedirectUri");
                 App.IsOrgOAuth2 = !string.IsNullOrEmpty(App.AppServerId) && !string.IsNullOrEmpty(App.AppRedirectUri);
 
-                // if username/password were persisted or anonymous access is enabled navigate to main page.                 
+                // if credentials were persisted or anonymous access is enabled navigate to main page.                 
                 if (App.SignInVM.IsCredentialsPersisted) // || SignInVM.IsAnonymousAccessEnabledAsync())
                 {
                     if (!(rootFrame.Content is MainPage))

@@ -20,23 +20,23 @@ namespace ArcGISPortalViewer.Helpers
     {
 		private const int c_defaultTolerance = 15;
 
-		public static async Task<IDictionary<Layer, IEnumerable<IdentifyFeature>>> Identify(MapViewController controller, Point tapPoint, MapPoint mapPoint, IEnumerable<Layer> layers = null, double toleranceInPixels = 5)
+        public static async Task<IDictionary<Layer, IEnumerable<IdentifyFeature>>> Identify(MapViewController controller, Point tapPoint, MapPoint mapPoint, IEnumerable<Layer> layers = null, double toleranceInPixels = 5)
         {
+
             if (controller == null)
                 throw new ArgumentNullException("controller");
-            if(layers == null)
+            if (layers == null)
                 throw new ArgumentNullException("layers");
 
-            var identifyLayers = LayerCollection.EnumerateLeaves(layers);            
-
+            var identifyLayers = LayerCollection.EnumerateLeaves(layers);
             var results = await Task.WhenAll((from l in identifyLayers where l.IsVisible select IdentifyLayer(controller, l, tapPoint, mapPoint)).Where((l => l != null)).ToArray()).ConfigureAwait(false);
 
             IDictionary<Layer, IEnumerable<IdentifyFeature>> taskResults = null;
             foreach (var result in results)
             {
-                if(taskResults == null)
+                if (taskResults == null)
                     taskResults = new Dictionary<Layer, IEnumerable<IdentifyFeature>>();
-                if(!taskResults.ContainsKey(result.Key))
+                if (!taskResults.ContainsKey(result.Key))
                     taskResults.Add(result);
             }
 
@@ -58,7 +58,7 @@ namespace ArcGISPortalViewer.Helpers
 				var center = controller.Extent.GetCenter();
 				var extent = new Envelope(center.X - resolution * c_defaultTolerance, center.Y - resolution * c_defaultTolerance,
 					center.X + resolution * c_defaultTolerance, center.Y + resolution * c_defaultTolerance, controller.SpatialReference);
-                var identifyParameter = new IdentifyParameter(mapPoint, extent, c_defaultTolerance, c_defaultTolerance,
+                var identifyParameter = new IdentifyParameters(mapPoint, extent, c_defaultTolerance, c_defaultTolerance,
                     c_defaultTolerance, DisplayInformation.GetForCurrentView().LogicalDpi)
 				{
                     LayerOption = LayerOption.Visible,
@@ -70,11 +70,29 @@ namespace ArcGISPortalViewer.Helpers
                 };
                 var identifyItems = (await identifyTask.ExecuteAsync(identifyParameter)).Results;
                 var identifyFeatures = new List<IdentifyFeature>();
-                foreach (var identifyItem in identifyItems)
+
+                try
                 {
-                    var fields = await GetFieldInfo(dynamicLayer, identifyItem);
-                    var identifyFeature = ReplaceAlaisWithFieldName(identifyItem, fields);
-                    identifyFeatures.Add(identifyFeature);
+                    var dict = new Dictionary<int, IReadOnlyList<FieldInfo>>();
+                    foreach (var identifyItem in identifyItems)
+                    {
+                        IReadOnlyList<FieldInfo> fields;
+                        if(dict.ContainsKey(identifyItem.LayerID))
+                            fields = dict[identifyItem.LayerID];
+                        else
+                        {
+                            fields = await GetFieldInfo(dynamicLayer, identifyItem);                            
+                            dict[identifyItem.LayerID] = fields;
+                        }                        
+                        var identifyFeature = ReplaceAliasWithFieldName(identifyItem, fields);                        
+                        identifyFeatures.Add(identifyFeature);
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    
+                    throw;
                 }
                 return new KeyValuePair<Layer, IEnumerable<IdentifyFeature>>(layer, identifyFeatures);
             }
@@ -89,7 +107,7 @@ namespace ArcGISPortalViewer.Helpers
 				var center = controller.Extent.GetCenter();
 				var extent = new Envelope(center.X - resolution * c_defaultTolerance, center.Y - resolution * c_defaultTolerance,
 					center.X + resolution * c_defaultTolerance, center.Y + resolution * c_defaultTolerance, controller.SpatialReference);
-                var identifyParameter = new IdentifyParameter(mapPoint, extent, c_defaultTolerance, c_defaultTolerance,
+                var identifyParameter = new IdentifyParameters(mapPoint, extent, c_defaultTolerance, c_defaultTolerance,
                     c_defaultTolerance, DisplayInformation.GetForCurrentView().LogicalDpi)
                 {
                     LayerOption = LayerOption.Visible,                    
@@ -99,28 +117,41 @@ namespace ArcGISPortalViewer.Helpers
                 var identifyItems = (await identifyTask.ExecuteAsync(identifyParameter)).Results;
                 
                 var identifyFeatures = new List<IdentifyFeature>();
+                var dict = new Dictionary<int, IReadOnlyList<FieldInfo>>();
                 foreach (var identifyItem in identifyItems)
                 {
-                    var fields = await GetFieldInfo(tiledlayer, identifyItem);
-                    var identifyFeature = ReplaceAlaisWithFieldName(identifyItem, fields);
+                    IReadOnlyList<FieldInfo> fields;
+                    if (dict.ContainsKey(identifyItem.LayerID))
+                        fields = dict[identifyItem.LayerID];
+                    else
+                    {
+                        fields = await GetFieldInfo(tiledlayer, identifyItem);
+                        dict[identifyItem.LayerID] = fields;
+                    }
+                    var identifyFeature = ReplaceAliasWithFieldName(identifyItem, fields);
                     identifyFeatures.Add(identifyFeature);
-                }                                
+                }                                           
                 return new KeyValuePair<Layer, IEnumerable<IdentifyFeature>>(layer, identifyFeatures);
             }
             if (layer is FeatureLayer)
             {
                 var featureLayer = ((FeatureLayer)layer);
-                var featureIds = await controller.FeatureLayerHitTestAsync(featureLayer, tapPoint, 1000);                
-                var features = await featureLayer.FeatureTable.QueryAsync(featureIds);
-                var schema = featureLayer.FeatureTable.Schema;
+                var featureIds = await controller.FeatureLayerHitTestAsync(featureLayer, tapPoint, 1000);
+                IEnumerable<Feature> features = new List<Feature>();
+                if (featureIds != null && featureIds.Any())
+                    features = await featureLayer.FeatureTable.QueryAsync(featureIds);
 
-                return new KeyValuePair<Layer, IEnumerable<IdentifyFeature>>(layer, features.Select(f => new IdentifyFeature(new IdentifyItem(
-                    -1, 
-                    featureLayer.DisplayName,
-                    schema.Fields.FirstOrDefault(x => x.Type == FieldType.Oid).Name,
-                    f.Attributes[schema.Fields.FirstOrDefault(x => x.Type == FieldType.Oid).Name].ToString(),
-                    f
-                    ), schema.Fields)));
+                var schema = featureLayer.FeatureTable.Schema;
+                IList<IdentifyFeature> displayFeatures = new List<IdentifyFeature>();
+                foreach (var f in features)
+                {
+                    var objectIDFieldName = schema.Fields.FirstOrDefault(x => x.Type == FieldType.Oid).Name;
+                    var objectIDFieldValue = f.Attributes[objectIDFieldName].ToString();
+                    IdentifyItem identifyItem = new IdentifyItem(-1, featureLayer.DisplayName, objectIDFieldName, objectIDFieldValue, f);
+                    IdentifyFeature identifyFeature = new IdentifyFeature(identifyItem, schema.Fields);
+                    displayFeatures.Add(identifyFeature);
+                }
+                return new KeyValuePair<Layer, IEnumerable<IdentifyFeature>>(layer, displayFeatures);
             }
             if (layer is GraphicsLayer)
             {
@@ -139,7 +170,7 @@ namespace ArcGISPortalViewer.Helpers
             return new KeyValuePair<Layer, IEnumerable<IdentifyFeature>>(layer,null);
         }
 
-        private static IdentifyFeature ReplaceAlaisWithFieldName(IdentifyItem identifyItem, IReadOnlyList<FieldInfo> fields)
+        private static IdentifyFeature ReplaceAliasWithFieldName(IdentifyItem identifyItem, IReadOnlyList<FieldInfo> fields)
         {
             if (identifyItem == null || identifyItem.Feature == null || identifyItem.Feature.Attributes == null || fields == null || !fields.Any())
                 return new IdentifyFeature(identifyItem);

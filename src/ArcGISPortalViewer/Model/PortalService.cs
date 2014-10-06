@@ -19,7 +19,7 @@ namespace ArcGISPortalViewer.Model
     public class PortalService : IPortalService , INotifyPropertyChanged
     {
         private static PortalService _currentPortalService;
-        private IdentityManager.Credential _credential = null;
+        private Credential _credential = null;
 
         public bool OrganizationResultsOnly = true; 
 
@@ -43,7 +43,7 @@ namespace ArcGISPortalViewer.Model
             get { return _organizationBanner; }
             set { if (_organizationBanner != value) { _organizationBanner = value; NotifyPropertyChanged(); } }
         }
-        
+
         private string _userName = "";
         public string UserName
         {
@@ -57,8 +57,7 @@ namespace ArcGISPortalViewer.Model
             get { return _password; }
             set { _password = value; }
         }
-
-        //public bool IsSigningIn { get; private set; }
+                
         private bool _isSigningIn = false;
         public bool IsSigningIn
         {
@@ -96,6 +95,10 @@ namespace ArcGISPortalViewer.Model
 
         public async Task AttemptAnonymousAccessAsync()
         {
+            var challengeHandler = IdentityManager.Current.ChallengeHandler;
+            // Deactivate the challenge handler temporarily before creating the portal (else challengehandler would be called for portal secured by native)
+            IdentityManager.Current.ChallengeHandler = new ChallengeHandler(crd => null);  
+
             try
             {
                 var p = await ArcGISPortal.CreateAsync(App.PortalUri.Uri);
@@ -110,6 +113,11 @@ namespace ArcGISPortalViewer.Model
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
+            }
+            finally
+            {
+                // Restore ChallengeHandler
+                IdentityManager.Current.ChallengeHandler = challengeHandler; 
             }
         }    
 
@@ -264,23 +272,17 @@ namespace ArcGISPortalViewer.Model
                 im.RemoveCredential(crd);            
         }
 
-        public async Task<bool> SignIn(string username, string password)
+        public async Task<bool> SignIn()
         {
             IsSigningIn = true;
-            _userName = username;
-            _password = password;
-
-            //UriBuilder builder = new UriBuilder(string.Format(App.SharingRest, App.OrganizationUrl));
             try
-            {                
-                //IdentityManager.Credential credential = await IdentityManager.Current.GenerateTokenAsync(UriBuilder.Uri.ToString(), username, password);
-                //if (credential != null && !string.IsNullOrEmpty(credential.Token)) // && credential.Token != Token)
-                bool b = await SignInUsingIdentityManager(username, password);
+            {
+                bool b = await SignInUsingIdentityManager();
                 if (b)
                 {
-                    Portal = await ArcGISPortal.CreateAsync(App.PortalUri.Uri, CancellationToken.None, null, _credential.Token);
+                    Portal = await ArcGISPortal.CreateAsync(App.PortalUri.Uri); //, CancellationToken.None, ((TokenCredential)_credential).Token);
                     if (Portal != null)
-                        CurrentUser = await ArcGISPortalUser.CreateAsync(Portal, _credential.UserName);
+                        CurrentUser = await ArcGISPortalUser.CreateAsync(Portal, ((TokenCredential)_credential).UserName);
 
                     SetOrganizationProperties();
                     IsSigningIn = false;
@@ -306,43 +308,31 @@ namespace ArcGISPortalViewer.Model
             //OrganizationBanner = "https://arcgis.esri.com/gis/home/images/banner-5.jpg";
         }
 
-        public async Task<bool> SignInUsingIdentityManager(string username, string password)
+        public async Task<bool> SignInUsingIdentityManager()
         {
             IsSigningIn = true;
             
             // if oauth2 required params are set, register the server for oauth2 authentication.            
             if (App.IsOrgOAuth2)
             {
-                IdentityManager.ServerInfo si = new IdentityManager.ServerInfo();
-                si.ServerUri = App.PortalUri.Uri.ToString();
-                si.TokenAuthenticationType = IdentityManager.TokenAuthenticationType.OAuthAuthorizationCode;
-                si.OAuthClientInfo = new IdentityManager.OAuthClientInfo() { ClientId = App.AppServerId, RedirectUri = App.AppRedirectUri };
-                IdentityManager.Current.RegisterServer(si);
-                //IdentityManager.Current.TokenValidity = 30;
-
-                ////ToDo: revisist persisting and retreiving the token for OAuth2
-                //IdentityManager.Credential cr = await RetrieveCredentialAsync();
-                //if (cr != null)
-                //{
-                //    IdentityManager.Current.AddCredential(cr);
-                //    _credential = cr;
-
-                //    IsSigningIn = false;
-                //    return true;
-                //}
+                var serverInfo = new ServerInfo()
+                {
+                    ServerUri = App.PortalUri.Uri.ToString(),
+                    TokenAuthenticationType = TokenAuthenticationType.OAuthAuthorizationCode,
+                    OAuthClientInfo = new OAuthClientInfo() { ClientId = App.AppServerId, RedirectUri = App.AppRedirectUri }
+                };
+                IdentityManager.Current.RegisterServer(serverInfo);
             }
-
-            // if username and password were retrieved try getting the credentials without challenging the user
-            else if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password))
-            {
+            // check if a TokenCredential can be retrieved without challenging the user
+            else if (IdentityManager.Current.Credentials.Any())
+            {  
                 try
                 {
-                    var credential = await IdentityManager.Current.GenerateCredentialAsync(App.PortalUri.Uri.ToString(), username, password);
+                    var credential = IdentityManager.Current.Credentials.ElementAt(0) as TokenCredential;                    
                     if (credential != null && !string.IsNullOrEmpty(credential.Token))
                     {
-                        //set the credential 
+                        // set the credential 
                         _credential = credential;
-
                         IsSigningIn = false;
                         return true;
                     }
@@ -353,39 +343,28 @@ namespace ArcGISPortalViewer.Model
                     var _ = App.ShowExceptionDialog(ex);
                     return false;
                 }
-            }                   
+            }                                     
             
-            // Since credential could not be retrieved, try getting it by challenging the user
-            var credentialRequestInfo = new IdentityManager.CredentialRequestInfo
+            // Since a credential could not be retrieved, try getting it by challenging the user
+            var credentialRequestInfo = new CredentialRequestInfo
             {
                 ServiceUri = App.PortalUri.Uri.ToString(),
-                AuthenticationType = IdentityManager.AuthenticationType.Token,
+                AuthenticationType = AuthenticationType.Token,
             };
 
             try
             {
-                IdentityManager.Credential credential = await IdentityManager.Current.GetCredentialAsync(credentialRequestInfo, true);
-                if (credential != null && !string.IsNullOrEmpty(credential.Token)) // && credential.Token != Token)
+                var credential = await IdentityManager.Current.GetCredentialAsync(credentialRequestInfo, true);
+                if (credential != null)
                 {
                     //set the credential 
-                    _credential = credential;                    
-
-                    //store credentials using PasswordVault 
-                    if (!App.IsOrgOAuth2) // && IdentityManager.Current.ChallengeMethodCredentialResults.CredentialSaveOption == Windows.Security.Credentials.UI.CredentialSaveOption.Selected)
-                        new PasswordVault().Add(new PasswordCredential(App.OrganizationUrl, credential.UserName, credential.Password));
-                    //else
-                    //    new PasswordVault().Add(new PasswordCredential(App.OrganizationUrl, credential.UserName, credential.Token)); // for OAuth2 store the token instead of the password. 
-
+                    _credential = credential;
+                    IdentityManager.Current.AddCredential(_credential);                    
                     IsSigningIn = false;                    
                     return true;
                 }
-                //if (credential.Credentials != null) // && credential.Credentials != credentials)
-                //{
-                //    System.Net.ICredentials credentials = credential.Credentials;
-                //    hasChanged = true;
-                //}
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 IsSigningIn = false;
             }

@@ -32,7 +32,7 @@ namespace ArcGISPortalViewer.Helpers
         {
             if (MapView == null)
                 return;
-            MapView.Rotation = 0;
+            MapView.SetRotationAsync(0);
         }
 
         public Task<bool> SetViewAsync(Geometry geometry)

@@ -1,4 +1,4 @@
-﻿<common:LayoutAwarePage
+﻿<common:LayoutAwarePage 
     x:Name="pageRoot"
     x:Class="ArcGISPortalViewer.View.MapPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -40,38 +40,40 @@
 				</core:EventTriggerBehavior>
 			</interactivity:Interaction.Behaviors>
 			<esri:MapView.Overlays>
-				<Grid esri:MapView.MapOverlayAnchor="{Binding AnchorMapPoint}" 
+                <esri:OverlayItemsControl>
+                    <Grid esri:MapView.ViewOverlayAnchor="{Binding AnchorMapPoint}" 
                       Visibility="{Binding IsOverlayVisible, Converter={StaticResource biConditionalConverter}}" 
                       VerticalAlignment="Top" 
                       HorizontalAlignment="Right">
-					<interactivity:Interaction.Behaviors>
-						<core:EventTriggerBehavior EventName="Tapped">
-							<core:InvokeCommandAction Command="{Binding OnPopupTappedCommand}" />
-						</core:EventTriggerBehavior>
-					</interactivity:Interaction.Behaviors>
-					<Grid.RowDefinitions>
-						<RowDefinition Height="Auto" />
-						<RowDefinition Height="Auto" />
-					</Grid.RowDefinitions>
-					<Grid Background="White">
-                        <StackPanel Orientation="Horizontal" Visibility="{Binding IsIdentifying, Converter={StaticResource biConditionalConverter}, ConverterParameter=reverse}">
-							<TextBlock FontSize="20" FontFamily="Segoe UI Symbol" Margin="5" FontWeight="SemiLight">
-								<TextBlock.Text>
-									<Binding Path="FeaturesFoundText"/>
-								</TextBlock.Text>
-							</TextBlock>
-							<TextBlock FontFamily="Segoe UI Symbol" FontSize="20" Text="" VerticalAlignment="Center" />
-						</StackPanel>
-                        <StackPanel Orientation="Horizontal" Visibility="{Binding IsIdentifying, Converter={StaticResource biConditionalConverter}}">
-							<ProgressRing IsActive="{Binding IsIdentifying}" Margin="10" Width="20" Height="20" />
-							<TextBlock Text="Identifying..." FontSize="18" FontFamily="Segoe UI Symbol" Margin="5" FontWeight="SemiLight" />
-						</StackPanel>
-					</Grid>
-					<Grid Grid.Row="1">
-						<Path Fill="White" Data="m 0,0 L 0,30, 30,0 0,0 z" />
-					</Grid>
-				</Grid>
-			</esri:MapView.Overlays>
+                        <interactivity:Interaction.Behaviors>
+                            <core:EventTriggerBehavior EventName="Tapped">
+                                <core:InvokeCommandAction Command="{Binding OnPopupTappedCommand}" />
+                            </core:EventTriggerBehavior>
+                        </interactivity:Interaction.Behaviors>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid Background="White">
+                            <StackPanel Orientation="Horizontal" Visibility="{Binding IsIdentifying, Converter={StaticResource biConditionalConverter}, ConverterParameter=reverse}">
+                                <TextBlock FontSize="20" FontFamily="Segoe UI Symbol" Margin="5" FontWeight="SemiLight">
+                                    <TextBlock.Text>
+                                        <Binding Path="FeaturesFoundText"/>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                                <TextBlock FontFamily="Segoe UI Symbol" FontSize="20" Text="" VerticalAlignment="Center" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Visibility="{Binding IsIdentifying, Converter={StaticResource biConditionalConverter}}">
+                                <ProgressRing IsActive="{Binding IsIdentifying}" Margin="10" Width="20" Height="20" />
+                                <TextBlock Text="Identifying..." FontSize="18" FontFamily="Segoe UI Symbol" Margin="5" FontWeight="SemiLight" />
+                            </StackPanel>
+                        </Grid>
+                        <Grid Grid.Row="1">
+                            <Path Fill="White" Data="m 0,0 L 0,30, 30,0 0,0 z" />
+                        </Grid>
+                    </Grid>
+                </esri:OverlayItemsControl>
+            </esri:MapView.Overlays>
 		</esri:MapView>
 
         
