@@ -1,4 +1,9 @@
-﻿// The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
+﻿// (c) Copyright ESRI.
+// This source is subject to the Microsoft Public License (Ms-PL).
+// Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
+// All other rights reserved
+
+// The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
 using ArcGISPortalViewer.Common;
 using Esri.ArcGISRuntime.Controls;
 using Esri.ArcGISRuntime.Geometry;
@@ -13,6 +18,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
+using System.Linq;
 
 namespace ArcGISPortalViewer.Controls
 {
@@ -148,6 +154,7 @@ namespace ArcGISPortalViewer.Controls
         private void ResetMeasure()
         {
             ResetDisplay();
+            ResetEditor();
         }
 
         private void ResetDisplay()
@@ -155,6 +162,10 @@ namespace ArcGISPortalViewer.Controls
             MeasureItemCollection.Clear();
             MeasureSummary.TotalLength = 0;
             MeasureSummary.Area = 0;
+        }
+
+        private void ResetEditor()
+        {
             if (Editor != null && Editor.IsActive)
             {
                 if (Editor.Cancel.CanExecute(null))
@@ -165,7 +176,7 @@ namespace ArcGISPortalViewer.Controls
         private async void ExecuteMeasure()
         {
             if (Editor == null) return;
-            ResetDisplay();
+            ResetEditor();
             OnMeasureStarted();
             Exception error = null;
             Polyline polyline = null;
@@ -190,13 +201,8 @@ namespace ArcGISPortalViewer.Controls
             }
             finally
             {
-                Polygon area = null;
-                if (polyline != null && polyline.Paths[0].Count > 2)
-                {
-                  area = new Polygon(polyline.Paths, polyline.SpatialReference);
-                }
+                OnMeasureCompleted(polyline, error, isCanceled);
                 polyline = null;
-                OnMeasureCompleted(area, error, isCanceled);
                 if (IsEnabled)
                     ExecuteMeasure();
             }
@@ -210,6 +216,15 @@ namespace ArcGISPortalViewer.Controls
         private void OnStatusReported(GeometryEditStatus status)
         {
             var polyline = status.NewGeometry as Polyline;
+
+            // Only reset display when first vertex is committed.
+            if (polyline != null && polyline.Parts != null && polyline.Parts.Count > 0)
+            {
+                var vertices = polyline.Parts[0].GetPoints();
+                if (vertices != null && vertices.Count() == 1)
+                    ResetDisplay();
+            }
+
             switch (status.GeometryEditAction)
             {
                 case GeometryEditAction.AddedVertex:
@@ -231,13 +246,13 @@ namespace ArcGISPortalViewer.Controls
                 default:
                 {
                     MeasureItemCollection.Clear();
-                    if (polyline != null)
+                    if (polyline != null && polyline.Parts != null)
                     {
-                        foreach (var p in polyline.Paths[0])
+                        foreach (var p in polyline.Parts[0].GetPoints())
                         {
                             MeasureItemCollection.Add(new MeasureItem()
                             {
-                                Location = new MapPoint(p, polyline.SpatialReference),
+                                Location = p,
                                 LinearUnitType = LinearUnitType,
                                 CoordinateFormat = CoordinateFormat
                             });
@@ -256,9 +271,9 @@ namespace ArcGISPortalViewer.Controls
         private void UpdateDisplay(Polyline polyline)
         {
             Polygon area = null;
-            if (polyline != null && polyline.Paths[0].Count > 2)
+            if (polyline != null && polyline.Parts[0].Count > 2)
             {
-                area = new Polygon(polyline.Paths, polyline.SpatialReference);
+                area = new Polygon(polyline.Parts, polyline.SpatialReference);
             }
             OnMeasureUpdated((Geometry)area ?? polyline);
             MapPoint previousPoint = null;
@@ -269,14 +284,14 @@ namespace ArcGISPortalViewer.Controls
                 if (previousPoint != null)
                 {
                     measureItem.Length = GeometryEngine.GeodesicLength(
-                        new Polyline(new Coordinate[] {previousPoint.Coordinate, measureItem.Location.Coordinate},
+                        new Polyline(new MapPoint[]{ previousPoint, measureItem.Location },
                             measureItem.Location.SpatialReference),
                         GeodeticCurveType.GreatElliptic);
                 }
                 previousPoint = measureItem.Location;
             }
 
-            MeasureSummary.TotalLength = polyline == null || polyline.Paths[0].Count < 2
+            MeasureSummary.TotalLength = polyline == null || polyline.Parts[0].Count < 2
                 ? 0
                 : GeometryEngine.GeodesicLength(polyline);
             MeasureSummary.Area = area == null
@@ -302,10 +317,10 @@ namespace ArcGISPortalViewer.Controls
                 MeasureUpdated(this, new MeasureUpdatedEventArgs(geometry));
         }
 
-        private void OnMeasureCompleted(Geometry area = null, Exception error = null, bool isCanceled = false)
+        private void OnMeasureCompleted(Geometry geometry = null, Exception error = null, bool isCanceled = false)
         {
             if (MeasureCompleted != null)
-                MeasureCompleted(this, new MeasureCompletedEventArgs(area, error, isCanceled));
+                MeasureCompleted(this, new MeasureCompletedEventArgs(geometry, error, isCanceled));
         }
 
         #endregion Events
@@ -335,9 +350,9 @@ namespace ArcGISPortalViewer.Controls
     public sealed class MeasureCompletedEventArgs : EventArgs
     {
         /// <summary>
-        /// Gets the resulting <see cref="Geometry"/> that represent the geodesic area covered during measure.
+        /// Gets the resulting <see cref="Geometry"/>.
         /// </summary>
-        public Geometry Area { get; private set; }
+        public Geometry Geometry { get; private set; }
 
         /// <summary>
         /// Gets the <see cref="Exception"/> that caused measure to fail.
@@ -349,9 +364,9 @@ namespace ArcGISPortalViewer.Controls
         /// </summary>
         public bool IsCanceled { get; private set; }
 
-        internal MeasureCompletedEventArgs(Geometry area = null, Exception error = null, bool isCanceled = false)
+        internal MeasureCompletedEventArgs(Geometry geometry = null, Exception error = null, bool isCanceled = false)
         {
-            Area = area;
+            Geometry = geometry;
             Error = error;
             IsCanceled = isCanceled;
         }
@@ -462,13 +477,13 @@ namespace ArcGISPortalViewer.Controls
             switch (coordinateFormat)
             {
                 case CoordinateFormat.DecimalDegrees:
-                    return CoordinateConversion.MapPointToDecimalDegrees(location, 5);
+                    return ConvertCoordinate.ToDecimalDegrees(location, 5);
                 case CoordinateFormat.DegreesDecimalMinutes:
-                    return CoordinateConversion.MapPointToDegreesDecimalMinutes(location, 3);
+                    return ConvertCoordinate.ToDegreesDecimalMinutes(location, 3);
                 case CoordinateFormat.Dms:
-                    return CoordinateConversion.MapPointToDegreesMinutesSeconds(location, 1);
+                    return ConvertCoordinate.ToDegreesMinutesSeconds(location, 1);
                 case CoordinateFormat.Mgrs:
-                    return CoordinateConversion.MapPointToMgrs(location, MgrsConversionMode.Automatic, 5, true, true);
+                    return ConvertCoordinate.ToMgrs(location, MgrsConversionMode.Automatic, 5, true, true);
             }
             return null;
         }

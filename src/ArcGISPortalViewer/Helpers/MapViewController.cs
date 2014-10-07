@@ -1,3 +1,8 @@
+// (c) Copyright ESRI.
+// This source is subject to the Microsoft Public License (Ms-PL).
+// Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
+// All other rights reserved
+
 using Windows.Foundation;
 using Esri.ArcGISRuntime.Controls;
 using Esri.ArcGISRuntime.Data;
@@ -27,7 +32,7 @@ namespace ArcGISPortalViewer.Helpers
         {
             if (MapView == null)
                 return;
-            MapView.Rotation = 0;
+            MapView.SetRotationAsync(0);
         }
 
         public Task<bool> SetViewAsync(Geometry geometry)

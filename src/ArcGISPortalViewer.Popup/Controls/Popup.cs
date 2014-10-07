@@ -1,4 +1,9 @@
-﻿using ArcGISPortalViewer.Popup.Converters;
+﻿// (c) Copyright ESRI.
+// This source is subject to the Microsoft Public License (Ms-PL).
+// Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
+// All other rights reserved
+
+using ArcGISPortalViewer.Popup.Converters;
 using ArcGISPortalViewer.Popup.Primitives.Charting;
 using Esri.ArcGISRuntime.WebMap;
 using System;
@@ -183,6 +188,7 @@ namespace ArcGISPortalViewer.Popup.Controls
                 }
                 if (displayFields == null)
                     return;
+                var attributes = Attributes as IDictionary<string, object>;
                 foreach (var item in displayFields)
                 {
                     var sp = new StackPanel();
@@ -206,7 +212,9 @@ namespace ArcGISPortalViewer.Popup.Controls
                             Source = this
                         });
                     }
-                    if (string.Equals("url", item.FieldName, StringComparison.OrdinalIgnoreCase))
+                    var useHyperlink = attributes != null && attributes.ContainsKey(item.FieldName) &&
+                        attributes[item.FieldName] is string && ((string)attributes[item.FieldName]).StartsWith("http");
+                    if (useHyperlink || string.Equals("url", item.FieldName, StringComparison.OrdinalIgnoreCase))
                     {
                         var hyperlink = new HyperlinkButton();
                         sp.Children.Add(hyperlink);

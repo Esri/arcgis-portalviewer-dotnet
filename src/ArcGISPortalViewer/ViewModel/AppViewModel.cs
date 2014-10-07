@@ -1,4 +1,9 @@
-﻿using System.Collections.Generic;
+﻿// (c) Copyright ESRI.
+// This source is subject to the Microsoft Public License (Ms-PL).
+// Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
+// All other rights reserved
+
+using System.Collections.Generic;
 using Windows.System;
 using Windows.UI.ViewManagement;
 using ArcGISPortalViewer.Common;
@@ -440,7 +445,7 @@ namespace ArcGISPortalViewer.ViewModel
                 App.AppRedirectUri = GetKeyValueFromResources("AppRedirectUri");
                 App.IsOrgOAuth2 = !string.IsNullOrEmpty(App.AppServerId) && !string.IsNullOrEmpty(App.AppRedirectUri);
 
-                // if username/password were persisted or anonymous access is enabled navigate to main page.                 
+                // if credentials were persisted or anonymous access is enabled navigate to main page.                 
                 if (App.SignInVM.IsCredentialsPersisted) // || SignInVM.IsAnonymousAccessEnabledAsync())
                 {
                     if (!(rootFrame.Content is MainPage))

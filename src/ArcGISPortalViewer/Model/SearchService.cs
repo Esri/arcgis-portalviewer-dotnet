@@ -1,4 +1,9 @@
-﻿using Esri.ArcGISRuntime.Portal;
+﻿// (c) Copyright ESRI.
+// This source is subject to the Microsoft Public License (Ms-PL).
+// Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
+// All other rights reserved
+
+using Esri.ArcGISRuntime.Portal;
 using ArcGISPortalViewer.Helpers;
 using System;
 using System.Collections.Generic;
@@ -12,7 +17,7 @@ namespace ArcGISPortalViewer.Model
     {
         public static SearchParameters CreateSearchParameters(string searchText, PortalQuery portalQuery, int startIndex = 1, int limit = 20, IList<string> favoriteItemIDs = null)
         {
-            string queryString = string.Format("{0} ({1})", searchText, "type:\"web map\" NOT \"web mapping application\"");            
+            string queryString = string.Format("{0} ({1})", searchText, "type:\"web map\" NOT type:\"web mapping application\"");            
             string sortField = "";
             QuerySortOrder sortOrder = QuerySortOrder.Descending;
 

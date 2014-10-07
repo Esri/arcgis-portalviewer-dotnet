@@ -1,4 +1,9 @@
-﻿using ArcGISPortalViewer.Controls;
+﻿// (c) Copyright ESRI.
+// This source is subject to the Microsoft Public License (Ms-PL).
+// Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
+// All other rights reserved
+
+using ArcGISPortalViewer.Controls;
 using ArcGISPortalViewer.Helpers;
 using Esri.ArcGISRuntime.Controls;
 using Esri.ArcGISRuntime.Data;
@@ -29,6 +34,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Geometry = Esri.ArcGISRuntime.Geometry.Geometry;
+using PointCollection = Esri.ArcGISRuntime.Geometry.PointCollection;
 
 namespace ArcGISPortalViewer.ViewModel
 {
@@ -41,7 +47,29 @@ namespace ArcGISPortalViewer.ViewModel
         }
         public LocatorFindResult Result { get; private set; }
         public int Index { get; private set; }
-        public string Title { get { return string.Format("{0}. {1}", Index, Result.Name); } }
+        public string Title { get { return string.Format("{0}. {1}", Index, GetAttributes(Result)); } }
+
+        private string GetAttributes(LocatorFindResult result)
+        {
+            if (result == null || !result.Feature.Attributes.Any())
+                return "";
+
+            var v = result.Feature.Attributes;
+            // use the result "name" if the PlaceName attribute is empty.
+            // Reason: when searching for exact addresses and street intersections the attribute fields might
+            // be empty; in particular we don't want to show an empty PlaceName.
+            var placeName = (string)v["PlaceName"];
+            if (string.IsNullOrEmpty(placeName))
+                return Result.Name;
+
+            // use the Placename, Type, City, and Country
+            var s = string.Format("{0}{1}{2}{3}",
+                    placeName,
+                    string.IsNullOrEmpty((string)v["Type"]) ? "" : ", " + ((string)v["Type"]),
+                    string.IsNullOrEmpty((string)v["City"]) ? "" : ", " + ((string)v["City"]),
+                    string.IsNullOrEmpty((string)v["Country"]) ? "" : ", " + ((string)v["Country"]));
+            return s;
+        }
     }
 
     public class MapViewModel : ViewModelBase
@@ -428,8 +456,11 @@ namespace ArcGISPortalViewer.ViewModel
                 WebMap = await WebMap.FromPortalItemAsync(PortalItem);
                 if (WebMap == null)
                     return null;
-
+                
                 WebMapVM = await WebMapViewModel.LoadAsync(WebMap, this.PortalItem.ArcGISPortal);
+                if (WebMapVM == null)
+                    return null;
+               
                 var errors = WebMapVM.LoadErrors.ToArray();
                 if (errors != null && errors.Any())
                 {
@@ -438,7 +469,7 @@ namespace ArcGISPortalViewer.ViewModel
                     if (errors.Count() == 1)
                     {
                         WebMapLayer webMapLayer = errors.First().Key;
-                        var layerName = webMapLayer.Title ?? webMapLayer.Id ?? webMapLayer.Type;
+                        var layerName = webMapLayer.Title ?? webMapLayer.Id ?? webMapLayer.LayerType.ToString();
                         title = string.Format("Unable to add the layer '{0}' in the map.", layerName);
                         message = errors.First().Value.Message;
                     }
@@ -448,7 +479,7 @@ namespace ArcGISPortalViewer.ViewModel
                         foreach (KeyValuePair<WebMapLayer, Exception> error in errors)
                         {
                             WebMapLayer webMapLayer = error.Key;
-                            var layerName = webMapLayer.Title ?? webMapLayer.Id ?? webMapLayer.Type;
+                            var layerName = webMapLayer.Title ?? webMapLayer.Id ?? webMapLayer.LayerType.ToString();
                             message += layerName + ":  " + error.Value.Message + Environment.NewLine;
                         }
                     }
@@ -463,12 +494,12 @@ namespace ArcGISPortalViewer.ViewModel
                 {
                     var webMapLayer = WebMap.OperationalLayers.FirstOrDefault(wml => wml.Id == featureLayer.ID);
                     if(webMapLayer != null && webMapLayer.PopupInfo != null && webMapLayer.PopupInfo.FieldInfos != null && webMapLayer.PopupInfo.FieldInfos.Any())
-                    {                                         
-                        var geodatabaseFeatureServiceTable = featureLayer.FeatureTable as GeodatabaseFeatureServiceTable;
-                        if(geodatabaseFeatureServiceTable != null && geodatabaseFeatureServiceTable.OutFields == null)
+                    {
+                        var serviceFeatureTable = featureLayer.FeatureTable as ServiceFeatureTable;
+                        if (serviceFeatureTable != null && serviceFeatureTable.OutFields == null)
                         {
-                            geodatabaseFeatureServiceTable.OutFields = new OutFields(webMapLayer.PopupInfo.FieldInfos.Where(f => f != null).Select(f => f.FieldName));
-                            geodatabaseFeatureServiceTable.RefreshFeatures(false);
+                            serviceFeatureTable.OutFields = new OutFields(webMapLayer.PopupInfo.FieldInfos.Where(f => f != null).Select(f => f.FieldName));
+                            serviceFeatureTable.RefreshFeatures(false);
                         }
                     }
                 }
@@ -500,7 +531,7 @@ namespace ArcGISPortalViewer.ViewModel
                 }
                 catch { }
                 if (baseWebmap != null)
-                    WebMapVM.BaseMap = baseWebmap.BaseMap;
+                    WebMapVM.Basemap = baseWebmap.Basemap;
             }
         }
 
@@ -511,6 +542,7 @@ namespace ArcGISPortalViewer.ViewModel
         {
             CreateSearchResultLayer();
             CreateMeasureResultsLayer();
+            CreateIdentifyResultsLayer();
         }
 
         /// <summary>
@@ -748,34 +780,63 @@ namespace ArcGISPortalViewer.ViewModel
                 SearchResultStatus = string.Format("Searching for '{0}'...", text.Trim());
                 var result = await geo.FindAsync(new OnlineLocatorFindParameters(text)
                 {
-                    MaxLocations = 50,
+                    MaxLocations = 25,                    
                     OutSpatialReference = WebMapVM.SpatialReference,
-                    Location = (MapPoint)GeometryEngine.NormalizeCentralMeridianOfGeometry(boundingBox.GetCenter()),
+                    SearchExtent = boundingBox,
+                    Location = (MapPoint)GeometryEngine.NormalizeCentralMeridian(boundingBox.GetCenter()),
                     Distance = GetDistance(boundingBox),
+                    OutFields = new List<string>() { "PlaceName", "Type", "City", "Country" }                    
                 }, cancellationToken);
-                int retries = 3;
-                while (result.Count == 0 && --retries > 0) //Try again with larger and larger extent
+
+                // if no results, try again with larger and larger extent
+                var retries = 3;
+                while (result.Count == 0 && --retries > 0)
                 {
                     if (cancellationToken.IsCancellationRequested)
                         return;
                     boundingBox = boundingBox.Expand(2);
                     result = await geo.FindAsync(new OnlineLocatorFindParameters(text)
                     {
-                        MaxLocations = 50,
+                        MaxLocations = 25,
                         OutSpatialReference = WebMapVM.SpatialReference,
-                        Location = (MapPoint)GeometryEngine.NormalizeCentralMeridianOfGeometry(boundingBox.GetCenter()),
+                        SearchExtent = boundingBox,
+                        Location = (MapPoint)GeometryEngine.NormalizeCentralMeridian(boundingBox.GetCenter()),
                         Distance = GetDistance(boundingBox),
+                        OutFields = new List<string>() { "PlaceName", "Type", "City", "Country"}
                     }, cancellationToken);
                 }
                 if (cancellationToken.IsCancellationRequested)
                     return;
-                if (result.Count == 0) //Try again unbounded
+
+                if (result.Count == 0) 
                 {
+                    // atfer trying to expand the bounding box several times and finding no results, 
+                    // let us try finding results without the spatial bound.
                     result = await geo.FindAsync(new OnlineLocatorFindParameters(text)
                     {
-                        MaxLocations = 50,
-                        OutSpatialReference = WebMapVM.SpatialReference
+                        MaxLocations = 25,
+                        OutSpatialReference = WebMapVM.SpatialReference,
+                        OutFields = new List<string>() { "PlaceName", "Type", "City", "Country"}
                     }, cancellationToken);
+
+                    if (result.Any())
+                    {
+                        // since the results are not bound by any spatial filter, let us show well known administrative 
+                        // places e.g. countries and cities, and filter out other results e.g. restaurents and business names.
+                        var typesToInclude = new List<string>()
+                        { "", "city", "community", "continent", "country", "county", "district", "locality", "municipality", "national capital", 
+                          "neighborhood", "other populated place", "state capital", "state or province", "territory", "village"};
+                        for (var i = result.Count - 1; i >= 0; --i)
+                        {
+                            // get the result type
+                            var resultType = ((string)result[i].Feature.Attributes["Type"]).Trim().ToLower();
+                            // if the result type exists in the inclusion list above, keep it in the list of results
+                            if (typesToInclude.Contains(resultType))
+                                continue;
+                            // otherwise, remove it from the list of results
+                            result.RemoveAt(i);
+                        }
+                    }
                 }
 
                 if (result.Count == 0)
@@ -875,7 +936,7 @@ namespace ArcGISPortalViewer.ViewModel
             // get the distance between the center of the current map extent and one of its corners
             if (extent != null && !extent.IsEmpty)
             {
-                var d = GeometryEngine.GeodesicLength(new Polyline(new Coordinate[] { extent.GetCenter().Coordinate, new Coordinate(extent.XMin, extent.YMin) },
+                var d = GeometryEngine.GeodesicLength(new Polyline(new PointCollection(extent.SpatialReference){ extent.GetCenter(), new MapPoint(extent.XMin, extent.YMin) },
                         extent.SpatialReference), GeodeticCurveType.GreatElliptic);
 
                 // to increase the chances of finding results make sure the smallest returned distance is 5 Kilometers.
@@ -935,16 +996,80 @@ namespace ArcGISPortalViewer.ViewModel
         {
             if (!(commandParameter is EventArgs) || m_MeasureLayer == null)
                 return;
-            m_MeasureLayer.Graphics.Clear();
-            measureHasItems = false;
             if (commandParameter is MeasureUpdatedEventArgs)
             {
-                measureHasItems = true;
+                m_MeasureLayer.Graphics.Clear();
                 var e = commandParameter as MeasureUpdatedEventArgs;
                 if (e.Area is Polygon)
-                    m_MeasureLayer.Graphics.Add(new Graphic() { Geometry = e.Area });
+                    m_MeasureLayer.Graphics.Add(new Graphic() { Geometry = e.Area, Symbol = measureAreaSymbol });
             }
+            else if (commandParameter is MeasureCompletedEventArgs)
+            {
+                m_MeasureLayer.Graphics.Clear();
+                var e = commandParameter as MeasureCompletedEventArgs;
+                if (e.Error == null && !e.IsCanceled)
+                {
+                    if (e.Geometry is Polyline)
+                    {
+                        var polyline = e.Geometry as Polyline;
+                        if (polyline.Parts != null && polyline.Parts.Count > 0)
+                        {
+                            var vertices = polyline.Parts[0];
+                            if (vertices != null && vertices.Count > 2)
+                            {
+                                var area = new Polygon(vertices, polyline.SpatialReference);
+                                m_MeasureLayer.Graphics.Add(new Graphic() { Geometry = area, Symbol = measureAreaSymbol });
+                            }
+                            m_MeasureLayer.Graphics.Add(new Graphic() { Geometry = polyline, Symbol = measureLineSymbol });
+                            int i = 0;
+                            if (vertices != null)
+                                foreach (var vertex in vertices)
+                                {
+                                    var mapPoint = vertex;
+                                    var graphic = new Graphic() { Geometry = mapPoint.EndPoint };
+                                    graphic.Symbol = GetVertexSymbol(++i);
+                                    m_MeasureLayer.Graphics.Add(graphic);
+                                }
+                        }
+                    }
+                }
+            }
+            measureHasItems = m_MeasureLayer.Graphics.Count > 0;
             base.RaisePropertyChanged("IsClearGraphicsVisible");
+        }
+
+        private FillSymbol _measureAreaSymbol;
+        private FillSymbol measureAreaSymbol
+        {
+            get
+            {
+                if (_measureAreaSymbol == null)
+                {
+                    _measureAreaSymbol = new SimpleFillSymbol()
+                      {
+                          Color = Color.FromArgb(50, 255, 255, 255),
+                          Outline = new SimpleLineSymbol() { Style = SimpleLineStyle.Dot, Width = 1 }
+                      };
+                }
+                return _measureAreaSymbol;
+            }
+        }
+        
+        private LineSymbol _measureLineSymbol;
+        private LineSymbol measureLineSymbol
+        {
+            get
+            {
+                if (_measureLineSymbol == null)
+                {
+                    _measureLineSymbol = new SimpleLineSymbol()
+                     {
+                         Color = Colors.CornflowerBlue,
+                         Width = 4
+                     };
+                }
+                return _measureLineSymbol;
+            }
         }
 
         private GraphicsLayer m_MeasureLayer;
@@ -959,19 +1084,31 @@ namespace ArcGISPortalViewer.ViewModel
                 m_MeasureLayer = new GraphicsLayer()
                 {
                     ID = "MeasureLayer",
-                    Renderer = new SimpleRenderer()
-                    {
-                        Symbol = new SimpleFillSymbol()
-                        {
-                            Color = Color.FromArgb(50, 255, 255, 255),
-                            Outline = new SimpleLineSymbol() { Style = SimpleLineStyle.Dot, Width = 1 }
-                        }
-                    }
                 };
             }
             AddGraphicsLayer(m_MeasureLayer);
         }
 
+        private Esri.ArcGISRuntime.Symbology.Symbol GetVertexSymbol(int index)
+        {
+            return new CompositeSymbol()
+                       {
+                           Symbols = new SymbolCollection(new Esri.ArcGISRuntime.Symbology.Symbol[]                        
+                            {
+                                new SimpleMarkerSymbol()
+                                {
+                                    Color = Colors.White, Size = 14,
+                                    Outline = new SimpleLineSymbol() {Width = 1.5, Color = Colors.CornflowerBlue},
+                                },
+                                new TextSymbol()
+                                {
+                                    Text =string.Format("{0}", index, System.Globalization.CultureInfo.InvariantCulture),
+                                    HorizontalTextAlignment = HorizontalTextAlignment.Center,
+                                    VerticalTextAlignment = VerticalTextAlignment.Middle
+                                }
+                            })
+                       };
+        }
         #endregion Measure Tool
 
 
@@ -1154,8 +1291,6 @@ namespace ArcGISPortalViewer.ViewModel
                     ShowDetailView = true;
                     SelectedItem = IdentifyItems.First();
                 }
-                if (!WebMapVM.Map.Layers.Contains(IdentifyLayer))
-                    AddGraphicsLayer(IdentifyLayer);
             }            
             finally
             {
@@ -1166,6 +1301,14 @@ namespace ArcGISPortalViewer.ViewModel
         #endregion Public Methods
 
         #region Private Methods
+
+        /// <summary>
+        /// Adds graphics layer to hold identify results.
+        /// </summary>
+        private void CreateIdentifyResultsLayer()
+        {
+            AddGraphicsLayer(IdentifyLayer);
+        }
 
         private void OnPopupTapped(object obj)
         {
@@ -1189,6 +1332,10 @@ namespace ArcGISPortalViewer.ViewModel
                 var popupItem = ((PopupItem)obj);
                 OnSelectedItem(popupItem);
                 var _ = SetViewAsync(popupItem.IdentifyFeature.Item.Feature.Geometry.Extent);
+            }
+            else if (obj is Viewpoint)
+            {
+                var _ = SetViewAsync(((Viewpoint)obj).TargetGeometry);
             }
             else if (obj is Esri.ArcGISRuntime.Geometry.Geometry)
             {
@@ -1255,7 +1402,7 @@ namespace ArcGISPortalViewer.ViewModel
             var selectionGraphic  = feature is GeodatabaseFeature ? ((GeodatabaseFeature)feature).AsGraphic() : new Graphic { Geometry = feature.Geometry };
             switch (selectionGraphic.Geometry.GeometryType)
             {
-                case GeometryType.MultiPoint:
+                case GeometryType.Multipoint:
                 case GeometryType.Point:
                     selectionGraphic.Symbol = _pointSelectionSymbol;
                     break;

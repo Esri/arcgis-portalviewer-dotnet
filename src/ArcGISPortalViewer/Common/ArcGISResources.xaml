@@ -54,10 +54,12 @@
                         <Border VerticalAlignment="Bottom" Background="#AA000000">
                             <StackPanel Margin="5">
                                 <TextBlock Text="{Binding Title}" FontWeight="Bold" FontSize="16"
-											TextTrimming="WordEllipsis"  
-											Foreground="{StaticResource ApplicationPageBackgroundThemeBrush}"/>
+											TextTrimming="WordEllipsis"
+                                           ToolTipService.ToolTip="{Binding Title}"
+                                           Foreground="{StaticResource ApplicationPageBackgroundThemeBrush}"/>
                                 <TextBlock Text="{Binding Snippet, Converter={StaticResource htmlStripper}}"
 											TextWrapping="Wrap" TextTrimming="WordEllipsis"
+                                           ToolTipService.ToolTip="{Binding Snippet}"
 											MaxHeight="50" Margin="0,0,10,0"
 											Foreground="{StaticResource ApplicationPageBackgroundThemeBrush}"/>
                             </StackPanel>
@@ -106,7 +108,7 @@
                             </Border.Background>
                         </Border>
                         <StackPanel VerticalAlignment="Bottom">
-                            <TextBlock Text="{Binding Title}" TextTrimming="WordEllipsis"
+                            <TextBlock Text="{Binding Title}" TextTrimming="WordEllipsis" ToolTipService.ToolTip="{Binding Title}"
 								   Style="{StaticResource TitleTextStyle}" Foreground="White"
 								   Height="25" Margin="15,0,15,15" />
                         </StackPanel>
