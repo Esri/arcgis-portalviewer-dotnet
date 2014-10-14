@@ -20,7 +20,6 @@
     <TargetFrameworkVersion />
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
-    <NuGetPackageImportStamp>bcd28cbd</NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -348,9 +347,6 @@
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
   <PropertyGroup>
     <SDKReferenceDirectoryRoot>c:\applications\output\winrt_sdk\;$(SDKReferenceDirectoryRoot)</SDKReferenceDirectoryRoot>
-  </PropertyGroup>
-  <PropertyGroup>
-    <PreBuildEvent>"$(SolutionDir).nuget\nuget.exe" restore "$(SolutionPath)"</PreBuildEvent>
   </PropertyGroup>
   <Import Project="..\packages\Esri.ArcGISRuntime.10.2.4.748\build\win81\Esri.ArcGISRuntime.targets" Condition="Exists('..\packages\Esri.ArcGISRuntime.10.2.4.748\build\win81\Esri.ArcGISRuntime.targets')" />
   <Import Project="..\packages\Esri.ArcGISRuntime.Toolkit.10.2.4.748\build\win81\Esri.ArcGISRuntime.Toolkit.targets" Condition="Exists('..\packages\Esri.ArcGISRuntime.Toolkit.10.2.4.748\build\win81\Esri.ArcGISRuntime.Toolkit.targets')" />
