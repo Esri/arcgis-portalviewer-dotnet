@@ -1014,8 +1014,8 @@ namespace ArcGISPortalViewer.ViewModel
                         var polyline = e.Geometry as Polyline;
                         if (polyline.Parts != null && polyline.Parts.Count > 0)
                         {
-                            var vertices = polyline.Parts[0];
-                            if (vertices != null && vertices.Count > 2)
+                            var vertices = polyline.Parts[0].GetPoints();
+                            if (vertices != null && vertices.Count() > 2)
                             {
                                 var area = new Polygon(vertices, polyline.SpatialReference);
                                 m_MeasureLayer.Graphics.Add(new Graphic() { Geometry = area, Symbol = measureAreaSymbol });
@@ -1026,7 +1026,7 @@ namespace ArcGISPortalViewer.ViewModel
                                 foreach (var vertex in vertices)
                                 {
                                     var mapPoint = vertex;
-                                    var graphic = new Graphic() { Geometry = mapPoint.EndPoint };
+                                    var graphic = new Graphic() { Geometry = mapPoint };
                                     graphic.Symbol = GetVertexSymbol(++i);
                                     m_MeasureLayer.Graphics.Add(graphic);
                                 }
