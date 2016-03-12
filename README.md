@@ -1,6 +1,6 @@
 # arcgis-portalviewer-dotnet
 
-I have ported the Esri ArcGIS Portal Viewer to UWP app. It cannot be published at this point into the Windows Store but the app can be side loaded to any Windows 10 device. Instead of the default ArcGIS Runtime Toolkit from Esri please use this one: 
+This is the Esri ArcGIS Portal Viewer ported into a UWP app. It cannot be published into the Microsoft Windows Store due to the ArcGIS Runtime for .NET not fully supporting UWP at this stage which is to happen in the ArcGIS Quartz release. The app package can be side loaded to any Windows 10 device though. Instead of the default ArcGIS Runtime Toolkit from Esri please use this one: 
 https://github.com/dimesv/arcgis-toolkit-dotnet
 
 Only the UWP edition of the Toolkit is needed by the Portal Viewer sample app.
