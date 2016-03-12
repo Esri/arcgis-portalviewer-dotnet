@@ -22,9 +22,9 @@ namespace ArcGISPortalViewer.Helpers
     public class IncremetalLoadingCollection : ObservableCollection<object>, ISupportIncrementalLoading
     {
         public delegate Task<IEnumerable<object>> getMore(uint count);
-        private getMore GetMoreAsync;        
+        private getMore GetMoreAsync;
         public event EventHandler<bool> IsLoadingDataEventHandler;
-        public string Title {get; set; }
+        public string Title { get; set; }
         private uint resultcount = 0;
 
         private bool _isEmpty = true;
@@ -47,7 +47,7 @@ namespace ArcGISPortalViewer.Helpers
                     NotifyPropertyChanged();
                 }
             }
-        }        
+        }
 
         public IncremetalLoadingCollection(getMore getMoreAsync)
         {
@@ -68,7 +68,7 @@ namespace ArcGISPortalViewer.Helpers
                 IsLoadingDataEventHandler(this, true);
 
             List<object> resList = null;
-            var result = await GetMoreAsync(count);            
+            var result = await GetMoreAsync(count);
             if (result != null)
             {
                 resList = new List<object>(result);
@@ -76,17 +76,17 @@ namespace ArcGISPortalViewer.Helpers
                 {
                     this.Add(item);
                     resultcount++;
-                }                
+                }
             }
 
-            if (resList == null || resList.Count <= 0)           
+            if (resList == null || resList.Count <= 0)
                 HasMoreItems = false;
-            
+
             if (IsLoadingDataEventHandler != null)
                 IsLoadingDataEventHandler(this, false);
 
-            IsEmpty = this.Count() <= 0 && !HasMoreItems;           
-            return new LoadMoreItemsResult() { Count = resultcount };            
+            IsEmpty = this.Count() <= 0 && !HasMoreItems;
+            return new LoadMoreItemsResult() { Count = resultcount };
         }
 
         public void Reset()
@@ -97,7 +97,7 @@ namespace ArcGISPortalViewer.Helpers
         }
 
         private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
-        {           
+        {
             OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
         }
     }

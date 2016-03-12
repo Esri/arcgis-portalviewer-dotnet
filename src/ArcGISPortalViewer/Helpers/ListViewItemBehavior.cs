@@ -83,7 +83,7 @@ namespace ArcGISPortalViewer.Helpers
             ListView listView = sender as ListView;
             try
             {
-                if (listView != null && e.AddedItems.Count()>0)
+                if (listView != null && e.AddedItems.Count() > 0)
                     listView.ScrollIntoView(e.AddedItems[0]);
             }
             catch (Exception ex)

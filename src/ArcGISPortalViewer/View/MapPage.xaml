@@ -18,28 +18,22 @@
     xmlns:popup="using:ArcGISPortalViewer.Popup.Controls"
     mc:Ignorable="d">
 
-	<Page.Resources>
-		<viewModel:MapViewModel x:Key="MapVM" />
+    <Page.Resources>
+        <viewModel:MapViewModel x:Key="MapVM" />
         <common:ReverseOrderConverter x:Key="ReverseOrderConverter" />
-		<Style x:Key="ListViewStyle" TargetType="ListView">
-			<Setter Property="helpers:ListViewBehavior.IsItemBroughtIntoViewWhenSelected" Value="true"/>
-		</Style>
-	</Page.Resources>
+        <Style x:Key="ListViewStyle" TargetType="ListView">
+            <Setter Property="helpers:ListViewBehavior.IsItemBroughtIntoViewWhenSelected" Value="true"/>
+        </Style>
+    </Page.Resources>
 
-	<Grid Style="{StaticResource LayoutRootStyle}"
-          DataContext="{StaticResource MapVM}">
-
-		<esri:MapView x:Name="mapView"
-                      Map="{Binding WebMapVM.Map}" 
-                      helpers:MapViewController.MapView="{Binding Controller}" 
-                      LocationDisplay="{Binding LocationDisplay}"
-                      Editor="{Binding Editor}">
-			<interactivity:Interaction.Behaviors>
-				<core:EventTriggerBehavior EventName="MapViewTapped">
-					<core:InvokeCommandAction Command="{Binding OnMapTappedCommand}"/>
-				</core:EventTriggerBehavior>
-			</interactivity:Interaction.Behaviors>
-			<esri:MapView.Overlays>
+    <Grid Style="{StaticResource LayoutRootStyle}" DataContext="{StaticResource MapVM}">
+        <esri:MapView x:Name="mapView" Map="{Binding WebMapVM.Map}" helpers:MapViewController.MapView="{Binding Controller}" LocationDisplay="{Binding LocationDisplay}" Editor="{Binding Editor}">
+            <interactivity:Interaction.Behaviors>
+                <core:EventTriggerBehavior EventName="MapViewTapped">
+                    <core:InvokeCommandAction Command="{Binding OnMapTappedCommand}"/>
+                </core:EventTriggerBehavior>
+            </interactivity:Interaction.Behaviors>
+            <esri:MapView.Overlays>
                 <esri:OverlayItemsControl>
                     <Grid esri:MapView.ViewOverlayAnchor="{Binding AnchorMapPoint}" 
                       Visibility="{Binding IsOverlayVisible, Converter={StaticResource biConditionalConverter}}" 
@@ -74,15 +68,14 @@
                     </Grid>
                 </esri:OverlayItemsControl>
             </esri:MapView.Overlays>
-		</esri:MapView>
+        </esri:MapView>
 
-        
         <!--Attribution Control-->
         <Grid Margin="0,0,20,23" Opacity=".5"
               VerticalAlignment="Bottom" 
               HorizontalAlignment="Right"
               >
-			<toolkit:Attribution 
+            <toolkit:Attribution 
 				IsHitTestVisible="True"
                 Layers="{Binding ElementName=mapView, Path=Map.Layers}"                              
                 FontSize="12"
@@ -90,210 +83,210 @@
                 FontFamily="Segoe UI Light" 
                 Margin="0"
 				Background="#99FFFFFF">
-				<toolkit:Attribution.Template>
-					<ControlTemplate TargetType="toolkit:Attribution">
-						<ToggleButton Background="{TemplateBinding Background}" Content="{Binding Items, Mode=OneWay, RelativeSource={RelativeSource Mode=TemplatedParent}}">
-							<ToggleButton.Template>
-								<ControlTemplate>
-									<Grid Background="{TemplateBinding Background}"
+                <toolkit:Attribution.Template>
+                    <ControlTemplate TargetType="toolkit:Attribution">
+                        <ToggleButton Background="{TemplateBinding Background}" Content="{Binding Items, Mode=OneWay, RelativeSource={RelativeSource Mode=TemplatedParent}}">
+                            <ToggleButton.Template>
+                                <ControlTemplate>
+                                    <Grid Background="{TemplateBinding Background}"
 										  >
-										<Grid.Resources>
-											<common:StringJoinConverter x:Key="joinConverter" />
-										</Grid.Resources>
-										<VisualStateManager.VisualStateGroups>
-											<VisualStateGroup x:Name="CommonStates">
-												<VisualState x:Name="Normal"/>
-												<VisualState x:Name="PointerOver"/>
-												<VisualState x:Name="CheckedPointerOver">
-													<Storyboard>
-														<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="TextWrapping" Storyboard.TargetName="tb">
-															<DiscreteObjectKeyFrame KeyTime="0">
-																<DiscreteObjectKeyFrame.Value>
-																	<TextWrapping>Wrap</TextWrapping>
-																</DiscreteObjectKeyFrame.Value>
-															</DiscreteObjectKeyFrame>
-														</ObjectAnimationUsingKeyFrames>
-													</Storyboard>
-												</VisualState>
-												<VisualState x:Name="Checked">
-													<Storyboard>
-														<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="TextWrapping" Storyboard.TargetName="tb">
-															<DiscreteObjectKeyFrame KeyTime="0">
-																<DiscreteObjectKeyFrame.Value>
-																	<TextWrapping>Wrap</TextWrapping>
-																</DiscreteObjectKeyFrame.Value>
-															</DiscreteObjectKeyFrame>
-														</ObjectAnimationUsingKeyFrames>
-													</Storyboard>
-												</VisualState>
-											</VisualStateGroup>
-										</VisualStateManager.VisualStateGroups>
-										<TextBlock x:Name="tb" Margin="10"
+                                        <Grid.Resources>
+                                            <common:StringJoinConverter x:Key="joinConverter" />
+                                        </Grid.Resources>
+                                        <VisualStateManager.VisualStateGroups>
+                                            <VisualStateGroup x:Name="CommonStates">
+                                                <VisualState x:Name="Normal"/>
+                                                <VisualState x:Name="PointerOver"/>
+                                                <VisualState x:Name="CheckedPointerOver">
+                                                    <Storyboard>
+                                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="TextWrapping" Storyboard.TargetName="tb">
+                                                            <DiscreteObjectKeyFrame KeyTime="0">
+                                                                <DiscreteObjectKeyFrame.Value>
+                                                                    <TextWrapping>Wrap</TextWrapping>
+                                                                </DiscreteObjectKeyFrame.Value>
+                                                            </DiscreteObjectKeyFrame>
+                                                        </ObjectAnimationUsingKeyFrames>
+                                                    </Storyboard>
+                                                </VisualState>
+                                                <VisualState x:Name="Checked">
+                                                    <Storyboard>
+                                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="TextWrapping" Storyboard.TargetName="tb">
+                                                            <DiscreteObjectKeyFrame KeyTime="0">
+                                                                <DiscreteObjectKeyFrame.Value>
+                                                                    <TextWrapping>Wrap</TextWrapping>
+                                                                </DiscreteObjectKeyFrame.Value>
+                                                            </DiscreteObjectKeyFrame>
+                                                        </ObjectAnimationUsingKeyFrames>
+                                                    </Storyboard>
+                                                </VisualState>
+                                            </VisualStateGroup>
+                                        </VisualStateManager.VisualStateGroups>
+                                        <TextBlock x:Name="tb" Margin="10"
 											Text="{Binding Content, Converter={StaticResource joinConverter}, Mode=OneWay, RelativeSource={RelativeSource Mode=TemplatedParent}}"
 										    TextTrimming="CharacterEllipsis"
 											TextWrapping="NoWrap"></TextBlock>
-										
-									</Grid>
-								</ControlTemplate>
-							</ToggleButton.Template>
-						</ToggleButton>
-					</ControlTemplate>
-				</toolkit:Attribution.Template>
-			</toolkit:Attribution>
-		</Grid>
+
+                                    </Grid>
+                                </ControlTemplate>
+                            </ToggleButton.Template>
+                        </ToggleButton>
+                    </ControlTemplate>
+                </toolkit:Attribution.Template>
+            </toolkit:Attribution>
+        </Grid>
 
         <!--Progress Ring-->
-		<ProgressRing IsActive="{Binding IsLoadingWebMap}" IsHitTestVisible="False"
+        <ProgressRing IsActive="{Binding IsLoadingWebMap}" IsHitTestVisible="False"
 					  HorizontalAlignment="Center" VerticalAlignment="Center"
 					  Width="66" Height="66" />
 
         <!--Side Panel-->
-		<controls:CollapsibleTab Name="collapsibleTab" IsOpen="{Binding IsSidePaneOpen, Mode=TwoWay}">
-			<interactivity:Interaction.Behaviors>
-				<core:EventTriggerBehavior EventName="Opened">
-					<core:InvokeCommandAction Command="{Binding OnCollapsibleTabOpenedCommand}" CommandParameter="{Binding ElementName=collapsibleTab, Path=Width}" />
-				</core:EventTriggerBehavior>
-			</interactivity:Interaction.Behaviors>
-			<controls:CollapsibleTab.Tabs>
-                
+        <controls:CollapsibleTab x:Name="collapsibleTab" IsOpen="{Binding IsSidePaneOpen, Mode=TwoWay}">
+            <interactivity:Interaction.Behaviors>
+                <core:EventTriggerBehavior EventName="Opened">
+                    <core:InvokeCommandAction Command="{Binding OnCollapsibleTabOpenedCommand}" CommandParameter="{Binding ElementName=collapsibleTab, Path=Width}" />
+                </core:EventTriggerBehavior>
+            </interactivity:Interaction.Behaviors>
+            <controls:CollapsibleTab.Tabs>
+
                 <!--Layers Tab-->
-				<controls:TabItem x:Name="layerTab" Header="LAYERS" Icon="ms-appx:///Assets/Icons/Layers.png"          
+                <controls:TabItem x:Name="layerTab" Header="LAYERS" Icon="ms-appx:///Assets/Icons/Layers.png"          
                                     Visibility="{Binding HasOperationalLayers, Converter={StaticResource biConditionalConverter}, Source={StaticResource MapVM}}"
 				                    IsCurrentItem="True">
-					<controls:LayerListControl Layers="{Binding OperationalLayers, Converter={StaticResource ReverseOrderConverter}}" />
-				</controls:TabItem>
-                
+                    <controls:LayerListControl Layers="{Binding OperationalLayers, Converter={StaticResource ReverseOrderConverter}}" />
+                </controls:TabItem>
+
                 <!--Legend Tab-->
-				<controls:TabItem Header="LEGEND" Icon="ms-appx:///Assets/Icons/Legend.png" 
+                <controls:TabItem Header="LEGEND" Icon="ms-appx:///Assets/Icons/Legend.png" 
                                   Visibility="{Binding HasOperationalLayers, Converter={StaticResource biConditionalConverter}, Source={StaticResource MapVM}}">
-					<Grid>
-						<Grid.RowDefinitions>
-							<RowDefinition Height="Auto"/>
-							<RowDefinition Height="*"/>
-						</Grid.RowDefinitions>
-						<TextBlock Text="Legend" Style="{StaticResource PageSubheaderTextStyle}"
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="Legend" Style="{StaticResource PageSubheaderTextStyle}"
 		                    Margin="0,0,0,10" />
 
-						<ScrollViewer Grid.Row="1" Margin="0,0,-20,0" Padding="0,0,20,0" ZoomMode="Disabled" HorizontalScrollMode="Disabled">
-							<toolkit:Legend Layers="{Binding OperationalLayers}" ReverseLayersOrder="True" />
-						</ScrollViewer>
-					</Grid>
-				</controls:TabItem>
-				<!--Search Tab-->
-				<controls:TabItem Header="SEARCH" Icon="ms-appx:///Assets/Icons/Search.png">
-					<Grid>
-						<Grid.RowDefinitions>
-							<RowDefinition Height="Auto" />
-							<RowDefinition Height="*" />
-						</Grid.RowDefinitions>
+                        <ScrollViewer Grid.Row="1" Margin="0,0,-20,0" Padding="0,0,20,0" ZoomMode="Disabled" HorizontalScrollMode="Disabled">
+                            <toolkit:Legend Layers="{Binding OperationalLayers}" ReverseLayersOrder="True" />
+                        </ScrollViewer>
+                    </Grid>
+                </controls:TabItem>
+                <!--Search Tab-->
+                <controls:TabItem Header="SEARCH" Icon="ms-appx:///Assets/Icons/Search.png">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
                         <SearchBox x:Name="SearchBox" Grid.Row="0" HorizontalAlignment="Center" Height="32" Width="270" PlaceholderText="Find address or place"
                                    FocusOnKeyboardInput="True" SearchHistoryContext="locations" Loaded="SearchBox_OnLoaded" KeyUp="SearchBox_OnKeyUp">
-							<interactivity:Interaction.Behaviors>
-								<core:EventTriggerBehavior EventName="QuerySubmitted">
-									<core:InvokeCommandAction Command="{Binding OnQuerySubmittedCommand}"/>
-								</core:EventTriggerBehavior>
-							</interactivity:Interaction.Behaviors>
-						</SearchBox>
-						<Grid Grid.Row="1" VerticalAlignment="Top">
-							<Grid.RowDefinitions>
-								<RowDefinition Height="Auto" />
-								<RowDefinition Height="*" />
-							</Grid.RowDefinitions>
-							<StackPanel Orientation="Horizontal" Grid.Row="0">
-								<TextBlock x:Name="status" Text="{Binding SearchResultStatus}" Style="{StaticResource CaptionTextStyle}" Padding="6,0,0,0"  />
-							</StackPanel>
-							<ListView x:Name="searchResultListView" AutomationProperties.AutomationId="ResultListView" AutomationProperties.Name="Search Results" Grid.Row="1"
+                            <interactivity:Interaction.Behaviors>
+                                <core:EventTriggerBehavior EventName="QuerySubmitted">
+                                    <core:InvokeCommandAction Command="{Binding OnQuerySubmittedCommand}"/>
+                                </core:EventTriggerBehavior>
+                            </interactivity:Interaction.Behaviors>
+                        </SearchBox>
+                        <Grid Grid.Row="1" VerticalAlignment="Top">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <StackPanel Orientation="Horizontal" Grid.Row="0">
+                                <TextBlock x:Name="status" Text="{Binding SearchResultStatus}" Style="{StaticResource CaptionTextStyle}" Padding="6,0,0,0"  />
+                            </StackPanel>
+                            <ListView x:Name="searchResultListView" AutomationProperties.AutomationId="ResultListView" AutomationProperties.Name="Search Results" Grid.Row="1"
                                           Margin="0,10,-20,0" Padding="0,0,3,0" ItemsSource="{Binding Locations}" SelectionMode="Single" IsSwipeEnabled="false"
                                           SelectedItem="{Binding SearchResultSelectedItem, Mode=TwoWay}" ScrollViewer.ZoomMode="Disabled" ScrollViewer.VerticalScrollMode="Enabled" 
                                           ScrollViewer.BringIntoViewOnFocusChange="True" Style="{StaticResource ListViewStyle}">
-								<ListViewItem ></ListViewItem>
-								<ListView.ItemTemplate>
-									<DataTemplate>
-										<TextBlock Text="{Binding Title}" TextWrapping="Wrap" FontSize="16" FontWeight="SemiLight"
+                                <ListViewItem ></ListViewItem>
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Title}" TextWrapping="Wrap" FontSize="16" FontWeight="SemiLight"
                                                        HorizontalAlignment="Stretch" Padding="10,12,12,12"/>
-									</DataTemplate>
-								</ListView.ItemTemplate>
-							</ListView>
-							<ProgressRing HorizontalAlignment="Center" VerticalAlignment="Top" Grid.Row="1" IsActive="{Binding IsLoadingSearchResults}"
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                            <ProgressRing HorizontalAlignment="Center" VerticalAlignment="Top" Grid.Row="1" IsActive="{Binding IsLoadingSearchResults}"
 							  Margin="20" Width="66" Height="66" x:Name="progressRingSearch" />
-						</Grid>
-					</Grid>
-				</controls:TabItem>
-                
-				<!-- Measure Tab -->
-				<controls:TabItem Header="MEASURE"
+                        </Grid>
+                    </Grid>
+                </controls:TabItem>
+
+                <!-- Measure Tab -->
+                <controls:TabItem Header="MEASURE"
                                   Icon="ms-appx:///Assets/Icons/Measure.png"
                                   ShowCloseButton="false"
                                   Visibility="Visible"
                                   IsCurrentItem="{Binding IsMeasureOpened, Mode=TwoWay, Source={StaticResource MapVM}}">
-					<controls:MeasureDisplayControl Editor="{Binding Editor}"
+                    <controls:MeasureDisplayControl Editor="{Binding Editor}"
                                                     IsMeasureEnabled="{Binding IsMeasureOpened}"
                                                     LinearUnitType="{Binding AppVM.LinearUnitType, Source={StaticResource Locator}}"
                                                     CoordinateFormat="{Binding  AppVM.CoordinateFormat, Source={StaticResource Locator}}">
-						<interactivity:Interaction.Behaviors>
-							<core:EventTriggerBehavior EventName="MeasureStarted">
-								<core:InvokeCommandAction Command="{Binding UpdateMeasureArea}" />
-							</core:EventTriggerBehavior>
-							<core:EventTriggerBehavior EventName="MeasureUpdated">
-								<core:InvokeCommandAction Command="{Binding UpdateMeasureArea}" />
-							</core:EventTriggerBehavior>
-							<core:EventTriggerBehavior EventName="MeasureCompleted">
-								<core:InvokeCommandAction Command="{Binding UpdateMeasureArea}" />
-							</core:EventTriggerBehavior>
-						</interactivity:Interaction.Behaviors>
-					</controls:MeasureDisplayControl>
-				</controls:TabItem>
-                
-				<!--Identify Tab-->
-				<controls:TabItem                   
+                        <interactivity:Interaction.Behaviors>
+                            <core:EventTriggerBehavior EventName="MeasureStarted">
+                                <core:InvokeCommandAction Command="{Binding UpdateMeasureArea}" />
+                            </core:EventTriggerBehavior>
+                            <core:EventTriggerBehavior EventName="MeasureUpdated">
+                                <core:InvokeCommandAction Command="{Binding UpdateMeasureArea}" />
+                            </core:EventTriggerBehavior>
+                            <core:EventTriggerBehavior EventName="MeasureCompleted">
+                                <core:InvokeCommandAction Command="{Binding UpdateMeasureArea}" />
+                            </core:EventTriggerBehavior>
+                        </interactivity:Interaction.Behaviors>
+                    </controls:MeasureDisplayControl>
+                </controls:TabItem>
+
+                <!--Identify Tab-->
+                <controls:TabItem                   
                                   Header="Identify" Icon="/Assets/Icons/Identify.png" 
                                   ShowCloseButton="True"
                                   Visibility="{Binding IsIdentifyPanelEnabled, Converter={StaticResource biConditionalConverter}, 
                                     Mode=TwoWay, Source={StaticResource MapVM}}"
                                   IsCurrentItem="{Binding OpenIdentifyPanel, Mode=TwoWay, Source={StaticResource MapVM}}" >
-					<controls:IdentifyResultsControl
+                    <controls:IdentifyResultsControl
                         ItemsSource="{Binding IdentifyItems}"
                         SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
                         ShowDetailView="{Binding ShowDetailView}"
                         OnSelectedItemClickedCommand="{Binding OnSelectedItemCommand}"
                         OnBackClickedCommand="{Binding OnBackClickCommand}"
                         OnSetViewClickedCommand="{Binding OnSetViewCommand}">
-					</controls:IdentifyResultsControl>
-				</controls:TabItem>
-			</controls:CollapsibleTab.Tabs>
-		</controls:CollapsibleTab>
+                    </controls:IdentifyResultsControl>
+                </controls:TabItem>
+            </controls:CollapsibleTab.Tabs>
+        </controls:CollapsibleTab>
 
-	</Grid>
-    
+    </Grid>
+
     <!--Top AppBar-->
-	<common:LayoutAwarePage.TopAppBar>
-		<AppBar x:Name="topAppBar" IsHoldingEnabled="False" 
+    <common:LayoutAwarePage.TopAppBar>
+        <AppBar x:Name="topAppBar" IsHoldingEnabled="False" 
                 Background="{StaticResource ApplicationPageBackgroundThemeBrush}"                
                 IsOpen="{Binding IsAppBarOpen, Mode=TwoWay, Source={StaticResource MapVM}}" >
-			<!-- Back button and page title -->
-			<Grid  Margin="0,30,0,0"
+            <!-- Back button and page title -->
+            <Grid  Margin="0,30,0,0"
                          DataContext="{StaticResource MapVM}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-				<Button Style="{StaticResource BackButtonStyle}" VerticalAlignment="Center" 
+                <Button Style="{StaticResource BackButtonStyle}" VerticalAlignment="Center" 
 						Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" />
-				<TextBlock x:Name="PageTitle" Text="{Binding PortalItem.Title}" Grid.Column="1"
+                <TextBlock x:Name="PageTitle" Text="{Binding PortalItem.Title}" Grid.Column="1"
                         Style="{StaticResource PageHeaderTextStyle}" TextTrimming="WordEllipsis" ToolTipService.ToolTip="{Binding PortalItem.Title}" />
-			</Grid>
-		</AppBar>
-	</common:LayoutAwarePage.TopAppBar>
-    
+            </Grid>
+        </AppBar>
+    </common:LayoutAwarePage.TopAppBar>
+
     <!--Bottom AppBar-->
-	<common:LayoutAwarePage.BottomAppBar>
-		<AppBar IsOpen="{Binding IsAppBarOpen, Mode=TwoWay, Source={StaticResource MapVM}}">
-			<Grid DataContext="{StaticResource MapVM}">
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition />
-					<ColumnDefinition Width="Auto" />
-				</Grid.ColumnDefinitions>
-                <StackPanel Orientation="Horizontal">                    
+    <common:LayoutAwarePage.BottomAppBar>
+        <AppBar IsOpen="{Binding IsAppBarOpen, Mode=TwoWay, Source={StaticResource MapVM}}">
+            <Grid DataContext="{StaticResource MapVM}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal">
                     <controls:LocationDisplayToggle LocationDisplay="{Binding LocationDisplay}">
                         <interactivity:Interaction.Behaviors>
                             <core:EventTriggerBehavior EventName="AutoPanModeChanged">
@@ -313,9 +306,9 @@
                             <BitmapIcon UriSource="ms-appx:///Assets/Icons/location_compass.png" Width="32" Height="32"/>
                         </controls:LocationDisplayToggle.CompassIcon>
                     </controls:LocationDisplayToggle>
-				</StackPanel>
-				<StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                    
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+
                     <!--Clear Map Graphics-->
                     <Button  x:Name="ClearMapButton"
                              Style="{StaticResource ClearMapButtonStyle}"
@@ -341,38 +334,38 @@
                             </Flyout>
 
                         </AppBarButton.Flyout>
-                    </AppBarButton>                  
-                    
+                    </AppBarButton>
+
                     <!--Basemaps-->
                     <AppBarButton Label="Basemap" Visibility="{Binding HasOperationalLayers, Converter={StaticResource biConditionalConverter}}">
-						<AppBarButton.Flyout>
-							<Flyout>
-								<Grid>
-									<controls:BasemapPicker x:Name="basemapPicker" 
+                        <AppBarButton.Flyout>
+                            <Flyout>
+                                <Grid>
+                                    <controls:BasemapPicker x:Name="basemapPicker" 
                                         ArcGISPortal="{Binding PortalItem.ArcGISPortal}" >
-										<interactivity:Interaction.Behaviors>
-											<core:EventTriggerBehavior EventName="ItemClick">
-												<core:InvokeCommandAction Command="{Binding OnBasemapPickedCommand}"/>
-											</core:EventTriggerBehavior>
-										</interactivity:Interaction.Behaviors>
-									</controls:BasemapPicker>
-									<ProgressRing IsActive="{Binding IsLoadingBasemaps, ElementName=basemapPicker}" IsHitTestVisible="False"
+                                        <interactivity:Interaction.Behaviors>
+                                            <core:EventTriggerBehavior EventName="ItemClick">
+                                                <core:InvokeCommandAction Command="{Binding OnBasemapPickedCommand}"/>
+                                            </core:EventTriggerBehavior>
+                                        </interactivity:Interaction.Behaviors>
+                                    </controls:BasemapPicker>
+                                    <ProgressRing IsActive="{Binding IsLoadingBasemaps, ElementName=basemapPicker}" IsHitTestVisible="False"
 					                  HorizontalAlignment="Center" VerticalAlignment="Center"
 					                  Width="66" Height="66" />
-								</Grid>
-							</Flyout>
-						</AppBarButton.Flyout>
-						<AppBarButton.Icon>
-							<BitmapIcon UriSource="ms-appx:///Assets/Icons/basemaps.png" Width="22" Height="22"/>
-						</AppBarButton.Icon>
-					</AppBarButton>
-                    
+                                </Grid>
+                            </Flyout>
+                        </AppBarButton.Flyout>
+                        <AppBarButton.Icon>
+                            <BitmapIcon UriSource="ms-appx:///Assets/Icons/basemaps.png" Width="22" Height="22"/>
+                        </AppBarButton.Icon>
+                    </AppBarButton>
+
                     <!--Full Extent-->
-					<Button x:Name="FullExtentButton" Style="{StaticResource StartExtentAppBarButtonStyle}"
+                    <Button x:Name="FullExtentButton" Style="{StaticResource StartExtentAppBarButtonStyle}"
                             Command="{Binding OnSetViewCommand}"
                             CommandParameter="{Binding WebMapVM.Map.InitialViewpoint}" />
-				</StackPanel>
-			</Grid>
-		</AppBar>
-	</common:LayoutAwarePage.BottomAppBar>
+                </StackPanel>
+            </Grid>
+        </AppBar>
+    </common:LayoutAwarePage.BottomAppBar>
 </common:LayoutAwarePage>

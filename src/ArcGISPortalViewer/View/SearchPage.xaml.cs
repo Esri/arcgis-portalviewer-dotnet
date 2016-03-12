@@ -18,7 +18,7 @@ namespace ArcGISPortalViewer.View
     {
         public SearchPage()
         {
-            this.InitializeComponent();            
+            this.InitializeComponent();
         }
 
         /// <summary>
@@ -31,20 +31,20 @@ namespace ArcGISPortalViewer.View
         /// <param name="pageState">A dictionary of state preserved by this page during an earlier
         /// session.  This will be null the first time a page is visited.</param>
         protected override void LoadState(Object navigationParameter, Dictionary<String, Object> pageState)
-        {        
+        {
             var vm = (SearchViewModel)DataContext;
             var searchText = navigationParameter as string;
             vm.SearchQuery = searchText;
             if (searchText != null) searchBox.QueryText = searchText;
             if (pageState != null)
             {
-                if (pageState.ContainsKey("SortBoxSelectedIndex"))                
-                    SortBox.SelectedIndex = (int)pageState["SortBoxSelectedIndex"];                                    
-                if (pageState.ContainsKey("SearchDomainBoxSelectedIndex"))                
-                    SearchDomainBox.SelectedIndex = (int)pageState["SearchDomainBoxSelectedIndex"];                                    
-            }           
-            vm.SelectSortFieldCommand.Execute(SortBox.SelectedItem);                
-            vm.SelectSearchDomainCommand.Execute(SearchDomainBox.SelectedItem);                    
+                if (pageState.ContainsKey("SortBoxSelectedIndex"))
+                    SortBox.SelectedIndex = (int)pageState["SortBoxSelectedIndex"];
+                if (pageState.ContainsKey("SearchDomainBoxSelectedIndex"))
+                    SearchDomainBox.SelectedIndex = (int)pageState["SearchDomainBoxSelectedIndex"];
+            }
+            vm.SelectSortFieldCommand.Execute(SortBox.SelectedItem);
+            vm.SelectSearchDomainCommand.Execute(SearchDomainBox.SelectedItem);
         }
 
         /// <summary>
@@ -54,9 +54,9 @@ namespace ArcGISPortalViewer.View
         /// </summary>
         /// <param name="pageState">An empty dictionary to be populated with serializable state.</param>
         protected override void SaveState(Dictionary<String, Object> pageState)
-        {            
-            pageState["SearchDomainBoxSelectedIndex"] = SearchDomainBox.SelectedIndex;                        
-            pageState["SortBoxSelectedIndex"] = SortBox.SelectedIndex;                        
-        }        
+        {
+            pageState["SearchDomainBoxSelectedIndex"] = SearchDomainBox.SelectedIndex;
+            pageState["SortBoxSelectedIndex"] = SortBox.SelectedIndex;
+        }
     }
 }

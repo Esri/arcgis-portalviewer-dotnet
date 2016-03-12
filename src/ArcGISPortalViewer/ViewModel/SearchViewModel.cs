@@ -27,7 +27,7 @@ namespace ArcGISPortalViewer.ViewModel
         public RelayCommand<object> SelectItemCommand { get; set; }
         public RelayCommand<object> SelectSortFieldCommand { get; set; }
         public RelayCommand<object> SelectSearchDomainCommand { get; set; }
-        
+
         public enum SortField
         {
             None = 0,
@@ -75,20 +75,20 @@ namespace ArcGISPortalViewer.ViewModel
         {
             if (string.IsNullOrEmpty(sortByField))
                 return SortField.None; // Sort by relevance
-            if (sortByField == (string) Application.Current.Resources["SortByTitle"])
+            if (sortByField == (string)Application.Current.Resources["SortByTitle"])
                 return SortField.Title;
-            if (sortByField == (string) Application.Current.Resources["SortByOwner"])
+            if (sortByField == (string)Application.Current.Resources["SortByOwner"])
                 return SortField.Owner;
-            if (sortByField == (string) Application.Current.Resources["SortByHighestRating"])
+            if (sortByField == (string)Application.Current.Resources["SortByHighestRating"])
                 return SortField.HighestRated;
-            if (sortByField == (string) Application.Current.Resources["SortByMostRecent"])
+            if (sortByField == (string)Application.Current.Resources["SortByMostRecent"])
                 return SortField.Recent;
-            if (sortByField == (string) Application.Current.Resources["SortByMostViews"])
+            if (sortByField == (string)Application.Current.Resources["SortByMostViews"])
                 return SortField.MostPopular;
 
             return SortField.None; // Sort by relevance
         }
-        
+
         /// <summary>
         /// The <see cref="CurrentSortField" /> property's name.
         /// </summary>
@@ -112,7 +112,7 @@ namespace ArcGISPortalViewer.ViewModel
             }
         }
 
-        public ArcGISPortalItem SelectedPortalItem { get; set; }         
+        public ArcGISPortalItem SelectedPortalItem { get; set; }
 
         /// <summary>
         /// The <see cref="SearchResults" /> property's name.
@@ -136,7 +136,7 @@ namespace ArcGISPortalViewer.ViewModel
                 Set(SearchResultsPropertyName, ref _searchResults, value);
             }
         }
-        
+
         public bool IsSearchDomainOptionsVisible
         {
             get
@@ -171,7 +171,7 @@ namespace ArcGISPortalViewer.ViewModel
             {
                 if (_searchQuery != value)
                 {
-                    RaisePropertyChanging(SearchQueryPropertyName);
+                    //RaisePropertyChanging(SearchQueryPropertyName); // See https://mvvmlight.codeplex.com/workitem/7662
                     _searchQuery = value;
                     UpdateResults();
                     RaisePropertyChanged(SearchQueryPropertyName);
@@ -199,13 +199,13 @@ namespace ArcGISPortalViewer.ViewModel
         {
             get
             {
-                return _noResults;                
+                return _noResults;
             }
 
             set
             {
                 if (_noResults != value)
-                {                    
+                {
                     _noResults = value;
                     RaisePropertyChanged(NoResultsPropertyName);
                 }
@@ -225,7 +225,7 @@ namespace ArcGISPortalViewer.ViewModel
                     portalItem = null;
                 // the GridView sends ItemClickEventArgs
                 else if (e is ItemClickEventArgs)
-                    portalItem = ((ItemClickEventArgs)e).ClickedItem as ArcGISPortalItem;                
+                    portalItem = ((ItemClickEventArgs)e).ClickedItem as ArcGISPortalItem;
 
                 // send clicked item via a message to other ViewModels who
                 // are registered with ChangeItemSelectedMessage
@@ -272,18 +272,18 @@ namespace ArcGISPortalViewer.ViewModel
                     if (content == null) return;
                     var searchDomain = content.ToString();
                     if (string.IsNullOrEmpty(searchDomain)) return;
-                    PortalService.CurrentPortalService.OrganizationResultsOnly = searchDomain == (string) Application.Current.Resources["SearchOrganization"];
-                    if (SearchResults != null && SearchResults.IsEmpty) 
-                        SearchResults= null;
+                    PortalService.CurrentPortalService.OrganizationResultsOnly = searchDomain == (string)Application.Current.Resources["SearchOrganization"];
+                    if (SearchResults != null && SearchResults.IsEmpty)
+                        SearchResults = null;
                     // refresh search results            
                     UpdateResults();
                 }
             });
-        }        
+        }
 
         private async Task<IEnumerable<object>> SearchQueryAsync(uint count)
         {
-            SearchParameters sp = SearchService.CreateSearchParameters(SearchQuery, _portalQuery, SearchResults.Count + 1, Math.Max((int)count, 100));           
+            SearchParameters sp = SearchService.CreateSearchParameters(SearchQuery, _portalQuery, SearchResults.Count + 1, Math.Max((int)count, 100));
             var result = await GetPortalItemsAsync(sp);
             RaisePropertyChanged(() => SearchResultsTerm);
             RaisePropertyChanged(() => SearchResultsNumber);
@@ -313,14 +313,14 @@ namespace ArcGISPortalViewer.ViewModel
 
             // set NoResults each time to avoid false intermediate setting of
             // this depedency property
-            if (r == null || r.TotalCount == 0 )
+            if (r == null || r.TotalCount == 0)
             {
                 NoResults = true;
                 _totalHits = 0;
                 return null;
             }
-            
-            _totalHits = r.TotalCount;           
+
+            _totalHits = r.TotalCount;
             return r.Results;
         }
 
@@ -328,7 +328,7 @@ namespace ArcGISPortalViewer.ViewModel
         {
             if (!IsSearchQueryValid(SearchQuery))
             {
-                if (SearchResults != null) 
+                if (SearchResults != null)
                     SearchResults.Clear();
                 NoResults = true;
                 _totalHits = 0;
@@ -353,7 +353,7 @@ namespace ArcGISPortalViewer.ViewModel
         {
             _portalQuery = pQuery;
             RaisePortalQueryPropertyAndSendMessage();
-        }  
+        }
 
         private void RaisePortalQueryPropertyAndSendMessage()
         {

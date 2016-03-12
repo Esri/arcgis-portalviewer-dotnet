@@ -29,9 +29,9 @@ namespace ArcGISPortalViewer.Controls
 
         public HtmlPresenterControl()
         {
-            this.InitializeComponent();           
+            this.InitializeComponent();
         }
-               
+
         #endregion Constructor
 
         #region Public Properties
@@ -96,7 +96,7 @@ namespace ArcGISPortalViewer.Controls
         #endregion Public Properties
 
         #region Public Events
-        
+
         public event EventHandler<NotifyEventArgs> OnLinkClicked;
 
         #endregion Public Events
@@ -104,7 +104,7 @@ namespace ArcGISPortalViewer.Controls
         #region Private Methods
 
         private void LoadContent()
-        {                        
+        {
 
             const string script = @"window.onclick = hrefEvent;
                                 function hrefEvent(e)
@@ -120,9 +120,9 @@ namespace ArcGISPortalViewer.Controls
 
                                     return false;
                                 }";
-            
+
             var bodyAttributes = new StringBuilder();
-            
+
             // Font-Family:
             if (!string.IsNullOrEmpty(HtmlFontFamily))
                 bodyAttributes.AppendFormat(" font-family:'{0}'; ", HtmlFontFamily);
@@ -143,19 +143,19 @@ namespace ArcGISPortalViewer.Controls
         #region Private Events
 
         private void WebView_OnFrameNavigationStarting(WebView sender, WebViewNavigationStartingEventArgs args)
-        {            
-            args.Cancel = (_allowDefaultNavigation == false); 
+        {
+            args.Cancel = (_allowDefaultNavigation == false);
         }
 
         private void WebView_OnNavigationStarting(WebView sender, WebViewNavigationStartingEventArgs args)
-        {            
+        {
             args.Cancel = (_allowDefaultNavigation == false);
         }
 
         private void WebView_ScriptNotify(object sender, NotifyEventArgs e)
         {
             if (OnLinkClicked != null)
-                OnLinkClicked(this, e);            
+                OnLinkClicked(this, e);
         }
 
         #endregion Private Events        

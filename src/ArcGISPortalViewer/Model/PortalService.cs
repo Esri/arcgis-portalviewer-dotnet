@@ -16,18 +16,18 @@ using System.Linq;
 
 namespace ArcGISPortalViewer.Model
 {
-    public class PortalService : IPortalService , INotifyPropertyChanged
+    public class PortalService : IPortalService, INotifyPropertyChanged
     {
         private static PortalService _currentPortalService;
         private Credential _credential = null;
 
-        public bool OrganizationResultsOnly = true; 
+        public bool OrganizationResultsOnly = true;
 
         private string _organizationName = "";
         public string OrganizationName
         {
             get { return _organizationName; }
-            set { if (_organizationName != value) { _organizationName = value; NotifyPropertyChanged(); } }            
+            set { if (_organizationName != value) { _organizationName = value; NotifyPropertyChanged(); } }
         }
 
         private string _organizationThumbnail = "";
@@ -51,23 +51,23 @@ namespace ArcGISPortalViewer.Model
             set { _userName = value; }
         }
 
-        private string _password = "";        
+        private string _password = "";
         public string Password
         {
             get { return _password; }
             set { _password = value; }
         }
-                
+
         private bool _isSigningIn = false;
         public bool IsSigningIn
         {
             get { return _isSigningIn; }
             set { if (_isSigningIn != value) { _isSigningIn = value; NotifyPropertyChanged(); } }
         }
-               
+
         public ArcGISPortal Portal { get; private set; }
         public ArcGISPortalUser CurrentUser { get; private set; }
-        public bool IsAnonymousUser 
+        public bool IsAnonymousUser
         {
             get
             {
@@ -76,7 +76,7 @@ namespace ArcGISPortalViewer.Model
                 else
                     return false;
             }
-        }                
+        }
 
         public static PortalService CurrentPortalService
         {
@@ -90,14 +90,14 @@ namespace ArcGISPortalViewer.Model
 
         public PortalService()
         {
-           _currentPortalService = this;
+            _currentPortalService = this;
         }
 
         public async Task AttemptAnonymousAccessAsync()
         {
             var challengeHandler = IdentityManager.Current.ChallengeHandler;
             // Deactivate the challenge handler temporarily before creating the portal (else challengehandler would be called for portal secured by native)
-            IdentityManager.Current.ChallengeHandler = new ChallengeHandler(crd => null);  
+            IdentityManager.Current.ChallengeHandler = new ChallengeHandler(crd => null);
 
             try
             {
@@ -117,9 +117,9 @@ namespace ArcGISPortalViewer.Model
             finally
             {
                 // Restore ChallengeHandler
-                IdentityManager.Current.ChallengeHandler = challengeHandler; 
+                IdentityManager.Current.ChallengeHandler = challengeHandler;
             }
-        }    
+        }
 
         public async Task<IList<ArcGISPortalGroup>> GetGroups()
         {
@@ -142,7 +142,7 @@ namespace ArcGISPortalViewer.Model
         }
 
         public async Task<SearchResultInfo<ArcGISPortalItem>> GetSearchResults(SearchParameters searchParameters)
-        {  
+        {
             if (searchParameters == null || string.IsNullOrEmpty(searchParameters.QueryString))
                 return null;
 
@@ -169,9 +169,9 @@ namespace ArcGISPortalViewer.Model
             }
             catch (Exception)
             {
-                
+
                 throw;
-            }            
+            }
         }
 
         public async Task<IList<ArcGISPortalItem>> GetPortalItems(SearchParameters searchParameters)
@@ -194,7 +194,7 @@ namespace ArcGISPortalViewer.Model
         {
             return await GetPortalItemsInternal(ItemsRequestedType.Featured, searchParameters);
         }
-        
+
         private enum ItemsRequestedType
         {
             Default = 0, // defined by the search parameters
@@ -203,7 +203,7 @@ namespace ArcGISPortalViewer.Model
         }
 
         private async Task<IList<ArcGISPortalItem>> GetPortalItemsInternal(
-            ItemsRequestedType itemsRequestedType = ItemsRequestedType.Default, 
+            ItemsRequestedType itemsRequestedType = ItemsRequestedType.Default,
             SearchParameters searchParameters = null)
         {
             IList<ArcGISPortalItem> results = new List<ArcGISPortalItem>();
@@ -225,7 +225,7 @@ namespace ArcGISPortalViewer.Model
                     case ItemsRequestedType.Basemaps:
                         items = await CurrentPortalService.Portal.ArcGISPortalInfo.SearchBasemapGalleryAsync(searchParameters);
                         break;
-                }                
+                }
                 if (items != null)
                 {
                     foreach (ArcGISPortalItem item in items.Results)
@@ -236,7 +236,7 @@ namespace ArcGISPortalViewer.Model
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
-            }            
+            }
         }
 
         public void SignOut()
@@ -269,7 +269,7 @@ namespace ArcGISPortalViewer.Model
             var im = IdentityManager.Current;
             //im.ChallengeMethod = null;
             foreach (var crd in im.Credentials)
-                im.RemoveCredential(crd);            
+                im.RemoveCredential(crd);
         }
 
         public async Task<bool> SignIn()
@@ -301,7 +301,7 @@ namespace ArcGISPortalViewer.Model
 
         private void SetOrganizationProperties()
         {
-            OrganizationName = !string.IsNullOrEmpty(Portal.ArcGISPortalInfo.Name) ? Portal.ArcGISPortalInfo.Name : Portal.ArcGISPortalInfo.PortalName;  
+            OrganizationName = !string.IsNullOrEmpty(Portal.ArcGISPortalInfo.Name) ? Portal.ArcGISPortalInfo.Name : Portal.ArcGISPortalInfo.PortalName;
             OrganizationThumbnail = Portal.ArcGISPortalInfo.ThumbnailUri != null ? Portal.ArcGISPortalInfo.ThumbnailUri.AbsoluteUri : "";
             // Need to expose banner id and url on ArcGISPortalInfo - for now I am hardcoding banner-2.jpg.
             OrganizationBanner = "http://portalhost.esri.com/gis/home/images/banner-5.jpg";
@@ -311,7 +311,7 @@ namespace ArcGISPortalViewer.Model
         public async Task<bool> SignInUsingIdentityManager()
         {
             IsSigningIn = true;
-            
+
             // if oauth2 required params are set, register the server for oauth2 authentication.            
             if (App.IsOrgOAuth2)
             {
@@ -325,10 +325,10 @@ namespace ArcGISPortalViewer.Model
             }
             // check if a TokenCredential can be retrieved without challenging the user
             else if (IdentityManager.Current.Credentials.Any())
-            {  
+            {
                 try
                 {
-                    var credential = IdentityManager.Current.Credentials.ElementAt(0) as TokenCredential;                    
+                    var credential = IdentityManager.Current.Credentials.ElementAt(0) as TokenCredential;
                     if (credential != null && !string.IsNullOrEmpty(credential.Token))
                     {
                         // set the credential 
@@ -343,8 +343,8 @@ namespace ArcGISPortalViewer.Model
                     var _ = App.ShowExceptionDialog(ex);
                     return false;
                 }
-            }                                     
-            
+            }
+
             // Since a credential could not be retrieved, try getting it by challenging the user
             var credentialRequestInfo = new CredentialRequestInfo
             {
@@ -359,8 +359,8 @@ namespace ArcGISPortalViewer.Model
                 {
                     //set the credential 
                     _credential = credential;
-                    IdentityManager.Current.AddCredential(_credential);                    
-                    IsSigningIn = false;                    
+                    IdentityManager.Current.AddCredential(_credential);
+                    IsSigningIn = false;
                     return true;
                 }
             }

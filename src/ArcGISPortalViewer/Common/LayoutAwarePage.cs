@@ -44,9 +44,7 @@ namespace ArcGISPortalViewer.Common
         /// <summary>
         /// Identifies the <see cref="DefaultViewModel"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty DefaultViewModelProperty =
-            DependencyProperty.Register("DefaultViewModel", typeof(IObservableMap<String, Object>),
-            typeof(LayoutAwarePage), null);
+        public static readonly DependencyProperty DefaultViewModelProperty = DependencyProperty.Register("DefaultViewModel", typeof(IObservableMap<String, Object>), typeof(LayoutAwarePage), null);
 
         private List<Control> _layoutAwareControls;
 
@@ -55,7 +53,8 @@ namespace ArcGISPortalViewer.Common
         /// </summary>
         public LayoutAwarePage()
         {
-            if (Windows.ApplicationModel.DesignMode.DesignModeEnabled) return;
+            if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
+                return;
 
             // Create an empty default view model
             this.DefaultViewModel = new ObservableDictionary<String, Object>();
@@ -68,14 +67,11 @@ namespace ArcGISPortalViewer.Common
                 this.StartLayoutUpdates(sender, e);
 
                 // Keyboard and mouse navigation only apply when occupying the entire window
-                if (this.ActualHeight == Window.Current.Bounds.Height &&
-                    this.ActualWidth == Window.Current.Bounds.Width)
+                if (this.ActualHeight == Window.Current.Bounds.Height && this.ActualWidth == Window.Current.Bounds.Width)
                 {
                     // Listen to the window directly so focus isn't required
-                    Window.Current.CoreWindow.Dispatcher.AcceleratorKeyActivated +=
-                        CoreDispatcher_AcceleratorKeyActivated;
-                    Window.Current.CoreWindow.PointerPressed +=
-                        this.CoreWindow_PointerPressed;
+                    Window.Current.CoreWindow.Dispatcher.AcceleratorKeyActivated += CoreDispatcher_AcceleratorKeyActivated;
+                    Window.Current.CoreWindow.PointerPressed += this.CoreWindow_PointerPressed;
                 }
             };
 
@@ -83,10 +79,8 @@ namespace ArcGISPortalViewer.Common
             this.Unloaded += (sender, e) =>
             {
                 this.StopLayoutUpdates(sender, e);
-                Window.Current.CoreWindow.Dispatcher.AcceleratorKeyActivated -=
-                    CoreDispatcher_AcceleratorKeyActivated;
-                Window.Current.CoreWindow.PointerPressed -=
-                    this.CoreWindow_PointerPressed;
+                Window.Current.CoreWindow.Dispatcher.AcceleratorKeyActivated -= CoreDispatcher_AcceleratorKeyActivated;
+                Window.Current.CoreWindow.PointerPressed -= this.CoreWindow_PointerPressed;
             };
         }
 
@@ -96,15 +90,8 @@ namespace ArcGISPortalViewer.Common
         /// </summary>
         protected IObservableMap<String, Object> DefaultViewModel
         {
-            get
-            {
-                return this.GetValue(DefaultViewModelProperty) as IObservableMap<String, Object>;
-            }
-
-            set
-            {
-                this.SetValue(DefaultViewModelProperty, value);
-            }
+            get { return this.GetValue(DefaultViewModelProperty) as IObservableMap<String, Object>; }
+            set { this.SetValue(DefaultViewModelProperty, value); }
         }
 
         #region Navigation support
@@ -134,7 +121,8 @@ namespace ArcGISPortalViewer.Common
         protected virtual void GoBack(object sender, RoutedEventArgs e)
         {
             // Use the navigation frame to return to the previous page
-            if (this.Frame != null && this.Frame.CanGoBack) this.Frame.GoBack();
+            if (this.Frame != null && this.Frame.CanGoBack)
+                this.Frame.GoBack();
         }
 
         /// <summary>
@@ -147,7 +135,8 @@ namespace ArcGISPortalViewer.Common
         protected virtual void GoForward(object sender, RoutedEventArgs e)
         {
             // Use the navigation frame to move to the next page
-            if (this.Frame != null && this.Frame.CanGoForward) this.Frame.GoForward();
+            if (this.Frame != null && this.Frame.CanGoForward)
+                this.Frame.GoForward();
         }
 
         /// <summary>
@@ -157,17 +146,14 @@ namespace ArcGISPortalViewer.Common
         /// </summary>
         /// <param name="sender">Instance that triggered the event.</param>
         /// <param name="args">Event data describing the conditions that led to the event.</param>
-        private void CoreDispatcher_AcceleratorKeyActivated(CoreDispatcher sender,
-            AcceleratorKeyEventArgs args)
+        private void CoreDispatcher_AcceleratorKeyActivated(CoreDispatcher sender, AcceleratorKeyEventArgs args)
         {
             var virtualKey = args.VirtualKey;
 
             // Only investigate further when Left, Right, or the dedicated Previous or Next keys
             // are pressed
-            if ((args.EventType == CoreAcceleratorKeyEventType.SystemKeyDown ||
-                args.EventType == CoreAcceleratorKeyEventType.KeyDown) &&
-                (virtualKey == VirtualKey.Left || virtualKey == VirtualKey.Right ||
-                (int)virtualKey == 166 || (int)virtualKey == 167))
+            if ((args.EventType == CoreAcceleratorKeyEventType.SystemKeyDown || args.EventType == CoreAcceleratorKeyEventType.KeyDown) &&
+                (virtualKey == VirtualKey.Left || virtualKey == VirtualKey.Right || (int)virtualKey == 166 || (int)virtualKey == 167))
             {
                 var coreWindow = Window.Current.CoreWindow;
                 var downState = CoreVirtualKeyStates.Down;
@@ -177,15 +163,13 @@ namespace ArcGISPortalViewer.Common
                 bool noModifiers = !menuKey && !controlKey && !shiftKey;
                 bool onlyAlt = menuKey && !controlKey && !shiftKey;
 
-                if (((int)virtualKey == 166 && noModifiers) ||
-                    (virtualKey == VirtualKey.Left && onlyAlt))
+                if (((int)virtualKey == 166 && noModifiers) || (virtualKey == VirtualKey.Left && onlyAlt))
                 {
                     // When the previous key or Alt+Left are pressed navigate back
                     args.Handled = true;
                     this.GoBack(this, new RoutedEventArgs());
                 }
-                else if (((int)virtualKey == 167 && noModifiers) ||
-                    (virtualKey == VirtualKey.Right && onlyAlt))
+                else if (((int)virtualKey == 167 && noModifiers) || (virtualKey == VirtualKey.Right && onlyAlt))
                 {
                     // When the next key or Alt+Right are pressed navigate forward
                     args.Handled = true;
@@ -201,14 +185,12 @@ namespace ArcGISPortalViewer.Common
         /// </summary>
         /// <param name="sender">Instance that triggered the event.</param>
         /// <param name="args">Event data describing the conditions that led to the event.</param>
-        private void CoreWindow_PointerPressed(CoreWindow sender,
-            PointerEventArgs args)
+        private void CoreWindow_PointerPressed(CoreWindow sender, PointerEventArgs args)
         {
             var properties = args.CurrentPoint.Properties;
 
             // Ignore button chords with the left, right, and middle buttons
-            if (properties.IsLeftButtonPressed || properties.IsRightButtonPressed ||
-                properties.IsMiddleButtonPressed) return;
+            if (properties.IsLeftButtonPressed || properties.IsRightButtonPressed || properties.IsMiddleButtonPressed) return;
 
             // If back or foward are pressed (but not both) navigate appropriately
             bool backPressed = properties.IsXButton1Pressed;

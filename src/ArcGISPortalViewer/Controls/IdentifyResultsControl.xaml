@@ -12,48 +12,48 @@
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
-    
+
     <Grid>
         <Grid>
-            <Grid.Resources>                
+            <Grid.Resources>
                 <common:BiConditionalConverter x:Key="biConditionalConverter" />
-                <common:PopupItemFormatConverter  x:Key="AttributeStringFormatConverter" />                
+                <common:PopupItemFormatConverter  x:Key="AttributeStringFormatConverter" />
             </Grid.Resources>
             <Grid Visibility="{Binding Path=ShowDetailView, ElementName=identifyResultsControl, Converter={StaticResource biConditionalConverter}, ConverterParameter=reverse}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-                <TextBlock x:Name="FeturesFoundTextBlock" FontSize="25" FontFamily="Segoe UI Symbol" Margin="5" FontWeight="SemiLight" />                                    
-                <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" Grid.Row="1">                    
-                        <ItemsControl ItemsSource="{Binding Path=ItemsSource, ElementName=identifyResultsControl}" >                            
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="Auto" />
-                                        </Grid.ColumnDefinitions>
-                                        <Button Command="{Binding ElementName=identifyResultsControl, Path=OnSelectedItemClickedCommand}" CommandParameter="{Binding}" Margin="0" Padding="0"
+                <TextBlock x:Name="FeturesFoundTextBlock" FontSize="25" FontFamily="Segoe UI Symbol" Margin="5" FontWeight="SemiLight" />
+                <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" Grid.Row="1">
+                    <ItemsControl ItemsSource="{Binding Path=ItemsSource, ElementName=identifyResultsControl}" >
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Button Command="{Binding ElementName=identifyResultsControl, Path=OnSelectedItemClickedCommand}" CommandParameter="{Binding}" Margin="0" Padding="0"
                                                 Background="Transparent">
-                                            <TextBlock FontSize="18" Margin="5" FontWeight="SemiLight" VerticalAlignment="Center" HorizontalAlignment="Stretch" TextWrapping="Wrap" >
-                                                <TextBlock.Text>
-                                                    <Binding Converter="{StaticResource AttributeStringFormatConverter}"/>
-                                                </TextBlock.Text>
-                                            </TextBlock>
-                                        </Button>
-                                        <Button Command="{Binding ElementName=identifyResultsControl, Path=OnSetViewClickedCommand}" CommandParameter="{Binding}" Padding="0" Margin="0"
+                                        <TextBlock FontSize="18" Margin="5" FontWeight="SemiLight" VerticalAlignment="Center" HorizontalAlignment="Stretch" TextWrapping="Wrap" >
+                                            <TextBlock.Text>
+                                                <Binding Converter="{StaticResource AttributeStringFormatConverter}"/>
+                                            </TextBlock.Text>
+                                        </TextBlock>
+                                    </Button>
+                                    <Button Command="{Binding ElementName=identifyResultsControl, Path=OnSetViewClickedCommand}" CommandParameter="{Binding}" Padding="0" Margin="0"
                                                 Grid.Column="1" 
                                                 Background="Transparent" 
                                                 Width="50" 
                                                 Height="50" 
                                                 VerticalAlignment="Center" >
-                                            <TextBlock FontFamily="Segoe UI Symbol" FontSize="20" Text="{StaticResource SetViewGlyph}" />
-                                        </Button>
-                                    </Grid>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>                    
+                                        <TextBlock FontFamily="Segoe UI Symbol" FontSize="20" Text="{StaticResource SetViewGlyph}" />
+                                    </Button>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
                 </ScrollViewer>
             </Grid>
             <Grid Visibility="{Binding Path=ShowDetailView, ElementName=identifyResultsControl, Converter={StaticResource biConditionalConverter}}"

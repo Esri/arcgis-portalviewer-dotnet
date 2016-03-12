@@ -15,10 +15,6 @@ namespace ArcGISPortalViewer.Model
     public interface IPortalService
     {
         Task<IList<ArcGISPortalGroup>> GetGroups();
-        //Task<IEnumerator<ArcGISPortalGroup>> GetGroups();
-        //Task<IList<PortalItem>> GetGroups();
-        //Task<IList<PortalItem>> GetPortalItems(SearchParameters searchParamaters);
         Task<IList<ArcGISPortalItem>> GetPortalItems(SearchParameters searchParamaters);
-        //Task<IList<ArcGISPortalItem>> GetFavorites();
     }
 }

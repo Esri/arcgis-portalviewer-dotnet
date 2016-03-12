@@ -34,22 +34,22 @@ namespace ArcGISPortalViewer.Controls
         #region Properties
         public Editor Editor
         {
-            get { return (Editor) GetValue(EditorProperty); }
+            get { return (Editor)GetValue(EditorProperty); }
             set { SetValue(EditorProperty, value); }
         }
 
         public static readonly DependencyProperty EditorProperty =
-            DependencyProperty.Register("Editor", typeof (Editor), typeof (MeasureDisplayControl),
+            DependencyProperty.Register("Editor", typeof(Editor), typeof(MeasureDisplayControl),
                 new PropertyMetadata(null));
 
         public LinearUnitType LinearUnitType
         {
-            get { return (LinearUnitType) GetValue(LinearUnitTypeProperty); }
+            get { return (LinearUnitType)GetValue(LinearUnitTypeProperty); }
             set { SetValue(LinearUnitTypeProperty, value); }
         }
 
         public static readonly DependencyProperty LinearUnitTypeProperty =
-            DependencyProperty.Register("LinearUnitType", typeof (LinearUnitType), typeof (MeasureDisplayControl),
+            DependencyProperty.Register("LinearUnitType", typeof(LinearUnitType), typeof(MeasureDisplayControl),
                 new PropertyMetadata(LinearUnitType.Metric, OnLinearUnitTypePropertyChanged));
 
         private static void OnLinearUnitTypePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -65,12 +65,12 @@ namespace ArcGISPortalViewer.Controls
 
         public CoordinateFormat CoordinateFormat
         {
-            get { return (CoordinateFormat) GetValue(CoordinateFormatProperty); }
+            get { return (CoordinateFormat)GetValue(CoordinateFormatProperty); }
             set { SetValue(CoordinateFormatProperty, value); }
         }
 
         public static readonly DependencyProperty CoordinateFormatProperty =
-            DependencyProperty.Register("CoordinateFormat", typeof (CoordinateFormat), typeof (MeasureDisplayControl),
+            DependencyProperty.Register("CoordinateFormat", typeof(CoordinateFormat), typeof(MeasureDisplayControl),
                 new PropertyMetadata(CoordinateFormat.DecimalDegrees, OnCoordinateFormatPropertyChanged));
 
         private static void OnCoordinateFormatPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -78,19 +78,19 @@ namespace ArcGISPortalViewer.Controls
             var measureDisplayControl = d as MeasureDisplayControl;
             if (measureDisplayControl == null)
                 return;
-            var coordinateFormat = (CoordinateFormat) e.NewValue;
+            var coordinateFormat = (CoordinateFormat)e.NewValue;
             foreach (var measureItem in measureDisplayControl.MeasureItemCollection)
                 measureItem.CoordinateFormat = coordinateFormat;
         }
 
         public bool IsMeasureEnabled
         {
-            get { return (bool) GetValue(IsMeasureEnabledProperty); }
+            get { return (bool)GetValue(IsMeasureEnabledProperty); }
             set { SetValue(IsMeasureEnabledProperty, value); }
         }
 
         public static readonly DependencyProperty IsMeasureEnabledProperty =
-            DependencyProperty.Register("IsMeasureEnabled", typeof (bool), typeof (MeasureDisplayControl),
+            DependencyProperty.Register("IsMeasureEnabled", typeof(bool), typeof(MeasureDisplayControl),
                 new PropertyMetadata(false, OnIsMeasureEnabledPropertyChanged));
 
         private static void OnIsMeasureEnabledPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -99,12 +99,12 @@ namespace ArcGISPortalViewer.Controls
             if (measureDisplayControl == null || measureDisplayControl.Editor == null)
                 return;
             measureDisplayControl.Editor.IsSuspended = !measureDisplayControl.IsMeasureEnabled;
-            if(!measureDisplayControl.Editor.IsActive)
+            if (!measureDisplayControl.Editor.IsActive)
             {
                 measureDisplayControl.ExecuteMeasure();
             }
         }
-        
+
 
         private ObservableCollection<MeasureItem> m_MeasureItemCollection;
         /// <summary>
@@ -127,19 +127,19 @@ namespace ArcGISPortalViewer.Controls
             get { return m_MeasureSummary ?? (m_MeasureSummary = new MeasureSummary()); }
         }
         #endregion Properties
-        
+
         private void MeasureItem_Holding(object sender, HoldingRoutedEventArgs e)
         {
             var item = sender as FrameworkElement;
             var measureItem = item.DataContext as MeasureItem;
             if (Editor != null && measureItem != null && Editor.DeleteVertex.CanExecute(measureItem.CoordinateIndex))
-                FlyoutBase.ShowAttachedFlyout((FrameworkElement) sender);
+                FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
         }
 
         private void DeleteVertex_Click(object sender, RoutedEventArgs e)
         {
             if (Editor == null || !(sender is FrameworkElement) ||
-                !(((FrameworkElement)sender).DataContext is MeasureItem)) 
+                !(((FrameworkElement)sender).DataContext is MeasureItem))
                 return;
             int coordinateIndex = ((MeasureItem)((FrameworkElement)sender).DataContext).CoordinateIndex;
             if (Editor.DeleteVertex.CanExecute(coordinateIndex))
@@ -228,38 +228,38 @@ namespace ArcGISPortalViewer.Controls
             switch (status.GeometryEditAction)
             {
                 case GeometryEditAction.AddedVertex:
-                {
-                    MeasureItemCollection.Insert(status.VertexPosition.CoordinateIndex,
-                        new MeasureItem()
-                        {
-                            Location = status.NewVertex,
-                            LinearUnitType = LinearUnitType,
-                            CoordinateFormat = CoordinateFormat
-                        });
-                    break;
-                }
-                case GeometryEditAction.DeletedVertex:
-                {
-                    MeasureItemCollection.RemoveAt(status.VertexPosition.CoordinateIndex);
-                    break;
-                }
-                default:
-                {
-                    MeasureItemCollection.Clear();
-                    if (polyline != null && polyline.Parts != null)
                     {
-                        foreach (var p in polyline.Parts[0].GetPoints())
-                        {
-                            MeasureItemCollection.Add(new MeasureItem()
+                        MeasureItemCollection.Insert(status.VertexPosition.CoordinateIndex,
+                            new MeasureItem()
                             {
-                                Location = p,
+                                Location = status.NewVertex,
                                 LinearUnitType = LinearUnitType,
                                 CoordinateFormat = CoordinateFormat
                             });
-                        }
+                        break;
                     }
-                    break;
-                }
+                case GeometryEditAction.DeletedVertex:
+                    {
+                        MeasureItemCollection.RemoveAt(status.VertexPosition.CoordinateIndex);
+                        break;
+                    }
+                default:
+                    {
+                        MeasureItemCollection.Clear();
+                        if (polyline != null && polyline.Parts != null)
+                        {
+                            foreach (var p in polyline.Parts[0].GetPoints())
+                            {
+                                MeasureItemCollection.Add(new MeasureItem()
+                                {
+                                    Location = p,
+                                    LinearUnitType = LinearUnitType,
+                                    CoordinateFormat = CoordinateFormat
+                                });
+                            }
+                        }
+                        break;
+                    }
             }
             UpdateDisplay(polyline);
         }
@@ -284,7 +284,7 @@ namespace ArcGISPortalViewer.Controls
                 if (previousPoint != null)
                 {
                     measureItem.Length = GeometryEngine.GeodesicLength(
-                        new Polyline(new MapPoint[]{ previousPoint, measureItem.Location },
+                        new Polyline(new MapPoint[] { previousPoint, measureItem.Location },
                             measureItem.Location.SpatialReference),
                         GeodeticCurveType.GreatElliptic);
                 }
@@ -301,7 +301,7 @@ namespace ArcGISPortalViewer.Controls
 
         #region Events
 
-        public event EventHandler MeasureStarted;
+        public event EventHandler<EventArgs> MeasureStarted;
         public event EventHandler<MeasureUpdatedEventArgs> MeasureUpdated;
         public event EventHandler<MeasureCompletedEventArgs> MeasureCompleted;
 
@@ -331,7 +331,7 @@ namespace ArcGISPortalViewer.Controls
     /// Data for <see cref="MeasureDisplayControl.MeasureUpdated"/> event.
     /// </summary>
     public sealed class MeasureUpdatedEventArgs : EventArgs
-    { 
+    {
         /// <summary>
         /// Gets the current <see cref="Geometry"/> that represent the geodesic area covered during measure.
         /// </summary>
@@ -542,7 +542,7 @@ namespace ArcGISPortalViewer.Controls
         /// </summary>
         public string AreaDisplay
         {
-            get{return base.GeodesicAreaToString(Area, base.LinearUnitType);}
+            get { return base.GeodesicAreaToString(Area, base.LinearUnitType); }
         }
 
         /// <summary>
@@ -619,7 +619,7 @@ namespace ArcGISPortalViewer.Controls
             get { return m_Length; }
             set
             {
-                if (!double.Equals(m_Length,value))
+                if (!double.Equals(m_Length, value))
                 {
                     m_Length = value;
                     OnPropertyChanged();
@@ -641,7 +641,7 @@ namespace ArcGISPortalViewer.Controls
         /// </summary>
         public string LengthDisplay
         {
-          get { return base.GeodesicLengthToString(Length, base.LinearUnitType); }
+            get { return base.GeodesicLengthToString(Length, base.LinearUnitType); }
         }
 
         protected override void OnLinearUnitTypeChanged()
@@ -654,6 +654,6 @@ namespace ArcGISPortalViewer.Controls
         {
             OnPropertyChanged("CoordinateDisplay");
             base.OnCoordinateFormatChanged();
-        }     
+        }
     }
 }

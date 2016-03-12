@@ -8,8 +8,8 @@
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
-    
-   <WebView x:Name="WebView" DefaultBackgroundColor="Transparent"
+
+    <WebView x:Name="WebView" DefaultBackgroundColor="Transparent"
         FrameNavigationStarting="WebView_OnFrameNavigationStarting"
         NavigationStarting="WebView_OnNavigationStarting" 
         ScriptNotify="WebView_ScriptNotify"

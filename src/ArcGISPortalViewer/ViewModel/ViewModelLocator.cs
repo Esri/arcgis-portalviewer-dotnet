@@ -33,15 +33,15 @@ namespace ArcGISPortalViewer.ViewModel
     {
         static ViewModelLocator()
         {
-            ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);            
+            ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
 
             if (ViewModelBase.IsInDesignModeStatic)
-            {             
+            {
                 SimpleIoc.Default.Register<IPortalService>(() => new Design.DesignPortalService());
                 SimpleIoc.Default.Register<INavigationService, Design.DesignNavigationService>();
             }
             else
-            {                
+            {
                 SimpleIoc.Default.Register<IPortalService, PortalService>();
                 SimpleIoc.Default.Register<INavigationService>(() => new NavigationService());
                 SimpleIoc.Default.Register<IFavoritesService, FavoritesService>();
@@ -49,7 +49,7 @@ namespace ArcGISPortalViewer.ViewModel
             }
 
             SimpleIoc.Default.Register<AppViewModel>(true);
-            SimpleIoc.Default.Register<ArcGISBlankViewModel>(); //created up front to registers login messages when signing i is triggered            
+            SimpleIoc.Default.Register<ArcGISBlankViewModel>(); //created up front to registers login messages when signing is triggered            
             SimpleIoc.Default.Register<MainViewModel>();
             SimpleIoc.Default.Register<PortalItemViewModel>(true);
             SimpleIoc.Default.Register<PortalGroupViewModel>(true);
@@ -57,7 +57,7 @@ namespace ArcGISPortalViewer.ViewModel
             SimpleIoc.Default.Register<FavoritesViewModel>();
             SimpleIoc.Default.Register<SearchViewModel>(true);
         }
-        
+
         /// <summary>
         /// Gets the AppVM property.
         /// </summary>
@@ -113,7 +113,7 @@ namespace ArcGISPortalViewer.ViewModel
                 return ServiceLocator.Current.GetInstance<PortalItemViewModel>();
             }
         }
-        
+
         /// <summary>
         /// Gets the PortalGroupVM property.
         /// </summary>
@@ -155,7 +155,7 @@ namespace ArcGISPortalViewer.ViewModel
                 return ServiceLocator.Current.GetInstance<SearchViewModel>();
             }
         }
-        
+
         /// <summary>
         /// Cleans up all the resources.
         /// </summary>

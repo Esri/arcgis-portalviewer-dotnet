@@ -23,7 +23,7 @@ namespace ArcGISPortalViewer.Common
             if (!(value is PopupItem))
                 return value;
 
-            var popupItem = ((PopupItem) value);
+            var popupItem = ((PopupItem)value);
 
             var dict = popupItem.IdentifyFeature.Item.Feature.Attributes;
             var formatter = popupItem.PopupInfo.Title;
@@ -37,13 +37,13 @@ namespace ArcGISPortalViewer.Common
                 return null;
             if (!string.IsNullOrEmpty(formatter))
                 value = ResolveBinding(dict, formatter);
-            return value;         
+            return value;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             throw new NotImplementedException();
-        }        
+        }
 
         internal static string ResolveBinding(IDictionary<string, object> dict, string formatter)
         {

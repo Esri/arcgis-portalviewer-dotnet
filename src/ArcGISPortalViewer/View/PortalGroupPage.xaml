@@ -15,8 +15,8 @@
     mc:Ignorable="d"
     DataContext="{Binding PortalGroupVM, Source={StaticResource Locator}}">
 
-    <Page.Resources>        
-        <common:ToStringFormatConverter x:Key="formatConverter" />        
+    <Page.Resources>
+        <common:ToStringFormatConverter x:Key="formatConverter" />
         <common:PortalItemToHtmlStringConverter x:Key="PortalItemToHtmlStringConverter" />
         <CollectionViewSource x:Key="cvsProjects" x:Name="cvsProjects" IsSourceGrouped="True" ItemsPath="Activities"/>
 
@@ -95,7 +95,7 @@
         </Style>
     </Page.Resources>
 
-    <Grid Background="White">       
+    <Grid Background="White">
         <Grid x:Name="LayoutRoot" Style="{StaticResource LayoutRootStyle}" Background="Transparent">
             <Grid.RowDefinitions>
                 <RowDefinition Height="140"/>
@@ -119,7 +119,7 @@
                         </core:EventTriggerBehavior>
                     </interactivity:Interaction.Behaviors>
                 </SearchBox>
-            </Grid>   
+            </Grid>
 
             <Grid Grid.Row="1" Margin="0,0,0,40">
                 <Grid.ColumnDefinitions>
@@ -193,7 +193,7 @@
                                 <EntranceThemeTransition />
                             </TransitionCollection>
                         </Grid.Transitions>
-                        
+
                         <controls:HtmlPresenterControl Html="{Binding PortalGroup, Converter={StaticResource PortalItemToHtmlStringConverter}}" 
                                                        HtmlFontFamily="Segoe UI Light"
                                                        HtmlFontSize="18"
@@ -204,7 +204,7 @@
                                     <core:InvokeCommandAction Command="{Binding Source={StaticResource Locator}, Path=AppVM.HyperlinkNavigationCommand}" />
                                 </core:EventTriggerBehavior>
                             </interactivity:Interaction.Behaviors>
-                        </controls:HtmlPresenterControl>                                               
+                        </controls:HtmlPresenterControl>
                     </Grid>
                     <Grid x:Name="CommentsGrid" Grid.Row="1" Visibility="Collapsed">
                         <Grid.Transitions>
@@ -298,12 +298,12 @@
     <common:LayoutAwarePage.BottomAppBar>
         <AppBar x:Name="appBar" Height="88" Background="{StaticResource ApplicationPageBackgroundThemeBrush}">
             <Grid>
-                <Grid.Resources>                                                            
+                <Grid.Resources>
                     <Style x:Key="PinAppBarButtonStyle" TargetType="Button" BasedOn="{StaticResource AppBarButtonStyle}">
                         <Setter Property="AutomationProperties.AutomationId" Value="PinAppBarButton"/>
                         <Setter Property="AutomationProperties.Name" Value="Pin to Start"/>
                         <Setter Property="Content" Value="&#xE141;"/>
-                    </Style>                    
+                    </Style>
                 </Grid.Resources>
                 <!--<StackPanel Margin="0,0,30,0" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left">
                     <Button Style="{StaticResource MapAppBarButtonStyle}" Visibility="{Binding PortalGroup, Converter={StaticResource typeToVisibilityConverter}, ConverterParameter=ArcGISPortalGroup}" Command="{Binding OpenMapCommand, Mode=OneWay}" />

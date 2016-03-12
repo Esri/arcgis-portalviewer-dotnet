@@ -33,7 +33,7 @@ namespace ArcGISPortalViewer.ViewModel
         #region Private Members
 
         private Frame _rootFrame;
-        private LaunchActivatedEventArgs _args;                
+        private LaunchActivatedEventArgs _args;
 
         #endregion Private Members
 
@@ -55,7 +55,7 @@ namespace ArcGISPortalViewer.ViewModel
         {
             get { return _currentAppViewModel ?? (_currentAppViewModel = new AppViewModel()); }
         }
-        
+
         #endregion CurrentAppViewModel
 
         #region IsNetworkConnectionAvaliable
@@ -83,16 +83,16 @@ namespace ArcGISPortalViewer.ViewModel
                 Set(SelectedPortalItemPropertyName, ref _selectedPortalItem, value);
                 RaisePropertyChanged(() => IsSelectedItemInFavorites);
             }
-        }        
+        }
 
         #endregion SelectedPortalItem
-              
+
         #region IsSelectedItemInFavorites
 
         public bool IsSelectedItemInFavorites
         {
             get
-            {                
+            {
                 if (SelectedPortalItem == null || FavoritesService.CurrentFavoritesService.Favorites == null)
                     return false;
 
@@ -120,7 +120,7 @@ namespace ArcGISPortalViewer.ViewModel
             {
                 Set(IsPinningTilePropertyName, ref _isPinningTile, value);
             }
-        }        
+        }
 
         #endregion IsPinningTile        
 
@@ -140,7 +140,7 @@ namespace ArcGISPortalViewer.ViewModel
                     LinearUnitType.ImperialUS
                 });
             }
-        }        
+        }
 
         #endregion LinearUnitTypeSource
 
@@ -162,7 +162,7 @@ namespace ArcGISPortalViewer.ViewModel
                     CoordinateFormat.Mgrs
                 });
             }
-        }        
+        }
 
         #endregion CoordinateFormatSource
 
@@ -183,7 +183,7 @@ namespace ArcGISPortalViewer.ViewModel
                     base.RaisePropertyChanged("LinearUnitType");
                 }
             }
-        }        
+        }
 
         #endregion LinearUnitType
 
@@ -204,7 +204,7 @@ namespace ArcGISPortalViewer.ViewModel
                     base.RaisePropertyChanged("CoordinateFormat");
                 }
             }
-        }        
+        }
 
         #endregion CoordinateFormat
 
@@ -232,7 +232,7 @@ namespace ArcGISPortalViewer.ViewModel
                     }
                 }));
             }
-        }        
+        }
 
         #endregion TryAgainCommand        
 
@@ -248,7 +248,7 @@ namespace ArcGISPortalViewer.ViewModel
             {
                 return _pinToStartCommand ?? (_pinToStartCommand = new RelayCommand<object>(ExecutePinToStartCommand));
             }
-        }        
+        }
 
         private void ExecutePinToStartCommand(object sender)
         {
@@ -276,14 +276,14 @@ namespace ArcGISPortalViewer.ViewModel
             {
                 return _addToFavoritesCommand ?? (_addToFavoritesCommand = new RelayCommand(ExecuteAddToFavoritesCommand));
             }
-        }        
+        }
 
         private void ExecuteAddToFavoritesCommand()
         {
             // send a message to other FavoritesViewModel who is registered with AddItemToFavoritesMessage
             Messenger.Default.Send(new AddItemToFavoritesMessage { Item = SelectedPortalItem });
             RaisePropertyChanged(() => IsSelectedItemInFavorites);
-        } 
+        }
 
         #endregion AddToFavoritesCommand
 
@@ -301,7 +301,7 @@ namespace ArcGISPortalViewer.ViewModel
                     RaisePropertyChanged(() => IsSelectedItemInFavorites);
                 }));
             }
-        }        
+        }
 
         #endregion RemoveFromFavoritesCommand
 
@@ -319,7 +319,7 @@ namespace ArcGISPortalViewer.ViewModel
                     ExecuteWebMapsQuerySubmittedCommand,
                     CanExecuteWebMapsQuerySubmittedCommand));
             }
-        }        
+        }
 
         private void ExecuteWebMapsQuerySubmittedCommand(object obj)
         {
@@ -333,7 +333,7 @@ namespace ArcGISPortalViewer.ViewModel
         private bool CanExecuteWebMapsQuerySubmittedCommand(object obj)
         {
             return true;
-        } 
+        }
 
         #endregion WebMapsQuerySubmittedCommand
 
@@ -352,7 +352,7 @@ namespace ArcGISPortalViewer.ViewModel
                     CanExecuteOpenMapCommand));
             }
         }
-        
+
         private void ExecuteOpenMapCommand(ArcGISPortalItem portalItem)
         {
             if (portalItem == null)
@@ -368,7 +368,7 @@ namespace ArcGISPortalViewer.ViewModel
             if (portalItem != null && portalItem.Type == ItemType.WebMap)
                 return true;
             return false;
-        }        
+        }
 
         #endregion OpenManCommand
 
@@ -381,7 +381,7 @@ namespace ArcGISPortalViewer.ViewModel
             {
                 return _hyperlinkNavigationCommand ?? (_hyperlinkNavigationCommand = new RelayCommand<object>(ExecuteHyperlinkNavigation));
             }
-        }        
+        }
 
         private async void ExecuteHyperlinkNavigation(object obj)
         {
@@ -408,12 +408,12 @@ namespace ArcGISPortalViewer.ViewModel
                     }
                 }
             }
-        }        
+        }
 
         #endregion OnHyperlinkNavigationCommand
 
         #endregion Public Commands
-    
+
         #region Public Methods
 
         public async Task AppInit(Frame rootFrame, LaunchActivatedEventArgs args)
@@ -450,7 +450,7 @@ namespace ArcGISPortalViewer.ViewModel
                 {
                     if (!(rootFrame.Content is MainPage))
                     {
-                        if (!rootFrame.Navigate(typeof (MainPage), args.Arguments))
+                        if (!rootFrame.Navigate(typeof(MainPage), args.Arguments))
                         {
                             throw new Exception("Failed to create initial page");
                         }
@@ -532,7 +532,7 @@ namespace ArcGISPortalViewer.ViewModel
             }
 
             return "";
-        }                      
+        }
 
         private static bool CheckNetworkAvailability(NetworkConnectivityLevel minimumLevelRequired = NetworkConnectivityLevel.InternetAccess)
         {
@@ -554,5 +554,5 @@ namespace ArcGISPortalViewer.ViewModel
         }
 
         #endregion Private Events               
-    }    
+    }
 }

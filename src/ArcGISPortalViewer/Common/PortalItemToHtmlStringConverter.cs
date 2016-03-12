@@ -9,13 +9,13 @@ using Windows.UI.Xaml.Data;
 using Esri.ArcGISRuntime.Portal;
 
 namespace ArcGISPortalViewer.Common
-{    
+{
     class PortalItemToHtmlStringConverter : IValueConverter
-    {              
+    {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            if (value is ArcGISPortalItem && targetType == typeof (string))
-                return ConvertPortalItemToHtmlString((ArcGISPortalItem) value);
+            if (value is ArcGISPortalItem && targetType == typeof(string))
+                return ConvertPortalItemToHtmlString((ArcGISPortalItem)value);
             if (value is ArcGISPortalGroup && targetType == typeof(string))
                 return ConvertPortalGroupToHtmlString((ArcGISPortalGroup)value);
             return value;
@@ -29,8 +29,8 @@ namespace ArcGISPortalViewer.Common
         private static string ConvertPortalItemToHtmlString(ArcGISPortalItem portalItem)
         {
             if (portalItem != null)
-            {             
-                var sb = new StringBuilder();                
+            {
+                var sb = new StringBuilder();
                 sb.Append("<h2>");
                 sb.Append("Description");
                 sb.Append("</h2>");
@@ -61,7 +61,7 @@ namespace ArcGISPortalViewer.Common
         private static string ConvertPortalGroupToHtmlString(ArcGISPortalGroup portalGroup)
         {
             if (portalGroup != null)
-            {                
+            {
                 var sb = new StringBuilder();
                 sb.Append("<h2>");
                 sb.Append("Description");
@@ -69,7 +69,7 @@ namespace ArcGISPortalViewer.Common
                 sb.Append(portalGroup.Description);
                 sb.Append("<h2>");
                 sb.Append("Tags");
-                sb.Append("</h2>");                
+                sb.Append("</h2>");
                 var index = 0;
                 foreach (var tag in portalGroup.Tags)
                 {

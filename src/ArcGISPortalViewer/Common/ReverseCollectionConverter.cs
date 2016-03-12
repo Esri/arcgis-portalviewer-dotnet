@@ -11,7 +11,7 @@ using Esri.ArcGISRuntime.Layers;
 
 namespace ArcGISPortalViewer.Common
 {
-    class ReverseOrderConverter : IValueConverter  
+    class ReverseOrderConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {

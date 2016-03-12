@@ -1,44 +1,31 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest">
-  <Identity Name="012f1c67-1cef-4e44-9ac7-f7a54e24a445" Publisher="CN=Esri" Version="1.0.0.0" />
+<Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
+  <Identity Name="58493JoseSousa.ArcGISViewerfortheUniversalWindowsP" Publisher="CN=1F3BD9AB-DC7F-4012-90AE-3F178A71D77D" Version="1.1.3.0" />
+  <mp:PhoneIdentity PhoneProductId="84545c41-6b13-432c-baaa-fa2f295b49a2" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
-    <DisplayName>ArcGISPortalViewer</DisplayName>
-    <PublisherDisplayName>ESRI Inc</PublisherDisplayName>
+    <DisplayName>ArcGIS Viewer for the Universal Windows Platform</DisplayName>
+    <PublisherDisplayName>Jose Sousa</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
-    <Description>ArcGISPortalViewer</Description>
   </Properties>
-  <Prerequisites>
-    <OSMinVersion>6.3.0</OSMinVersion>
-    <OSMaxVersionTested>6.3.0</OSMaxVersionTested>
-  </Prerequisites>
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.0.0" MaxVersionTested="10.0.0.0" />
+  </Dependencies>
   <Resources>
     <Resource Language="x-generate" />
   </Resources>
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="ArcGISPortalViewer.App">
-      <Extensions>
-        <Extension Category="windows.search" />
-        <Extension Category="windows.protocol">
-          <Protocol Name="arcgis">
-            <Logo>Assets\SmallLogo.png</Logo>
-            <DisplayName>Portal Viewer Sample</DisplayName>
-          </Protocol>
-        </Extension>
-      </Extensions>
-      <m2:VisualElements DisplayName="Portal Viewer Sample" Description="Portal Viewer Sample" BackgroundColor="#ffffff" ForegroundText="dark" Square150x150Logo="Assets\Logo.png" Square30x30Logo="Assets\SmallLogo.png">
-        <m2:DefaultTile ShortName="Portal Viewer Sample">
-        </m2:DefaultTile>
-        <m2:InitialRotationPreference>
-          <m2:Rotation Preference="landscape" />
-          <m2:Rotation Preference="landscapeFlipped" />
-        </m2:InitialRotationPreference>
-        <m2:SplashScreen Image="Assets\SplashScreen.png" />
-      </m2:VisualElements>
+      <uap:VisualElements DisplayName="ArcGIS Viewer for the Universal Windows Platform" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" Description="ArcGIS Viewer for the Universal Windows Platform" BackgroundColor="transparent">
+        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" Square71x71Logo="Assets\Square71x71Logo.png" Square310x310Logo="Assets\Square310x310Logo.png">
+          <uap:ShowNameOnTiles>
+            <uap:ShowOn Tile="square310x310Logo" />
+          </uap:ShowNameOnTiles>
+        </uap:DefaultTile>
+        <uap:SplashScreen Image="Assets\SplashScreen.png" />
+      </uap:VisualElements>
     </Application>
   </Applications>
   <Capabilities>
-    <Capability Name="privateNetworkClientServer" />
     <Capability Name="internetClient" />
-    <DeviceCapability Name="location" />
   </Capabilities>
 </Package>

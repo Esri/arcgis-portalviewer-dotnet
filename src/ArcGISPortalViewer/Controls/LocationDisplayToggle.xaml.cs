@@ -76,7 +76,7 @@ namespace ArcGISPortalViewer.Controls
 
         private static void OnIsLocationEnabledPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var ctrl = (LocationDisplayToggle)d;        
+            var ctrl = (LocationDisplayToggle)d;
             ctrl.UpdateIcon();
         }
         private AutoPanMode Mode

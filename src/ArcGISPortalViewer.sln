@@ -1,22 +1,47 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.30501.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArcGISPortalViewer", "ArcGISPortalViewer\ArcGISPortalViewer.csproj", "{75CCCE90-11AA-405D-A128-FEA952708D15}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArcGISPortalViewer.Popup", "ArcGISPortalViewer.Popup\ArcGISPortalViewer.Popup.csproj", "{E7108835-AF55-4062-81BD-3ADE4116266F}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Esri.ArcGISRuntime.Toolkit.Shared", "..\..\arcgis-toolkit-dotnet\src\Common\Esri.ArcGISRuntime.Toolkit\Esri.ArcGISRuntime.Toolkit.Shared.shproj", "{9BEAB511-E16F-4651-A7CE-96A9F69D609B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Esri.ArcGISRuntime.Toolkit.UWP", "..\..\arcgis-toolkit-dotnet\src\UWP\Esri.ArcGISRuntime.Toolkit.UWP\Esri.ArcGISRuntime.Toolkit.UWP.csproj", "{5F89D345-6820-4758-991C-ECA4EFF60D22}"
+EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		..\..\arcgis-toolkit-dotnet\src\Common\Esri.ArcGISRuntime.Toolkit\Esri.ArcGISRuntime.Toolkit.Shared.projitems*{5f89d345-6820-4758-991c-eca4eff60d22}*SharedItemsImports = 4
+		..\..\arcgis-toolkit-dotnet\src\Common\Esri.ArcGISRuntime.Toolkit\Esri.ArcGISRuntime.Toolkit.Shared.projitems*{9beab511-e16f-4651-a7ce-96a9f69d609b}*SharedItemsImports = 13
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug .NET Native|Any CPU = Debug .NET Native|Any CPU
+		Debug .NET Native|ARM = Debug .NET Native|ARM
+		Debug .NET Native|x64 = Debug .NET Native|x64
+		Debug .NET Native|x86 = Debug .NET Native|x86
+		Debug|Any CPU = Debug|Any CPU
 		Debug|ARM = Debug|ARM
 		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
 		Release|ARM = Release|ARM
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{75CCCE90-11AA-405D-A128-FEA952708D15}.Debug .NET Native|Any CPU.ActiveCfg = Debug .NET Native|x86
+		{75CCCE90-11AA-405D-A128-FEA952708D15}.Debug .NET Native|ARM.ActiveCfg = Debug .NET Native|ARM
+		{75CCCE90-11AA-405D-A128-FEA952708D15}.Debug .NET Native|ARM.Build.0 = Debug .NET Native|ARM
+		{75CCCE90-11AA-405D-A128-FEA952708D15}.Debug .NET Native|ARM.Deploy.0 = Debug .NET Native|ARM
+		{75CCCE90-11AA-405D-A128-FEA952708D15}.Debug .NET Native|x64.ActiveCfg = Debug .NET Native|x64
+		{75CCCE90-11AA-405D-A128-FEA952708D15}.Debug .NET Native|x64.Build.0 = Debug .NET Native|x64
+		{75CCCE90-11AA-405D-A128-FEA952708D15}.Debug .NET Native|x64.Deploy.0 = Debug .NET Native|x64
+		{75CCCE90-11AA-405D-A128-FEA952708D15}.Debug .NET Native|x86.ActiveCfg = Debug .NET Native|x86
+		{75CCCE90-11AA-405D-A128-FEA952708D15}.Debug .NET Native|x86.Build.0 = Debug .NET Native|x86
+		{75CCCE90-11AA-405D-A128-FEA952708D15}.Debug .NET Native|x86.Deploy.0 = Debug .NET Native|x86
+		{75CCCE90-11AA-405D-A128-FEA952708D15}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{75CCCE90-11AA-405D-A128-FEA952708D15}.Debug|ARM.ActiveCfg = Debug|ARM
 		{75CCCE90-11AA-405D-A128-FEA952708D15}.Debug|ARM.Build.0 = Debug|ARM
 		{75CCCE90-11AA-405D-A128-FEA952708D15}.Debug|ARM.Deploy.0 = Debug|ARM
@@ -26,6 +51,7 @@ Global
 		{75CCCE90-11AA-405D-A128-FEA952708D15}.Debug|x86.ActiveCfg = Debug|x86
 		{75CCCE90-11AA-405D-A128-FEA952708D15}.Debug|x86.Build.0 = Debug|x86
 		{75CCCE90-11AA-405D-A128-FEA952708D15}.Debug|x86.Deploy.0 = Debug|x86
+		{75CCCE90-11AA-405D-A128-FEA952708D15}.Release|Any CPU.ActiveCfg = Release|x86
 		{75CCCE90-11AA-405D-A128-FEA952708D15}.Release|ARM.ActiveCfg = Release|ARM
 		{75CCCE90-11AA-405D-A128-FEA952708D15}.Release|ARM.Build.0 = Release|ARM
 		{75CCCE90-11AA-405D-A128-FEA952708D15}.Release|ARM.Deploy.0 = Release|ARM
@@ -35,18 +61,56 @@ Global
 		{75CCCE90-11AA-405D-A128-FEA952708D15}.Release|x86.ActiveCfg = Release|x86
 		{75CCCE90-11AA-405D-A128-FEA952708D15}.Release|x86.Build.0 = Release|x86
 		{75CCCE90-11AA-405D-A128-FEA952708D15}.Release|x86.Deploy.0 = Release|x86
+		{E7108835-AF55-4062-81BD-3ADE4116266F}.Debug .NET Native|Any CPU.ActiveCfg = Debug .NET Native|Any CPU
+		{E7108835-AF55-4062-81BD-3ADE4116266F}.Debug .NET Native|Any CPU.Build.0 = Debug .NET Native|Any CPU
+		{E7108835-AF55-4062-81BD-3ADE4116266F}.Debug .NET Native|ARM.ActiveCfg = Debug .NET Native|ARM
+		{E7108835-AF55-4062-81BD-3ADE4116266F}.Debug .NET Native|ARM.Build.0 = Debug .NET Native|ARM
+		{E7108835-AF55-4062-81BD-3ADE4116266F}.Debug .NET Native|x64.ActiveCfg = Debug .NET Native|x64
+		{E7108835-AF55-4062-81BD-3ADE4116266F}.Debug .NET Native|x64.Build.0 = Debug .NET Native|x64
+		{E7108835-AF55-4062-81BD-3ADE4116266F}.Debug .NET Native|x86.ActiveCfg = Debug .NET Native|x86
+		{E7108835-AF55-4062-81BD-3ADE4116266F}.Debug .NET Native|x86.Build.0 = Debug .NET Native|x86
+		{E7108835-AF55-4062-81BD-3ADE4116266F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E7108835-AF55-4062-81BD-3ADE4116266F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E7108835-AF55-4062-81BD-3ADE4116266F}.Debug|ARM.ActiveCfg = Debug|ARM
 		{E7108835-AF55-4062-81BD-3ADE4116266F}.Debug|ARM.Build.0 = Debug|ARM
 		{E7108835-AF55-4062-81BD-3ADE4116266F}.Debug|x64.ActiveCfg = Debug|x64
 		{E7108835-AF55-4062-81BD-3ADE4116266F}.Debug|x64.Build.0 = Debug|x64
 		{E7108835-AF55-4062-81BD-3ADE4116266F}.Debug|x86.ActiveCfg = Debug|x86
 		{E7108835-AF55-4062-81BD-3ADE4116266F}.Debug|x86.Build.0 = Debug|x86
+		{E7108835-AF55-4062-81BD-3ADE4116266F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E7108835-AF55-4062-81BD-3ADE4116266F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E7108835-AF55-4062-81BD-3ADE4116266F}.Release|ARM.ActiveCfg = Release|ARM
 		{E7108835-AF55-4062-81BD-3ADE4116266F}.Release|ARM.Build.0 = Release|ARM
 		{E7108835-AF55-4062-81BD-3ADE4116266F}.Release|x64.ActiveCfg = Release|x64
 		{E7108835-AF55-4062-81BD-3ADE4116266F}.Release|x64.Build.0 = Release|x64
+		{E7108835-AF55-4062-81BD-3ADE4116266F}.Release|x64.Deploy.0 = Release|x64
 		{E7108835-AF55-4062-81BD-3ADE4116266F}.Release|x86.ActiveCfg = Release|x86
 		{E7108835-AF55-4062-81BD-3ADE4116266F}.Release|x86.Build.0 = Release|x86
+		{5F89D345-6820-4758-991C-ECA4EFF60D22}.Debug .NET Native|Any CPU.ActiveCfg = Debug .NET Native|Any CPU
+		{5F89D345-6820-4758-991C-ECA4EFF60D22}.Debug .NET Native|Any CPU.Build.0 = Debug .NET Native|Any CPU
+		{5F89D345-6820-4758-991C-ECA4EFF60D22}.Debug .NET Native|ARM.ActiveCfg = Debug .NET Native|ARM
+		{5F89D345-6820-4758-991C-ECA4EFF60D22}.Debug .NET Native|ARM.Build.0 = Debug .NET Native|ARM
+		{5F89D345-6820-4758-991C-ECA4EFF60D22}.Debug .NET Native|x64.ActiveCfg = Debug .NET Native|x64
+		{5F89D345-6820-4758-991C-ECA4EFF60D22}.Debug .NET Native|x64.Build.0 = Debug .NET Native|x64
+		{5F89D345-6820-4758-991C-ECA4EFF60D22}.Debug .NET Native|x86.ActiveCfg = Debug .NET Native|x86
+		{5F89D345-6820-4758-991C-ECA4EFF60D22}.Debug .NET Native|x86.Build.0 = Debug .NET Native|x86
+		{5F89D345-6820-4758-991C-ECA4EFF60D22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F89D345-6820-4758-991C-ECA4EFF60D22}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F89D345-6820-4758-991C-ECA4EFF60D22}.Debug|ARM.ActiveCfg = Debug|ARM
+		{5F89D345-6820-4758-991C-ECA4EFF60D22}.Debug|ARM.Build.0 = Debug|ARM
+		{5F89D345-6820-4758-991C-ECA4EFF60D22}.Debug|x64.ActiveCfg = Debug|x64
+		{5F89D345-6820-4758-991C-ECA4EFF60D22}.Debug|x64.Build.0 = Debug|x64
+		{5F89D345-6820-4758-991C-ECA4EFF60D22}.Debug|x86.ActiveCfg = Debug|x86
+		{5F89D345-6820-4758-991C-ECA4EFF60D22}.Debug|x86.Build.0 = Debug|x86
+		{5F89D345-6820-4758-991C-ECA4EFF60D22}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F89D345-6820-4758-991C-ECA4EFF60D22}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F89D345-6820-4758-991C-ECA4EFF60D22}.Release|ARM.ActiveCfg = Release|ARM
+		{5F89D345-6820-4758-991C-ECA4EFF60D22}.Release|ARM.Build.0 = Release|ARM
+		{5F89D345-6820-4758-991C-ECA4EFF60D22}.Release|x64.ActiveCfg = Release|x64
+		{5F89D345-6820-4758-991C-ECA4EFF60D22}.Release|x64.Build.0 = Release|x64
+		{5F89D345-6820-4758-991C-ECA4EFF60D22}.Release|x64.Deploy.0 = Release|x64
+		{5F89D345-6820-4758-991C-ECA4EFF60D22}.Release|x86.ActiveCfg = Release|x86
+		{5F89D345-6820-4758-991C-ECA4EFF60D22}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

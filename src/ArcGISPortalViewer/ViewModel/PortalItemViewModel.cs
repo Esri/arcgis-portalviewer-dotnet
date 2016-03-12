@@ -26,10 +26,10 @@ namespace ArcGISPortalViewer.ViewModel
 
         public PortalItemViewModel()
         {
-            Messenger.Default.Register<ChangeItemSelectedMessage>(this, msg => { 
+            Messenger.Default.Register<ChangeItemSelectedMessage>(this, msg =>
+            {
                 PortalItem = msg.Item as ArcGISPortalItem;
-                //AppViewModel.CurrentAppViewModel.SelectedPortalItem = PortalItem; 
-            });           
+            });
         }
 
         #endregion Constructor
@@ -47,7 +47,7 @@ namespace ArcGISPortalViewer.ViewModel
                 {
                     _portalItem = value;
                     _comments = null;
-                    base.RaisePropertyChanged("PortalItem");                    
+                    base.RaisePropertyChanged("PortalItem");
                 }
             }
         }
@@ -67,7 +67,7 @@ namespace ArcGISPortalViewer.ViewModel
         {
             get
             {
-                if(_comments != null)
+                if (_comments != null)
                     return _comments;
                 if (PortalItem != null && PortalItem.NumComments > 0 && !IsDownloadingComments)
                 {
