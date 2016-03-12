@@ -17,15 +17,15 @@ using Windows.UI.Xaml.Media;
 
 namespace ArcGISPortalViewer.Popup.Primitives.Charting
 {
-	/// <summary>
-	/// FOR INTERNAL USE ONLY. Base class for charts. 
-	/// </summary>
-	[EditorBrowsable(EditorBrowsableState.Never)]
-	public abstract class BaseChart : Control
-	{
-		#region Private Members
+    /// <summary>
+    /// FOR INTERNAL USE ONLY. Base class for charts. 
+    /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public abstract class BaseChart : Control
+    {
+        #region Private Members
 
-		private readonly string[] _chartColors = { // 15 colors
+        private readonly string[] _chartColors = { // 15 colors
 		                            "284B70", // Blue
 		                            "702828", // Red
 		                            "5F7143", // Light Green
@@ -42,209 +42,209 @@ namespace ArcGISPortalViewer.Popup.Primitives.Charting
 		                            "B7B7B7", // Gray Shade 3
 		                            "A3A3A3" // Gray Shade 4
 		                        };
-		#endregion
+        #endregion
 
-		#region Constructors
-		/// <summary>
-		/// Initializes a new instance of the <see cref="BaseChart"/> class.
-		/// </summary>
-		internal BaseChart()
-		{
-			DefaultStyleKey = typeof(BaseChart);
-		}
-		
-		#endregion
+        #region Constructors
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BaseChart"/> class.
+        /// </summary>
+        internal BaseChart()
+        {
+            DefaultStyleKey = typeof(BaseChart);
+        }
 
-		#region Dependency Property Fields
-		public const string NormalizeSeparator = "_::_"; // separator for the normalize field in Fields
+        #endregion
 
-		///<summary>
-		/// Fields displayed into the chart (e.g Field1,Field2,Field3 or  Field1,Field2,Field3_::_NormalizeField)
-		///</summary>
-		public string Fields
-		{
-			get { return (string)GetValue(FieldsProperty); }
-			set { SetValue(FieldsProperty, value); }
-		}
+        #region Dependency Property Fields
+        public const string NormalizeSeparator = "_::_"; // separator for the normalize field in Fields
 
-		/// /// <summary>
-		/// Identifies the <see cref="Fields"/> dependency property.
-		/// </summary>
-		public static readonly DependencyProperty FieldsProperty =
-			DependencyProperty.Register("Fields", typeof(string), typeof(BaseChart), new PropertyMetadata(null, OnFieldsPropertyChanged));
+        ///<summary>
+        /// Fields displayed into the chart (e.g Field1,Field2,Field3 or  Field1,Field2,Field3_::_NormalizeField)
+        ///</summary>
+        public string Fields
+        {
+            get { return (string)GetValue(FieldsProperty); }
+            set { SetValue(FieldsProperty, value); }
+        }
 
-		static void OnFieldsPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-		{
-			((BaseChart)d).SetItemsSource();
-		}
+        /// /// <summary>
+        /// Identifies the <see cref="Fields"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty FieldsProperty =
+            DependencyProperty.Register("Fields", typeof(string), typeof(BaseChart), new PropertyMetadata(null, OnFieldsPropertyChanged));
 
-		#endregion
+        static void OnFieldsPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            ((BaseChart)d).SetItemsSource();
+        }
 
-		#region  Dependency Property KeyToLabelDictionary
-		///<summary>
-		/// Dictionary with the labels by field.
-		///</summary>
-		public ResourceDictionary KeyToLabelDictionary
-		{
-			get { return (ResourceDictionary)GetValue(KeyToLabelDictionaryProperty); }
-			set { SetValue(KeyToLabelDictionaryProperty, value); }
-		}
+        #endregion
 
-		/// /// <summary>
-		/// Identifies the <see cref="KeyToLabelDictionary"/> dependency property.
-		/// </summary>
-		public static readonly DependencyProperty KeyToLabelDictionaryProperty =
-			DependencyProperty.Register("KeyToLabelDictionary", typeof(ResourceDictionary), typeof(BaseChart), new PropertyMetadata(null, OnKeyToLabelDictionaryPropertyChanged));
+        #region  Dependency Property KeyToLabelDictionary
+        ///<summary>
+        /// Dictionary with the labels by field.
+        ///</summary>
+        public ResourceDictionary KeyToLabelDictionary
+        {
+            get { return (ResourceDictionary)GetValue(KeyToLabelDictionaryProperty); }
+            set { SetValue(KeyToLabelDictionaryProperty, value); }
+        }
 
-		static void OnKeyToLabelDictionaryPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-		{
-			((BaseChart)d).SetItemsSource();
-		}
-		#endregion
+        /// /// <summary>
+        /// Identifies the <see cref="KeyToLabelDictionary"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty KeyToLabelDictionaryProperty =
+            DependencyProperty.Register("KeyToLabelDictionary", typeof(ResourceDictionary), typeof(BaseChart), new PropertyMetadata(null, OnKeyToLabelDictionaryPropertyChanged));
 
-		#region Dependency Property ItemsSource
-		///<summary>
-		/// Dictionary with the values to display in the chart
-		///</summary>
-		public IDictionary<string, double> ItemsSource
-		{
-			get { return (IDictionary<string, double>)GetValue(ItemsSourceProperty); }
-			set { SetValue(ItemsSourceProperty, value); }
-		}
+        static void OnKeyToLabelDictionaryPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            ((BaseChart)d).SetItemsSource();
+        }
+        #endregion
 
-		/// <summary>
-		/// Identifies the <see cref="ItemsSource"/> dependency property.
-		/// </summary>
-		public static readonly DependencyProperty ItemsSourceProperty =
-			DependencyProperty.Register("ItemsSource", typeof(IDictionary<string, double>), typeof(BaseChart), new PropertyMetadata(null, OnItemsSourceChanged));
+        #region Dependency Property ItemsSource
+        ///<summary>
+        /// Dictionary with the values to display in the chart
+        ///</summary>
+        public IDictionary<string, double> ItemsSource
+        {
+            get { return (IDictionary<string, double>)GetValue(ItemsSourceProperty); }
+            set { SetValue(ItemsSourceProperty, value); }
+        }
 
-		private static void OnItemsSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-		{
-			((BaseChart)d).InvalidateChart();
-		}
-		#endregion
+        /// <summary>
+        /// Identifies the <see cref="ItemsSource"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ItemsSourceProperty =
+            DependencyProperty.Register("ItemsSource", typeof(IDictionary<string, double>), typeof(BaseChart), new PropertyMetadata(null, OnItemsSourceChanged));
 
-		/// <summary>
-		/// When overridden in a derived class, is invoked whenever application
-		/// code or internal processes (such as a rebuilding layout pass) call
-		/// <see cref="M:System.Windows.Controls.Control.ApplyTemplate"/>. In
-		/// simplest terms, this means the method is called just before a UI 
-		/// element displays in an application.
-		/// </summary>
-		protected override void OnApplyTemplate()
-		{
-			base.OnApplyTemplate();
-			RootElement = GetTemplateChild("Root") as Grid;
-			if (RootElement != null) 
-				GenerateChart();
-		}
+        private static void OnItemsSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            ((BaseChart)d).InvalidateChart();
+        }
+        #endregion
 
-		/// <summary>
-		/// Overrides MeasureOverride
-		/// </summary>
-		/// <param name="availableSize"></param>
-		/// <returns></returns>
-		protected override Size MeasureOverride(Size availableSize)
-		{
-			// Chart stretchs on available size
-			return availableSize;
-		}
+        /// <summary>
+        /// When overridden in a derived class, is invoked whenever application
+        /// code or internal processes (such as a rebuilding layout pass) call
+        /// <see cref="M:System.Windows.Controls.Control.ApplyTemplate"/>. In
+        /// simplest terms, this means the method is called just before a UI 
+        /// element displays in an application.
+        /// </summary>
+        protected override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+            RootElement = GetTemplateChild("Root") as Grid;
+            if (RootElement != null)
+                GenerateChart();
+        }
 
-		#region ForegroundColor
-		///<summary>
-		/// Color for chart axis and stroke of line chart points
-		///</summary>
-		protected Brush ForegroundColor
-		{
-			get
-			{
-				// Use the foreground color of the control 
-				return GetValue(Control.ForegroundProperty) as Brush;
-			}
-		}
+        /// <summary>
+        /// Overrides MeasureOverride
+        /// </summary>
+        /// <param name="availableSize"></param>
+        /// <returns></returns>
+        protected override Size MeasureOverride(Size availableSize)
+        {
+            // Chart stretchs on available size
+            return availableSize;
+        }
 
-		#endregion
+        #region ForegroundColor
+        ///<summary>
+        /// Color for chart axis and stroke of line chart points
+        ///</summary>
+        protected Brush ForegroundColor
+        {
+            get
+            {
+                // Use the foreground color of the control 
+                return GetValue(Control.ForegroundProperty) as Brush;
+            }
+        }
 
-		#region Protected Methods
+        #endregion
 
-		///<summary>
-		/// Set the tooltip of a data point
-		///</summary>
-		protected virtual void SetTooltip(DependencyObject element, string key, string value)
-		{
-			ToolTipService.SetToolTip(element, 
-				string.Format("{0} : {1}", key, value));
-		}
+        #region Protected Methods
 
-		/// <summary>
-		/// Generates the chart from the ItemsSource
-		/// </summary>
-		protected abstract void GenerateChart();
+        ///<summary>
+        /// Set the tooltip of a data point
+        ///</summary>
+        protected virtual void SetTooltip(DependencyObject element, string key, string value)
+        {
+            ToolTipService.SetToolTip(element,
+                string.Format("{0} : {1}", key, value));
+        }
 
-		/// <summary>
-		/// Root element of the control
-		/// </summary>
-		protected Grid RootElement { get; private set; }
+        /// <summary>
+        /// Generates the chart from the ItemsSource
+        /// </summary>
+        protected abstract void GenerateChart();
 
-		/// <summary>
-		/// Invalidates the chart
-		/// </summary>
-		protected void InvalidateChart()
-		{
-			if (RootElement != null)
-				GenerateChart();
-		}
+        /// <summary>
+        /// Root element of the control
+        /// </summary>
+        protected Grid RootElement { get; private set; }
 
-		/// <summary>
-		/// Returns a color by index
-		/// </summary>
-		/// <param name="index"></param>
-		/// <returns></returns>
-		protected Brush GetColorByIndex(int index)
-		{
-			string chartColor = _chartColors[index % _chartColors.Count()];
-			Color color = Color.FromArgb(0xff, byte.Parse(chartColor.Substring(0, 2), NumberStyles.HexNumber), byte.Parse(chartColor.Substring(2, 2), NumberStyles.HexNumber), byte.Parse(chartColor.Substring(4, 2), NumberStyles.HexNumber));
-			return new SolidColorBrush(color);
-		}
+        /// <summary>
+        /// Invalidates the chart
+        /// </summary>
+        protected void InvalidateChart()
+        {
+            if (RootElement != null)
+                GenerateChart();
+        }
 
-		/// <summary>
-		/// Returns a double value formatted to be displayed in axis or tooltip.
-		/// </summary>
-		/// <param name="value"></param>
-		/// <returns>Label</returns>
-		protected string FormattedValue(double value)
-		{
-			// Use group separator
-			return value.ToString("#,0.##########");
-		}
-		#endregion
+        /// <summary>
+        /// Returns a color by index
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        protected Brush GetColorByIndex(int index)
+        {
+            string chartColor = _chartColors[index % _chartColors.Count()];
+            Color color = Color.FromArgb(0xff, byte.Parse(chartColor.Substring(0, 2), NumberStyles.HexNumber), byte.Parse(chartColor.Substring(2, 2), NumberStyles.HexNumber), byte.Parse(chartColor.Substring(4, 2), NumberStyles.HexNumber));
+            return new SolidColorBrush(color);
+        }
 
-		#region Private Methods
+        /// <summary>
+        /// Returns a double value formatted to be displayed in axis or tooltip.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns>Label</returns>
+        protected string FormattedValue(double value)
+        {
+            // Use group separator
+            return value.ToString("#,0.##########");
+        }
+        #endregion
 
-		private void SetItemsSource()
-		{
-			if (!string.IsNullOrEmpty(Fields))
-			{
-				var binding = new Binding
-				{
-					Path = new PropertyPath(""),
-					Converter = new ChartConverter { KeyToLabelDictionary = KeyToLabelDictionary },
-					ConverterParameter = Fields
-				};
-				SetBinding(ItemsSourceProperty, binding);
-			}
-		} 
-		#endregion
+        #region Private Methods
 
-	}
+        private void SetItemsSource()
+        {
+            if (!string.IsNullOrEmpty(Fields))
+            {
+                var binding = new Binding
+                {
+                    Path = new PropertyPath(""),
+                    Converter = new ChartConverter { KeyToLabelDictionary = KeyToLabelDictionary },
+                    ConverterParameter = Fields
+                };
+                SetBinding(ItemsSourceProperty, binding);
+            }
+        }
+        #endregion
 
-	#region ChartConverter
-	/// <summary>
-	/// Converts and filters the attributes for use with displaying charting in popup.
-	/// </summary>
-	internal sealed class ChartConverter : IValueConverter
-	{
-		public ResourceDictionary KeyToLabelDictionary { get; set; }
+    }
+
+    #region ChartConverter
+    /// <summary>
+    /// Converts and filters the attributes for use with displaying charting in popup.
+    /// </summary>
+    internal sealed class ChartConverter : IValueConverter
+    {
+        public ResourceDictionary KeyToLabelDictionary { get; set; }
 
         /// <summary>
         /// Modifies the source data before passing it to the target for display in the UI.
@@ -322,6 +322,6 @@ namespace ArcGISPortalViewer.Popup.Primitives.Charting
             throw new NotImplementedException();
         }
     }
-	#endregion
+    #endregion
 
 }

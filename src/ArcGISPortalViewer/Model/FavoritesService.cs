@@ -45,8 +45,8 @@ namespace ArcGISPortalViewer.Model
         public FavoritesService()
         {
             //DeleteFavoritesList();            
-           _currentFavoritesService = this;          
-        }       
+            _currentFavoritesService = this;
+        }
 
         public List<string> GetFavoritesIds()
         {
@@ -69,7 +69,7 @@ namespace ArcGISPortalViewer.Model
             List<string> favoriteItems = GetFavoritesIds();
             if (string.IsNullOrEmpty(itemId) || favoriteItems == null || favoriteItems.Contains(itemId))
                 return;
-            
+
             //add item to Favorites collection
             Favorites.Add(portalItemViewModel);
             // add item id to favoriteItems
@@ -122,7 +122,7 @@ namespace ArcGISPortalViewer.Model
             ApplicationDataContainer roamingSettings = ApplicationData.Current.RoamingSettings;
             try
             {
-                roamingSettings.Values["FavoritesList"] = favoriteItems.Count > 0 ? favoriteItems.ToArray() : new string[]{""};
+                roamingSettings.Values["FavoritesList"] = favoriteItems.Count > 0 ? favoriteItems.ToArray() : new string[] { "" };
             }
             catch (Exception ex)
             {

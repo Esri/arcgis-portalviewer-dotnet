@@ -63,7 +63,7 @@ namespace ArcGISPortalViewer.Model
             get
             {
                 if (Image != null && Image is BitmapImage)
-                    return ((BitmapImage) Image).UriSource;
+                    return ((BitmapImage)Image).UriSource;
                 return null;
 
                 //if (ArcGISPortalItem == null)                   

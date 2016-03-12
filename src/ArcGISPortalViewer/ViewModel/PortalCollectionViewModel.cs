@@ -20,7 +20,7 @@ namespace ArcGISPortalViewer.ViewModel
     public class PortalCollectionViewModel : ViewModelBase
     {
         public string CollectionTitle { get; private set; }
-        
+
         /// <summary>
         /// The <see cref="CurrentCollection" /> property's name.
         /// </summary>
@@ -41,15 +41,15 @@ namespace ArcGISPortalViewer.ViewModel
             set
             {
                 Set(CurrentCollectionPropertyName, ref _currentCollection, value);
-                SelectedPortalItem = null; 
+                SelectedPortalItem = null;
             }
         }
-        
+
         public RelayCommand<object> ItemClickCommand { get; set; }
 
         private ArcGISPortalItem _selectedPortalItem;
-        public ArcGISPortalItem SelectedPortalItem 
-        { 
+        public ArcGISPortalItem SelectedPortalItem
+        {
             get { return _selectedPortalItem; }
             set
             {

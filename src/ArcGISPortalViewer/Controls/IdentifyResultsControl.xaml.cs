@@ -14,30 +14,30 @@ namespace ArcGISPortalViewer.Controls
 {
     public sealed partial class IdentifyResultsControl
     {
-        private const string SELECTED_NUMBER_OUT_OF_TOTAL_ITEMS_FORMAT_STRING = "({0} of {1})";        
+        private const string SELECTED_NUMBER_OUT_OF_TOTAL_ITEMS_FORMAT_STRING = "({0} of {1})";
 
         public IdentifyResultsControl()
         {
             InitializeComponent();
-        }        
+        }
 
         #region ItemsSource
 
         public IEnumerable<PopupItem> ItemsSource
         {
             get { return (IEnumerable<PopupItem>)GetValue(ItemsSourceProperty); }
-            set{ SetValue(ItemsSourceProperty, value);}
+            set { SetValue(ItemsSourceProperty, value); }
         }
-        
+
         public static readonly DependencyProperty ItemsSourceProperty =
             DependencyProperty.Register("ItemsSource", typeof(object), typeof(IdentifyResultsControl), new PropertyMetadata(null, OnItemsSourcePropertyChanged));
 
         private static void OnItemsSourcePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {            
-            var control = ((IdentifyResultsControl)d);            
+        {
+            var control = ((IdentifyResultsControl)d);
             control.UpdateCount();
             control.UpdateSelectedItemPositionText();
-        }        
+        }
 
         #endregion ItemsSource
 
@@ -54,7 +54,7 @@ namespace ArcGISPortalViewer.Controls
 
         private static void OnSelectedItemPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var control = ((IdentifyResultsControl) d);            
+            var control = ((IdentifyResultsControl)d);
             control.UpdateSelectedItemPositionText();
         }
 
@@ -67,7 +67,7 @@ namespace ArcGISPortalViewer.Controls
             get { return (string)GetValue(SelectedItemPositionTextProperty); }
             private set { SetValue(SelectedItemPositionTextProperty, value); }
         }
-        
+
         public static readonly DependencyProperty SelectedItemPositionTextProperty =
             DependencyProperty.Register("SelectedItemPositionText", typeof(string), typeof(IdentifyResultsControl), new PropertyMetadata(null));
 
@@ -93,9 +93,9 @@ namespace ArcGISPortalViewer.Controls
             get { return (bool)GetValue(ShowDetailViewProperty); }
             set { SetValue(ShowDetailViewProperty, value); }
         }
-        
+
         public static readonly DependencyProperty ShowDetailViewProperty =
-            DependencyProperty.Register("ShowDetailView", typeof(bool), typeof(IdentifyResultsControl), new PropertyMetadata(false));        
+            DependencyProperty.Register("ShowDetailView", typeof(bool), typeof(IdentifyResultsControl), new PropertyMetadata(false));
 
         #endregion ShowDetailView
 
@@ -107,7 +107,7 @@ namespace ArcGISPortalViewer.Controls
             get { return (ICommand)GetValue(OnSelectedItemClickedCommandProperty); }
             set { SetValue(OnSelectedItemClickedCommandProperty, value); }
         }
-        
+
         public static readonly DependencyProperty OnSelectedItemClickedCommandProperty =
             DependencyProperty.Register("OnSelectedItemClickedCommand", typeof(ICommand), typeof(IdentifyResultsControl), new PropertyMetadata(null));
 
@@ -120,7 +120,7 @@ namespace ArcGISPortalViewer.Controls
             get { return (ICommand)GetValue(OnSetViewClickedCommandProperty); }
             set { SetValue(OnSetViewClickedCommandProperty, value); }
         }
-        
+
         public static readonly DependencyProperty OnSetViewClickedCommandProperty =
             DependencyProperty.Register("OnSetViewClickedCommand", typeof(ICommand), typeof(IdentifyResultsControl), new PropertyMetadata(null));
 
@@ -133,7 +133,7 @@ namespace ArcGISPortalViewer.Controls
             get { return (ICommand)GetValue(OnBackClickedCommandProperty); }
             set { SetValue(OnBackClickedCommandProperty, value); }
         }
-        
+
         public static readonly DependencyProperty OnBackClickedCommandProperty =
             DependencyProperty.Register("OnBackClickedCommand", typeof(ICommand), typeof(IdentifyResultsControl), new PropertyMetadata(null));
 
@@ -142,10 +142,10 @@ namespace ArcGISPortalViewer.Controls
         #region Private Methods
 
         private void UpdateSelectedItemPositionText()
-        {            
+        {
             var total = ItemsSource != null ? ItemsSource.Count() : 0;
             var position = ItemsSource != null && SelectedItem != null ? (ItemsSource.ToList().IndexOf(SelectedItem) + 1) : 0;
-            SelectedItemPositionText = string.Format(SELECTED_NUMBER_OUT_OF_TOTAL_ITEMS_FORMAT_STRING, position, total );
+            SelectedItemPositionText = string.Format(SELECTED_NUMBER_OUT_OF_TOTAL_ITEMS_FORMAT_STRING, position, total);
         }
 
         private void UpdateCount()

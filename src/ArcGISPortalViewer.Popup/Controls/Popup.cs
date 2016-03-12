@@ -26,8 +26,8 @@ namespace ArcGISPortalViewer.Popup.Controls
 
         private readonly Style _pageSubHeaderTextStyle = (Style)Application.Current.Resources["PageSubheaderTextStyle"];
         private readonly Style _baselineTextStyle = (Style)Application.Current.Resources["BaselineTextStyle"];
-        private readonly double _controlContentThemeFontSize =(double) Application.Current.Resources["ControlContentThemeFontSize"];
-        private readonly FontFamily _contentControlThemeFontFamily =(FontFamily) Application.Current.Resources["ContentControlThemeFontFamily"];
+        private readonly double _controlContentThemeFontSize = (double)Application.Current.Resources["ControlContentThemeFontSize"];
+        private readonly FontFamily _contentControlThemeFontFamily = (FontFamily)Application.Current.Resources["ContentControlThemeFontFamily"];
 
         #endregion Private Members
 
@@ -55,7 +55,7 @@ namespace ArcGISPortalViewer.Popup.Controls
 
         private static void OnPopupInfoPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            ((Popup) d).UpdateTemplate();
+            ((Popup)d).UpdateTemplate();
         }
 
         #endregion PopupInfo
@@ -85,7 +85,7 @@ namespace ArcGISPortalViewer.Popup.Controls
             get { return (IEnumerable<FieldInfo>)GetValue(FieldsProperty); }
             set { SetValue(FieldsProperty, value); }
         }
-        
+
         public static readonly DependencyProperty FieldsProperty =
             DependencyProperty.Register("Fields", typeof(IEnumerable<FieldInfo>), typeof(Popup), new PropertyMetadata(null, OnFieldsPropertyChanged));
 
@@ -129,7 +129,7 @@ namespace ArcGISPortalViewer.Popup.Controls
         private void UpdateTemplate()
         {
             var stackPanel = new StackPanel { Orientation = Orientation.Vertical };
-            Content = stackPanel;                       
+            Content = stackPanel;
 
             var titleText = new TextBlock
             {
@@ -169,9 +169,9 @@ namespace ArcGISPortalViewer.Popup.Controls
                 stackPanel.Children.Add(desc);
 
                 var p = new Paragraph();
-                desc.Blocks.Add(p);                
-                
-                BindingOperations.SetBinding(p,HtmlToTextConverter.HtmlToInlinesProperty, new Binding
+                desc.Blocks.Add(p);
+
+                BindingOperations.SetBinding(p, HtmlToTextConverter.HtmlToInlinesProperty, new Binding
                 {
                     Path = new PropertyPath("Attributes"),
                     Source = this,
@@ -200,7 +200,7 @@ namespace ArcGISPortalViewer.Popup.Controls
                         Text = item.Label ?? item.FieldName,
                         Foreground = new SolidColorBrush(Colors.DarkGray),
                         TextWrapping = TextWrapping.Wrap,
-                        TextTrimming = TextTrimming.WordEllipsis                        
+                        TextTrimming = TextTrimming.WordEllipsis
                     };
                     sp.Children.Add(l);
                     if (!hasTitle)
@@ -264,7 +264,7 @@ namespace ArcGISPortalViewer.Popup.Controls
             if (PopupInfo != null && PopupInfo.MediaInfos != null)
             {
                 foreach (var item in PopupInfo.MediaInfos)
-                {                   
+                {
                     if (!string.IsNullOrEmpty(item.Title))
                     {
                         var mediaTitle = new TextBlock
@@ -289,11 +289,11 @@ namespace ArcGISPortalViewer.Popup.Controls
                         }
                         mediaTitle.SetBinding(TextBlock.TextProperty, new Binding
                         {
-                             Path = new PropertyPath("Attributes"),
-                             Source = this,
-                             Converter = new StringFormatToStringConverter(),
-                             ConverterParameter = item.Title
-                        });                        
+                            Path = new PropertyPath("Attributes"),
+                            Source = this,
+                            Converter = new StringFormatToStringConverter(),
+                            ConverterParameter = item.Title
+                        });
                     }
                     if (!string.IsNullOrEmpty(item.Caption))
                     {
@@ -323,26 +323,26 @@ namespace ArcGISPortalViewer.Popup.Controls
                             Source = this,
                             Converter = new StringFormatToStringConverter(),
                             ConverterParameter = item.Caption
-                        });                        
+                        });
                     }
 
-					IEnumerable<KeyValuePair<string,string>> fieldMappings = null;
-					if (PopupInfo != null && PopupInfo.FieldInfos != null)
-					{
-						fieldMappings = from f in PopupInfo.FieldInfos
-										select (new KeyValuePair<string, string>(f.FieldName, f.Label ?? f.FieldName));
-					}
-					BaseChart chart = null;
+                    IEnumerable<KeyValuePair<string, string>> fieldMappings = null;
+                    if (PopupInfo != null && PopupInfo.FieldInfos != null)
+                    {
+                        fieldMappings = from f in PopupInfo.FieldInfos
+                                        select (new KeyValuePair<string, string>(f.FieldName, f.Label ?? f.FieldName));
+                    }
+                    BaseChart chart = null;
                     switch (item.Type)
                     {
-                        case MediaType.Image:                        
+                        case MediaType.Image:
                             var imageGrid = new Grid();
                             stackPanel.Children.Add(imageGrid);
                             if (!string.IsNullOrEmpty(item.Value.SourceUrl))
                             {
                                 var image = new Image
                                 {
-                                    Margin = new Thickness(0,10,0,0),
+                                    Margin = new Thickness(0, 10, 0, 0),
                                     Width = 200d,
                                     Height = 200d,
                                     Stretch = Stretch.UniformToFill
@@ -373,51 +373,51 @@ namespace ArcGISPortalViewer.Popup.Controls
                                     ConverterParameter = item.Value.LinkUrl
                                 });
                             }
-                            break;                        
-                        case MediaType.BarChart:                            
-								chart = new BarChart();
-                                break;                            
-                        case MediaType.ColumnChart:                           
-                                chart = new ColumnChart();                             
-                                break;                           
-                        case MediaType.LineChart:                            
-								chart = new LineChart();
-                                break;                            
-                        case MediaType.PieChart:                            
-                                //string normalizeField = item.Value.NormalizeField;
-                                chart = new PieChart();
-                                break;                            
+                            break;
+                        case MediaType.BarChart:
+                            chart = new BarChart();
+                            break;
+                        case MediaType.ColumnChart:
+                            chart = new ColumnChart();
+                            break;
+                        case MediaType.LineChart:
+                            chart = new LineChart();
+                            break;
+                        case MediaType.PieChart:
+                            //string normalizeField = item.Value.NormalizeField;
+                            chart = new PieChart();
+                            break;
                     }
-					if (chart != null)
-					{
-						var fieldString = string.Join(",", item.Value.Fields);
-						var normalizeField = item.Value.NormalizeField;
-						if (!string.IsNullOrEmpty(normalizeField) && !normalizeField.Equals("null"))
-							fieldString += BaseChart.NormalizeSeparator + normalizeField;
+                    if (chart != null)
+                    {
+                        var fieldString = string.Join(",", item.Value.Fields);
+                        var normalizeField = item.Value.NormalizeField;
+                        if (!string.IsNullOrEmpty(normalizeField) && !normalizeField.Equals("null"))
+                            fieldString += BaseChart.NormalizeSeparator + normalizeField;
                         chart.Margin = new Thickness(0, 10, 0, 0);
-						chart.Fields = fieldString;
-						chart.Height = 200;
-						chart.Width = 200;
-						chart.FontSize = 10d;
-					    var keyValuePairs = fieldMappings as KeyValuePair<string, string>[] ?? fieldMappings.ToArray();
-					    if (keyValuePairs.Any())
-						{
-							chart.KeyToLabelDictionary = new ResourceDictionary();
-							foreach (var pair in keyValuePairs)
-								chart.KeyToLabelDictionary[pair.Key] = pair.Value;
-						}
-						stackPanel.Children.Add(chart);
-						chart.SetBinding(DataContextProperty, new Binding
-						{
-							Path = new PropertyPath("Attributes"),
-							Source = this,
-						});
-					}
+                        chart.Fields = fieldString;
+                        chart.Height = 200;
+                        chart.Width = 200;
+                        chart.FontSize = 10d;
+                        var keyValuePairs = fieldMappings as KeyValuePair<string, string>[] ?? fieldMappings.ToArray();
+                        if (keyValuePairs.Any())
+                        {
+                            chart.KeyToLabelDictionary = new ResourceDictionary();
+                            foreach (var pair in keyValuePairs)
+                                chart.KeyToLabelDictionary[pair.Key] = pair.Value;
+                        }
+                        stackPanel.Children.Add(chart);
+                        chart.SetBinding(DataContextProperty, new Binding
+                        {
+                            Path = new PropertyPath("Attributes"),
+                            Source = this,
+                        });
+                    }
                 }
-            }        
+            }
         }
 
         #endregion Private Methods
-        
+
     }
 }

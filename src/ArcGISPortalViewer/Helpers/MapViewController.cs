@@ -1,4 +1,4 @@
-// (c) Copyright ESRI.
+﻿// (c) Copyright ESRI.
 // This source is subject to the Microsoft Public License (Ms-PL).
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved
@@ -40,7 +40,7 @@ namespace ArcGISPortalViewer.Helpers
             var map = MapView;
             if (map != null && geometry != null)
                 return map.SetViewAsync(geometry);
-             
+
             return Task.FromResult(false);
         }
 
@@ -94,7 +94,7 @@ namespace ArcGISPortalViewer.Helpers
                         return false;
                 }
                 return await MapView.SetViewAsync(to, margin);
-            }            
+            }
             return await MapView.SetViewAsync(to, margin); //Pan to Point
         }
 
@@ -118,7 +118,7 @@ namespace ArcGISPortalViewer.Helpers
             }
         }
 
-        public  Task<IEnumerable<Graphic>> GraphicsLayerHitTestAsync(GraphicsLayer graphicsLayer, Point point,
+        public Task<IEnumerable<Graphic>> GraphicsLayerHitTestAsync(GraphicsLayer graphicsLayer, Point point,
             int maxHits = 10)
         {
             if (graphicsLayer == null)
@@ -199,7 +199,7 @@ namespace ArcGISPortalViewer.Helpers
 
         public static MapView GetMapView(DependencyObject obj)
         {
-            return (MapView) obj.GetValue(MapProperty);
+            return (MapView)obj.GetValue(MapProperty);
         }
 
         public static void SetMapView(DependencyObject obj, MapView value)
@@ -208,7 +208,7 @@ namespace ArcGISPortalViewer.Helpers
         }
 
         public static readonly DependencyProperty MapProperty =
-            DependencyProperty.RegisterAttached("MapView", typeof (MapView), typeof (MapViewController),
+            DependencyProperty.RegisterAttached("MapView", typeof(MapView), typeof(MapViewController),
                 new PropertyMetadata(null, OnMapViewPropertyChanged));
 
         private static void OnMapViewPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -253,9 +253,9 @@ namespace ArcGISPortalViewer.Helpers
             }
             else if (e.PropertyName == "UnitsPerPixel")
                 OnPropertyChanged("UnitsPerPixel");
-			else if (e.PropertyName == "TimeExtent")
-				OnPropertyChanged("TimeExtent");
-		}
+            else if (e.PropertyName == "TimeExtent")
+                OnPropertyChanged("TimeExtent");
+        }
 
         #endregion
 
@@ -344,7 +344,7 @@ namespace ArcGISPortalViewer.Helpers
         /// <param name="eventArgs">Event arguments.</param>
         public void OnEvent(TSource source, TEventArgs eventArgs)
         {
-            TInstance target = (TInstance) _weakInstance.Target;
+            TInstance target = (TInstance)_weakInstance.Target;
             if (null != target)
             {
                 // Call registered action
@@ -365,7 +365,7 @@ namespace ArcGISPortalViewer.Helpers
         /// </summary>
         public void Detach()
         {
-            TInstance target = (TInstance) _weakInstance.Target;
+            TInstance target = (TInstance)_weakInstance.Target;
             if (null != OnDetachAction)
             {
                 OnDetachAction(target, this);

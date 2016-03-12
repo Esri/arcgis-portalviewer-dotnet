@@ -20,43 +20,43 @@ using Windows.UI.Xaml.Navigation;
 
 namespace ArcGISPortalViewer.Controls
 {
-	public sealed partial class LayerListControl : UserControl
-	{
-		public LayerListControl()
-		{
-			this.InitializeComponent();
-		}
+    public sealed partial class LayerListControl : UserControl
+    {
+        public LayerListControl()
+        {
+            this.InitializeComponent();
+        }
 
-		public IEnumerable<Layer> Layers
-		{
-			get { return (IEnumerable<Layer>)GetValue(LayersProperty); }
-			set { SetValue(LayersProperty, value); }
-		}
+        public IEnumerable<Layer> Layers
+        {
+            get { return (IEnumerable<Layer>)GetValue(LayersProperty); }
+            set { SetValue(LayersProperty, value); }
+        }
 
-		public static readonly DependencyProperty LayersProperty =
-			DependencyProperty.Register("Layers", typeof(object), typeof(LayerListControl), new PropertyMetadata(null, OnLayerListControlPropertyChanged));
+        public static readonly DependencyProperty LayersProperty =
+            DependencyProperty.Register("Layers", typeof(object), typeof(LayerListControl), new PropertyMetadata(null, OnLayerListControlPropertyChanged));
 
-		private static void OnLayerListControlPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-		{
-			var ctrl = d as LayerListControl;
-			ctrl.LayerItems.ItemsSource = ctrl.Layers;
-		}
-	}
+        private static void OnLayerListControlPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var ctrl = d as LayerListControl;
+            ctrl.LayerItems.ItemsSource = ctrl.Layers;
+        }
+    }
 
-	public class ThumbTooltipValueConverter : IValueConverter
-	{
-		public object Convert(object value, Type targetType, object parameter, string language)
-		{
-			if (value is double)
-			{
-				return string.Format("{0:0}%", ((double)value) * 100);
-			}
-			return value;
-		}
+    public class ThumbTooltipValueConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            if (value is double)
+            {
+                return string.Format("{0:0}%", ((double)value) * 100);
+            }
+            return value;
+        }
 
-		public object ConvertBack(object value, Type targetType, object parameter, string language)
-		{
-			throw new NotImplementedException();
-		}
-	}
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

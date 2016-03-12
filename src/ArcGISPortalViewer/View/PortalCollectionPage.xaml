@@ -12,8 +12,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Page.Resources>                
-        <common:CollectionTypeConverter x:Key="collectionTypeConverter" />                
+    <Page.Resources>
+        <common:CollectionTypeConverter x:Key="collectionTypeConverter" />
         <Style
                 x:Key="GridViewItemStyle1"
                 TargetType="GridViewItem">
@@ -637,7 +637,7 @@
 
         <!-- Collection of items displayed by this page -->
         <CollectionViewSource x:Name="itemsViewSource" Source="{Binding CurrentCollection, Mode=OneWay, Converter={StaticResource collectionTypeConverter}}"/>
-       
+
         <DataTemplate x:Key="PortalItemTemplate">
             <Grid Width="300" Height="168" Background="Gray" Margin="0">
                 <TextBlock Foreground="#55FFFFFF" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="Segoe UI Symbol" Text="&#xE12B;" FontSize="72"/>
@@ -661,7 +661,7 @@
 										Height="25" Margin="15,0,15,15" />
             </Grid>
         </DataTemplate>
-        
+
         <!--the following commented PortalItemtemplate is an alternative to the one above.
             it shows the snippet or summary below the map title on each thumbnail.-->
         <!--<DataTemplate x:Key="PortalItemTemplate">
@@ -715,7 +715,7 @@
             <RowDefinition Height="140"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        
+
         <!-- Horizontal scrolling grid used in most view states -->
         <!--ItemContainerStyle="{StaticResource GridViewItemStyle1}"-->
         <GridView
@@ -816,7 +816,7 @@
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
     </Grid>
-    
+
     <common:LayoutAwarePage.BottomAppBar>
         <AppBar x:Name="appBar" Height="88" Background="{StaticResource ApplicationPageBackgroundThemeBrush}">
             <Grid  DataContext="{Binding AppVM, Source={StaticResource Locator}}">
@@ -830,10 +830,10 @@
                             IsEnabled="{Binding CurrentAppViewModel.IsPinningTile, Converter={StaticResource biConditionalConverter}, ConverterParameter=reverse}" 
                             Visibility="{Binding CurrentAppViewModel.SelectedPortalItem, Converter={StaticResource biConditionalConverter}}"
                             Command="{Binding CurrentAppViewModel.PinToStartCommand, Mode=OneWay}" CommandParameter="{Binding RelativeSource={RelativeSource Self}}" />
-                </StackPanel>               
+                </StackPanel>
             </Grid>
         </AppBar>
     </common:LayoutAwarePage.BottomAppBar>
 
-    
+
 </common:LayoutAwarePage>

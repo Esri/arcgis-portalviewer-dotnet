@@ -26,7 +26,7 @@ namespace ArcGISPortalViewer.ViewModel
         /// </summary>
         public const string ItemsPropertyName = "Items";
 
-        private ObservableCollection<ArcGISPortalItem> _items = null;      
+        private ObservableCollection<ArcGISPortalItem> _items = null;
 
         /// <summary>
         /// Sets and gets the Items property.
@@ -35,7 +35,7 @@ namespace ArcGISPortalViewer.ViewModel
         public ObservableCollection<ArcGISPortalItem> Items
         {
             get
-            {                
+            {
                 return _items;
             }
             set
@@ -43,7 +43,7 @@ namespace ArcGISPortalViewer.ViewModel
                 Set(ItemsPropertyName, ref _items, value);
             }
         }
-        
+
         //public string Title { get; set; }
         /// <summary>
         /// The <see cref="Title" /> property's name.
@@ -125,7 +125,7 @@ namespace ArcGISPortalViewer.ViewModel
                 return _removeFromFavoritesCommand ?? (_removeFromFavoritesCommand = new RelayCommand(() =>
                 {
                     FavoritesService.CurrentFavoritesService.RemoveFromFavorites(SelectedPortalItem);
-                    RaisePropertyChanged(() => IsSelectedItemInFavorites);                    
+                    RaisePropertyChanged(() => IsSelectedItemInFavorites);
                 }));
             }
         }
@@ -174,7 +174,7 @@ namespace ArcGISPortalViewer.ViewModel
 
             // reset Favorites when signing in
             Messenger.Default.Register<ChangeSignInMessage>(this, msg => { FavoritesService.CurrentFavoritesService.Favorites = null; });
-            
+
             // reset Favorites when signing out
             Messenger.Default.Register<ChangeSignOutMessage>(this, msg => { FavoritesService.CurrentFavoritesService.Favorites = null; });
         }

@@ -35,7 +35,7 @@ namespace ArcGISPortalViewer.Helpers
                 return new SimpleMarkerSymbol()
                 {
                     Color = Color.FromArgb(1, 0, 0, 0),
-                    Outline = new SimpleLineSymbol() {Width = 2, Color = Colors.White},
+                    Outline = new SimpleLineSymbol() { Width = 2, Color = Colors.White },
                     Size = 6
                 };
             return new CompositeSymbol()

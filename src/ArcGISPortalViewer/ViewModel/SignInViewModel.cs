@@ -14,7 +14,6 @@ using Esri.ArcGISRuntime.Portal;
 using Esri.ArcGISRuntime.Security;
 using Windows.Security.Credentials.UI;
 
-
 namespace ArcGISPortalViewer.ViewModel
 {
     public class SignInViewModel : ViewModelBase

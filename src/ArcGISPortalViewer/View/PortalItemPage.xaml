@@ -15,10 +15,10 @@
     mc:Ignorable="d"
     DataContext="{Binding PortalItemVM, Source={StaticResource Locator}}">
 
-    <Page.Resources>       
-        <common:ToStringFormatConverter x:Key="formatConverter" />       
+    <Page.Resources>
+        <common:ToStringFormatConverter x:Key="formatConverter" />
         <common:PortalItemToHtmlStringConverter x:Key="PortalItemToHtmlStringConverter" />
-        <CollectionViewSource x:Key="cvsProjects" x:Name="cvsProjects" IsSourceGrouped="True" ItemsPath="Activities"/>        
+        <CollectionViewSource x:Key="cvsProjects" x:Name="cvsProjects" IsSourceGrouped="True" ItemsPath="Activities"/>
 
         <Style x:Key="HeaderButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="{StaticResource ButtonBackgroundThemeBrush}"/>
@@ -98,7 +98,7 @@
     <Grid Background="White">
         <ProgressRing IsActive="{Binding IsDownloadingComments}" IsHitTestVisible="False"
 					  HorizontalAlignment="Center" VerticalAlignment="Center"
-					  Width="66" Height="66" />        
+					  Width="66" Height="66" />
         <Grid x:Name="LayoutRoot" Style="{StaticResource LayoutRootStyle}" Background="Transparent">
             <Grid.RowDefinitions>
                 <RowDefinition Height="140"/>
@@ -122,29 +122,29 @@
                             <core:InvokeCommandAction Command="{Binding CurrentAppViewModel.WebMapsQuerySubmittedCommand, Source={Binding AppVM, Source={StaticResource Locator}}}" />
                         </core:EventTriggerBehavior>
                     </interactivity:Interaction.Behaviors>
-                </SearchBox>               
+                </SearchBox>
             </Grid>
 
             <Grid Grid.Row="1" Margin="0,0,0,40">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <Border BorderThickness="0" Margin="120,0,0,0" Padding="0" Width="300" x:Name="ColumnOne">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Border BorderThickness="0" Margin="120,0,0,0" Padding="0" Width="300" x:Name="ColumnOne">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
 
-                            <StackPanel Grid.Row="0" VerticalAlignment="Top">
+                        <StackPanel Grid.Row="0" VerticalAlignment="Top">
 
                             <Button  Margin="-2,10,-2,0" Padding="0"
                                 Command="{Binding CurrentAppViewModel.OpenMapCommand, Mode=OneWay, Source={Binding AppVM, Source={StaticResource Locator}} }" 
                                 CommandParameter="{Binding PortalItem}"
                                 HorizontalAlignment="Stretch" VerticalAlignment="Top" Background="Transparent"
 								HorizontalContentAlignment="Stretch">
-                                    <StackPanel>
+                                <StackPanel>
                                     <Grid>
                                         <interactivity:Interaction.Behaviors>
                                             <core:EventTriggerBehavior EventName="Tapped">
@@ -152,33 +152,33 @@
                                             </core:EventTriggerBehavior>
                                         </interactivity:Interaction.Behaviors>
                                         <Rectangle Fill="Gray" Margin="1" />
-                                            <StackPanel VerticalAlignment="Center">
-                                                <TextBlock Foreground="#55FFFFFF" VerticalAlignment="Center"
+                                        <StackPanel VerticalAlignment="Center">
+                                            <TextBlock Foreground="#55FFFFFF" VerticalAlignment="Center"
 										   Margin="20"
 										   HorizontalAlignment="Center" FontFamily="Segoe UI Symbol">
                                             <Run Text="&#xE12B;" FontSize="72"
 												 />
-                                                </TextBlock>
-                                            </StackPanel>
+                                            </TextBlock>
+                                        </StackPanel>
 
-                                            <Image x:Name="image" Stretch="Uniform">
-                                                <Image.Source>
+                                        <Image x:Name="image" Stretch="Uniform">
+                                            <Image.Source>
                                                 <BitmapImage UriSource="{Binding PortalItem.ThumbnailUri}"
 												 
 												 />
-                                                    <!--UriSource="http://www.arcgis.com/sharing/content/items/a847f1f4cfa34cb487f6b17f151b9362/info/thumbnail/Land.jpg"-->
-                                                </Image.Source>
-                                            </Image>
-                                        </Grid>
-                                        <StackPanel Orientation="Horizontal"  Margin="10" HorizontalAlignment="Center">
-                                            <!--	<TextBlock FontFamily="Segoe UI Symbol" Text="&#xE12B;" FontSize="14" VerticalAlignment="Center" Margin="0,-5,10,0"/>-->
-                                            <TextBlock FontFamily="Segoe UI" Text="open map" FontSize="20" Opacity=".5" />
-                                            <!--<TextBlock Text="{StaticResource ChevronGlyph}" FontFamily="Segoe UI Symbol" Margin="10,-7,0,10" 
+                                                <!--UriSource="http://www.arcgis.com/sharing/content/items/a847f1f4cfa34cb487f6b17f151b9362/info/thumbnail/Land.jpg"-->
+                                            </Image.Source>
+                                        </Image>
+                                    </Grid>
+                                    <StackPanel Orientation="Horizontal"  Margin="10" HorizontalAlignment="Center">
+                                        <!--	<TextBlock FontFamily="Segoe UI Symbol" Text="&#xE12B;" FontSize="14" VerticalAlignment="Center" Margin="0,-5,10,0"/>-->
+                                        <TextBlock FontFamily="Segoe UI" Text="open map" FontSize="20" Opacity=".5" />
+                                        <!--<TextBlock Text="{StaticResource ChevronGlyph}" FontFamily="Segoe UI Symbol" Margin="10,-7,0,10" 
 										   Style="{StaticResource GroupHeaderTextStyle}"
 										   VerticalAlignment="Center"/>-->
-                                        </StackPanel>
                                     </StackPanel>
-                                </Button>
+                                </StackPanel>
+                            </Button>
 
                             <TextBlock Margin="0,20" Text="{Binding PortalItem.Snippet}"
 								   FontSize="14" TextWrapping="Wrap" 
@@ -192,7 +192,7 @@
                                             HorizontalAlignment="Left"
                                             Margin="-3,0,0,0"
                                             Padding="-2,0,0,0"
-                                            FontSize="24">                                  
+                                            FontSize="24">
                             </callisto:Rating>
                             <TextBlock FontSize="18">                                                                                                    
 							<Run>
@@ -201,41 +201,41 @@
 								</Run.Text>
 							</Run> 
 							<Run Text=" ratings"/>
-                                </TextBlock>
-                            </StackPanel>
+                            </TextBlock>
+                        </StackPanel>
 
 
-                            <StackPanel Grid.Row="1" Margin="0,10,0,0" >
-                                <TextBlock FontSize="14">
+                        <StackPanel Grid.Row="1" Margin="0,10,0,0" >
+                            <TextBlock FontSize="14">
                                 <Run Text="Web map by "/><Run Foreground="{StaticResource AppAccentBrush}" Text="{Binding PortalItem.Owner}"/>
-                                </TextBlock>
-                                <TextBlock FontSize="14" Margin="0,2,0,0">
+                            </TextBlock>
+                            <TextBlock FontSize="14" Margin="0,2,0,0">
                             <Run Text="Last modified:"/>
                             <Run>
                                 <Run.Text>
                                     <Binding Path="PortalItem.ModificationDate" Converter="{StaticResource formatConverter}" ConverterParameter="MMMM dd, yyyy" />
                                 </Run.Text>
                             </Run>
-                                </TextBlock>
-                            </StackPanel>
-                        </Grid>
-                    </Border>
-                    <Grid Grid.Column="1" x:Name="ColumnTwo">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="*" />
-                        </Grid.RowDefinitions>
+                            </TextBlock>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+                <Grid Grid.Column="1" x:Name="ColumnTwo">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
                     <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0">
                         <Button x:Name="OverviewButton" FontSize="32" FontWeight="Light" Content="Overview" Background="Transparent" Style="{StaticResource HeaderButtonStyle}" Padding="20,0" Click="OverviewButton_Click" />
                         <Button x:Name="CommentsButton" FontSize="32" FontWeight="Light" Content="Comments" Foreground="Gray" Background="Transparent" Style="{StaticResource HeaderButtonStyle}" Padding="20,0" Click="CommentsButton_Click" Visibility="{Binding PortalItem.NumComments, Converter={StaticResource biConditionalConverter}}" />
                     </StackPanel>
                     <Grid x:Name="OverviewGrid" Grid.Row="1">
-                            <Grid.Transitions>
-                                <TransitionCollection>
-                                    <EntranceThemeTransition />
-                                </TransitionCollection>
-                            </Grid.Transitions>
-                            <controls:HtmlPresenterControl Html="{Binding PortalItem, Converter={StaticResource PortalItemToHtmlStringConverter}}" 
+                        <Grid.Transitions>
+                            <TransitionCollection>
+                                <EntranceThemeTransition />
+                            </TransitionCollection>
+                        </Grid.Transitions>
+                        <controls:HtmlPresenterControl Html="{Binding PortalItem, Converter={StaticResource PortalItemToHtmlStringConverter}}" 
                                                            HtmlFontFamily="Segoe UI Light" HtmlFontSize="18"
                                                            Margin="16,0,50,0">
                             <interactivity:Interaction.Behaviors>
@@ -243,10 +243,10 @@
                                     <core:InvokeCommandAction Command="{Binding Source={StaticResource Locator}, Path=AppVM.HyperlinkNavigationCommand}" />
                                 </core:EventTriggerBehavior>
                             </interactivity:Interaction.Behaviors>
-                            </controls:HtmlPresenterControl>
+                        </controls:HtmlPresenterControl>
 
-                        </Grid>
-                        <Grid x:Name="CommentsGrid" Grid.Row="1" Visibility="Collapsed">
+                    </Grid>
+                    <Grid x:Name="CommentsGrid" Grid.Row="1" Visibility="Collapsed">
                         <Grid.Transitions>
                             <TransitionCollection>
                                 <EntranceThemeTransition />
@@ -295,58 +295,58 @@
                             </StackPanel>
                         </ScrollViewer>
                     </Grid>
-                    </Grid>
                 </Grid>
-            
-            
             </Grid>
 
-            <VisualStateManager.VisualStateGroups>
 
-                <!-- Visual states reflect the application's view state -->
-                <VisualStateGroup x:Name="ApplicationViewStates">
-                    <VisualState x:Name="FullScreenLandscape"/>
-                    <VisualState x:Name="Filled"/>
-
-                    <!-- The entire page respects the narrower 100-pixel margin convention for portrait -->
-                    <VisualState x:Name="FullScreenPortrait"/>
-
-                    <!-- The back button and title have different styles when snapped -->
-                    <VisualState x:Name="Snapped">
-                        <Storyboard>
-                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="appBar" Storyboard.TargetProperty="Visibility">
-                                <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
-                            </ObjectAnimationUsingKeyFrames>
-                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ColumnOne" Storyboard.TargetProperty="Margin">
-                                <DiscreteObjectKeyFrame KeyTime="0" Value="20,0"/>
-                            </ObjectAnimationUsingKeyFrames>
-                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ColumnOne" Storyboard.TargetProperty="Width">
-                                <DiscreteObjectKeyFrame KeyTime="0" Value="280"/>
-                            </ObjectAnimationUsingKeyFrames>
-                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ColumnTwo" Storyboard.TargetProperty="Visibility">
-                                <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
-                            </ObjectAnimationUsingKeyFrames>
-                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton" Storyboard.TargetProperty="Style">
-                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SnappedBackButtonStyle}"/>
-                            </ObjectAnimationUsingKeyFrames>
-                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="pageTitle" Storyboard.TargetProperty="Style">
-                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SnappedPageHeaderTextStyle}"/>
-                            </ObjectAnimationUsingKeyFrames>
-                        </Storyboard>
-                    </VisualState>
-                </VisualStateGroup>
-            </VisualStateManager.VisualStateGroups>
-                      
         </Grid>
+
+        <VisualStateManager.VisualStateGroups>
+
+            <!-- Visual states reflect the application's view state -->
+            <VisualStateGroup x:Name="ApplicationViewStates">
+                <VisualState x:Name="FullScreenLandscape"/>
+                <VisualState x:Name="Filled"/>
+
+                <!-- The entire page respects the narrower 100-pixel margin convention for portrait -->
+                <VisualState x:Name="FullScreenPortrait"/>
+
+                <!-- The back button and title have different styles when snapped -->
+                <VisualState x:Name="Snapped">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="appBar" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ColumnOne" Storyboard.TargetProperty="Margin">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="20,0"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ColumnOne" Storyboard.TargetProperty="Width">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="280"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ColumnTwo" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton" Storyboard.TargetProperty="Style">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SnappedBackButtonStyle}"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="pageTitle" Storyboard.TargetProperty="Style">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SnappedPageHeaderTextStyle}"/>
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
+    </Grid>
     <common:LayoutAwarePage.BottomAppBar>
         <AppBar x:Name="appBar" Height="88" Background="{StaticResource ApplicationPageBackgroundThemeBrush}">
-            <Grid DataContext="{Binding AppVM, Source={StaticResource Locator}}">                
-                <Grid.Resources>                                                                                
+            <Grid DataContext="{Binding AppVM, Source={StaticResource Locator}}">
+                <Grid.Resources>
                     <Style x:Key="PinAppBarButtonStyle" TargetType="Button" BasedOn="{StaticResource AppBarButtonStyle}">
                         <Setter Property="AutomationProperties.AutomationId" Value="PinAppBarButton"/>
                         <Setter Property="AutomationProperties.Name" Value="Pin to Start"/>
                         <Setter Property="Content" Value="&#xE141;"/>
-                    </Style>                    
+                    </Style>
                 </Grid.Resources>
                 <StackPanel Margin="0,0,30,0" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left" Visibility="{Binding CurrentAppViewModel.SelectedPortalItem, Converter={StaticResource biConditionalConverter}}" >
                     <Button Style="{StaticResource MapAppBarButtonStyle}" Command="{Binding CurrentAppViewModel.OpenMapCommand, Mode=OneWay}" CommandParameter="{Binding CurrentAppViewModel.SelectedPortalItem}" />

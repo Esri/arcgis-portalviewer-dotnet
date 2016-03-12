@@ -19,25 +19,15 @@ namespace ArcGISPortalViewer.ViewModel
             get
             {
                 return _signInCommand ?? (_signInCommand = new RelayCommand(() =>
-                    {
-                        Messenger.Default.Send<ChangeSignInMessage>(new ChangeSignInMessage());
-                    }
+                {
+                    Messenger.Default.Send<ChangeSignInMessage>(new ChangeSignInMessage());
+                }
                     ));
             }
         }
 
-        //private RelayCommand _anonymousAccessCommand;
-        //public RelayCommand AnonymousAccessCommand
-        //{
-        //    get
-        //    {
-        //        return _anonymousAccessCommand ?? (_anonymousAccessCommand = new RelayCommand(() =>
-        //            Messenger.Default.Send<ChangeAnonymousAccessMessage>(new ChangeAnonymousAccessMessage())));
-        //    }
-        //}
-
         public ArcGISBlankViewModel()
-        {            
+        {
         }
     }
 }

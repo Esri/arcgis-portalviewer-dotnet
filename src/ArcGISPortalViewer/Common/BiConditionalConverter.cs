@@ -71,9 +71,9 @@ namespace ArcGISPortalViewer.Common
                     if (targetType == typeof(Visibility))
                         return (!invert) ? Visibility.Visible : Visibility.Collapsed;
                     if (targetType == typeof(bool))
-                        return (!invert);    
-                }                
-            }                        
+                        return (!invert);
+                }
+            }
 
             return value;
         }

@@ -36,7 +36,7 @@ namespace ArcGISPortalViewer.View
         protected override void LoadState(Object navigationParameter, Dictionary<String, Object> pageState)
         {
             if (navigationParameter is ArcGISPortalItem)
-                AppViewModel.CurrentAppViewModel.SelectedPortalItem = (ArcGISPortalItem) navigationParameter;
+                AppViewModel.CurrentAppViewModel.SelectedPortalItem = (ArcGISPortalItem)navigationParameter;
         }
 
         /// <summary>

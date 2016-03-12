@@ -54,7 +54,7 @@ namespace ArcGISPortalViewer.ViewModel
     {
 
         #region Private Properties        
-        private INavigationService _navigationService;        
+        private INavigationService _navigationService;
         private ArcGISPortalItem _selectedPortalItem;
         private PortalGroupViewModel _selectedPortalGroup;
         private IncremetalLoadingCollection _selectedPortalItemCollection;
@@ -72,7 +72,7 @@ namespace ArcGISPortalViewer.ViewModel
                 RaisePropertyChanged(() => SelectedPortalItemCollection);
             }
         }
-       
+
         /// <summary>
         /// The <see cref="PortalService" /> property's name.
         /// </summary>
@@ -92,12 +92,12 @@ namespace ArcGISPortalViewer.ViewModel
             }
             set
             {
-                RaisePropertyChanging(PortalServicePropertyName);
+                // RaisePropertyChanging(PortalServicePropertyName); // See https://mvvmlight.codeplex.com/workitem/7662
                 _portalService = value;
                 RaisePropertyChanged(PortalServicePropertyName);
             }
         }
-        
+
         /// <summary>
         /// The <see cref="SelectedItem" /> property's name.
         /// </summary>
@@ -111,8 +111,6 @@ namespace ArcGISPortalViewer.ViewModel
         /// </summary>
         public const string IsLoadingDataPropertyName = "IsLoadingData";
 
-        //public ObservableCollection<object> FeaturedItems { get; private set; }
-        //public PortalItemCollection MyMaps { get; private set; }
         /// <summary>
         /// The <see cref="MyMaps" /> property's name.
         /// </summary>
@@ -126,16 +124,10 @@ namespace ArcGISPortalViewer.ViewModel
         /// </summary>
         public PortalItemCollection MyMaps
         {
-            get
-            {
-                return _myMaps;
-            }
-            set
-            {
-                Set(MyMapsPropertyName, ref _myMaps, value);
-            }
+            get { return _myMaps; }
+            set { Set(MyMapsPropertyName, ref _myMaps, value); }
         }
-        
+
         /// <summary>
         /// The <see cref="FeaturedItems" /> property's name.
         /// </summary>
@@ -157,8 +149,8 @@ namespace ArcGISPortalViewer.ViewModel
             {
                 Set(FeaturedItemsPropertyName, ref _featuredItems, value);
             }
-        }      
-                
+        }
+
         /// <summary>
         /// The <see cref="RecentItems" /> property's name.
         /// </summary>
@@ -178,10 +170,10 @@ namespace ArcGISPortalViewer.ViewModel
             }
             set
             {
-                Set(RecentItemsPropertyName, ref _recentItems, value);                
+                Set(RecentItemsPropertyName, ref _recentItems, value);
             }
         }
-                
+
         /// <summary>
         /// The <see cref="MostPopularItems" /> property's name.
         /// </summary>
@@ -204,7 +196,7 @@ namespace ArcGISPortalViewer.ViewModel
                 Set(MostPopularItemsPropertyName, ref _mostPopularItems, value);
             }
         }
-        
+
         /// <summary>
         /// The <see cref="FavoritesItems" /> property's name.
         /// </summary>
@@ -267,14 +259,14 @@ namespace ArcGISPortalViewer.ViewModel
                     && value != null)
                 {
                     _selectedPortalItem = value;
-                            
+
                     try
                     {
                         Messenger.Default.Send<ChangeItemSelectedMessage>(new ChangeItemSelectedMessage() { Item = _selectedPortalItem });
                         _navigationService.Navigate(App.ItemPageName, _selectedPortalItem);
                     }
                     catch (Exception ex)
-                    {                        
+                    {
                         var _ = App.ShowExceptionDialog(ex.InnerException);
                     }
                 }
@@ -326,13 +318,13 @@ namespace ArcGISPortalViewer.ViewModel
         public RelayCommand SignOutCommand { get { return _signOutCommand ?? (_signOutCommand = new RelayCommand(ExecuteSignOutCommand)); } }
 
         public RelayCommand<object> ItemClickCommand { get; set; }
-        public RelayCommand<object> MoreClickCommand { get; set; }       
+        public RelayCommand<object> MoreClickCommand { get; set; }
 
         #endregion
 
         #region Constructor
         public MainViewModel(INavigationService navigationService)
-        {           
+        {
             if (navigationService == null)
                 throw new ArgumentNullException("navigationService");
             else
@@ -340,10 +332,10 @@ namespace ArcGISPortalViewer.ViewModel
 
             try
             {
-              Task t = Initialize();
-            }            
+                Task t = Initialize();
+            }
             catch { }
-         
+
 #if DEBUG
             CreateDesignTimeData();
 #endif
@@ -374,7 +366,7 @@ namespace ArcGISPortalViewer.ViewModel
             {
                 // fill featured maps collection
                 IncremetalLoadingCollection.getMore getMoreItemsAsync0 = FeaturedQueryAsync;
-                FeaturedItems = new IncremetalLoadingCollection(getMoreItemsAsync0);                                
+                FeaturedItems = new IncremetalLoadingCollection(getMoreItemsAsync0);
                 FeaturedItems.Title = "Featured";
 
                 // fill most recent maps collection
@@ -419,10 +411,10 @@ namespace ArcGISPortalViewer.ViewModel
             ItemClickCommand = new RelayCommand<object>((e) =>
             {
                 // handle the type of EventArgs passed
-                if (e == null) 
+                if (e == null)
                     return;
-                
-                ArcGISPortalItem portalItem = null;                
+
+                ArcGISPortalItem portalItem = null;
                 // the GridView sends ItemClickEventArgs
                 if (e.GetType() == typeof(ItemClickEventArgs))
                     portalItem = ((ItemClickEventArgs)e).ClickedItem as ArcGISPortalItem;
@@ -439,8 +431,8 @@ namespace ArcGISPortalViewer.ViewModel
                     _navigationService.Navigate(App.ItemPageName, portalItem);
                 }
                 else // check if it is a PortalGroup
-                {                    
-                    ArcGISPortalGroup portalGroup = null;                    
+                {
+                    ArcGISPortalGroup portalGroup = null;
                     // the GridView sends ItemClickEventArgs
                     if (e.GetType() == typeof(ItemClickEventArgs))
                         portalGroup = ((ItemClickEventArgs)e).ClickedItem as ArcGISPortalGroup;
@@ -456,7 +448,7 @@ namespace ArcGISPortalViewer.ViewModel
                         //Use the navigation service to navigate to the page showing the item details
                         _navigationService.Navigate(App.GroupPageName);
                     }
-                }                
+                }
             });
 
             // initialize MoreClickCommand RelayCommand
@@ -464,7 +456,7 @@ namespace ArcGISPortalViewer.ViewModel
             {
                 if (objectCollection == null)
                     return;
-            
+
                 //Use the navigation service to navigate to the page showing the specific collection of portal items                
                 _navigationService.Navigate(App.CollectionPageName, objectCollection);
             });
@@ -479,7 +471,7 @@ namespace ArcGISPortalViewer.ViewModel
 
         #region Private Methods
 
-        private async Task<IEnumerable<ArcGISPortalItem>> GetMyMapsAsync() 
+        private async Task<IEnumerable<ArcGISPortalItem>> GetMyMapsAsync()
         {
             var ps = PortalService.CurrentPortalService;
             if (PortalService.CurrentPortalService.CurrentUser == null)
@@ -487,10 +479,10 @@ namespace ArcGISPortalViewer.ViewModel
 
             // modify query string to get the maps owned by the current user
             SearchParameters searchParam = SearchService.CreateSearchParameters("", PortalQuery.MyMaps, 1, 100);
-            searchParam.QueryString = string.Format(" ({0}) AND (owner: {1}) ", searchParam.QueryString,  ps.CurrentUser.UserName);
+            searchParam.QueryString = string.Format(" ({0}) AND (owner: {1}) ", searchParam.QueryString, ps.CurrentUser.UserName);
 
             IsLoadingData = true;
-            SearchResultInfo<ArcGISPortalItem> r = await ps.GetSearchResults(searchParam);           
+            SearchResultInfo<ArcGISPortalItem> r = await ps.GetSearchResults(searchParam);
             IsLoadingData = false;
             if (r == null) return null;
             return r.Results;
@@ -532,7 +524,7 @@ namespace ArcGISPortalViewer.ViewModel
         {
             IsLoadingData = true;
             var ps = PortalService.CurrentPortalService;
-            SearchResultInfo<ArcGISPortalItem> r = await ps.GetSearchResults(sp);           
+            SearchResultInfo<ArcGISPortalItem> r = await ps.GetSearchResults(sp);
             IsLoadingData = false;
             if (r == null) return null;
             return r.Results;
@@ -577,20 +569,20 @@ namespace ArcGISPortalViewer.ViewModel
 
         private void ExecuteSignInCommand()
         {
-            if (!App.SignInVM.IsCredentialsPersisted) 
+            if (!App.SignInVM.IsCredentialsPersisted)
                 Messenger.Default.Send<ChangeSignInMessage>(new ChangeSignInMessage() { });
         }
 
         private async void ExecuteSignOutCommand()
         {
-            Windows.UI.Popups.MessageDialog dialog = new Windows.UI.Popups.MessageDialog(string.Format("Do you want to sign out from {0}?", string.IsNullOrEmpty(PortalService.CurrentPortalService.OrganizationName)? "ArcGIS.com" : PortalService.CurrentPortalService.OrganizationName));
-            dialog.Commands.Add(new Windows.UI.Popups.UICommand("Sign out", (a) => 
-            { 
+            Windows.UI.Popups.MessageDialog dialog = new Windows.UI.Popups.MessageDialog(string.Format("Do you want to sign out from {0}?", string.IsNullOrEmpty(PortalService.CurrentPortalService.OrganizationName) ? "ArcGIS.com" : PortalService.CurrentPortalService.OrganizationName));
+            dialog.Commands.Add(new Windows.UI.Popups.UICommand("Sign out", (a) =>
+            {
                 // clear all observable collections
                 ClearAllCollections();
 
                 // signal changes on PortalService properties
-                RaisePropertyChanged(PortalServicePropertyName);                
+                RaisePropertyChanged(PortalServicePropertyName);
 
                 // sign out the current portal connection 
                 Messenger.Default.Send<ChangeSignOutMessage>(new ChangeSignOutMessage() { });
@@ -613,11 +605,11 @@ namespace ArcGISPortalViewer.ViewModel
             }
             catch (Exception ex)
             {
-                var _ = App.ShowExceptionDialog(ex);    
-            }          
-        }      
+                var _ = App.ShowExceptionDialog(ex);
+            }
+        }
         #endregion
-        
+
 
 #if DEBUG
         private void CreateDesignTimeData()

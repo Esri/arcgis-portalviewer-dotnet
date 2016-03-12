@@ -19,8 +19,8 @@ namespace ArcGISPortalViewer.Popup.Converters
             var formatter = parameter as string;
             if (dict == null || string.IsNullOrWhiteSpace(formatter))
                 return null;
-            if (!string.IsNullOrEmpty(formatter))            
-                value = AttributeBindingHelper.ResolveBinding(dict, formatter);            
+            if (!string.IsNullOrEmpty(formatter))
+                value = AttributeBindingHelper.ResolveBinding(dict, formatter);
             return value;
         }
 

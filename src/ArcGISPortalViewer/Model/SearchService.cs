@@ -17,7 +17,7 @@ namespace ArcGISPortalViewer.Model
     {
         public static SearchParameters CreateSearchParameters(string searchText, PortalQuery portalQuery, int startIndex = 1, int limit = 20, IList<string> favoriteItemIDs = null)
         {
-            string queryString = string.Format("{0} ({1})", searchText, "type:\"web map\" NOT type:\"web mapping application\"");            
+            string queryString = string.Format("{0} ({1})", searchText, "type:\"web map\" NOT type:\"web mapping application\"");
             string sortField = "";
             QuerySortOrder sortOrder = QuerySortOrder.Descending;
 
@@ -57,22 +57,22 @@ namespace ArcGISPortalViewer.Model
 
             SearchParameters searchParamters = new SearchParameters(queryString);
             searchParamters.StartIndex = startIndex;
-            searchParamters.Limit = limit;            
+            searchParamters.Limit = limit;
             searchParamters.SortField = sortField;
             searchParamters.SortOrder = sortOrder;
-            return searchParamters;        
+            return searchParamters;
         }
-        
+
         private static string GenerateFavoriteQueryFromIDs(IList<string> favoriteItemIDs)
         {
             if (favoriteItemIDs == null || favoriteItemIDs.Count <= 0)
                 return "";
-            
+
             var queryString = "";
             for (var i = 0; i < favoriteItemIDs.Count; i++)
             {
-                queryString = (i == 0) ? 
-                    String.Format("id: {0}" , favoriteItemIDs[i]) :
+                queryString = (i == 0) ?
+                    String.Format("id: {0}", favoriteItemIDs[i]) :
                     String.Format("{0} OR id: {1}", queryString, favoriteItemIDs[i]);
             }
             return queryString;

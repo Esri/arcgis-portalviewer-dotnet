@@ -44,7 +44,7 @@ namespace ArcGISPortalViewer.Helpers
 
     class ChangeItemCollectionMessage
     {
-        public object ItemCollection { get; set; }        
+        public object ItemCollection { get; set; }
     }
 
     class ChangeIncremetalCollectionMessage
