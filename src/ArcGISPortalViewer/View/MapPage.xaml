@@ -148,7 +148,7 @@
 					  Width="66" Height="66" />
 
         <!--Side Panel-->
-		<controls:CollapsibleTab Name="collapsibleTab" IsOpen="{Binding IsSidePaneOpen, Mode=TwoWay}">
+		<controls:CollapsibleTab x:Name="collapsibleTab" IsOpen="{Binding IsSidePaneOpen, Mode=TwoWay}">
 			<interactivity:Interaction.Behaviors>
 				<core:EventTriggerBehavior EventName="Opened">
 					<core:InvokeCommandAction Command="{Binding OnCollapsibleTabOpenedCommand}" CommandParameter="{Binding ElementName=collapsibleTab, Path=Width}" />

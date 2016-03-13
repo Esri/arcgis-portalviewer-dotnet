@@ -347,7 +347,7 @@ namespace ArcGISPortalViewer.Controls
 
 		public event EventHandler<TabItem> CurrentItemChanged;
 
-        public event EventHandler Opened;
+        public event EventHandler<EventArgs> Opened;
 		
         public event EventHandler Closed;
 	}

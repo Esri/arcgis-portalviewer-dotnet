@@ -123,7 +123,7 @@ namespace ArcGISPortalViewer.ViewModel
         {
             // the map controller is used to avoid using/passing the map control as a property to the MapViewModel
             Controller = new MapViewController();
-			Editor = new MeasureEditor();
+            Editor = new MeasureEditor();
             PortalItem = ArcGISPortalViewer.ViewModel.AppViewModel.CurrentAppViewModel.SelectedPortalItem;
             IsSidePaneOpen = false;
             LocationDisplay = new LocationDisplay();
@@ -165,7 +165,7 @@ namespace ArcGISPortalViewer.ViewModel
             get { return _portalItem; }
             set
             {
-                RaisePropertyChanging(PortalItemPropertyName);
+                //RaisePropertyChanging(PortalItemPropertyName); // See https://mvvmlight.codeplex.com/workitem/7662
                 _portalItem = value;
                 IsLoadingWebMap = true;
                 UpdateWebMap().ContinueWith(t =>
@@ -278,10 +278,10 @@ namespace ArcGISPortalViewer.ViewModel
         /// </summary>
         public Esri.ArcGISRuntime.Location.LocationDisplay LocationDisplay { get; private set; }
 
-		/// <summary>
-		/// Gets the editor used to draw on the map
-		/// </summary>
-		public Esri.ArcGISRuntime.Controls.Editor Editor { get; private set; }
+        /// <summary>
+        /// Gets the editor used to draw on the map
+        /// </summary>
+        public Esri.ArcGISRuntime.Controls.Editor Editor { get; private set; }
 
         private RelayCommand<object> _checkAutoPanMode;
         public ICommand CheckAutoPanMode
@@ -332,7 +332,7 @@ namespace ArcGISPortalViewer.ViewModel
                     return;
                 }
 
-                RaisePropertyChanging(WebMapPropertyName);
+                //RaisePropertyChanging(WebMapPropertyName);  // See https://mvvmlight.codeplex.com/workitem/7662
                 _webMap = value;
                 RaisePropertyChanged(WebMapPropertyName);
             }
@@ -363,7 +363,7 @@ namespace ArcGISPortalViewer.ViewModel
                     return;
                 }
 
-                RaisePropertyChanging(WebMapVMPropertyName);
+                //RaisePropertyChanging(WebMapVMPropertyName);  // See https://mvvmlight.codeplex.com/workitem/7662
                 _webMapViewModel = value;
                 RaisePropertyChanged(WebMapVMPropertyName);
                 RaisePropertyChanged("OperationalLayers");
@@ -456,11 +456,11 @@ namespace ArcGISPortalViewer.ViewModel
                 WebMap = await WebMap.FromPortalItemAsync(PortalItem);
                 if (WebMap == null)
                     return null;
-                
+
                 WebMapVM = await WebMapViewModel.LoadAsync(WebMap, this.PortalItem.ArcGISPortal);
                 if (WebMapVM == null)
                     return null;
-               
+
                 var errors = WebMapVM.LoadErrors.ToArray();
                 if (errors != null && errors.Any())
                 {
@@ -486,14 +486,14 @@ namespace ArcGISPortalViewer.ViewModel
                     var ex = new Exception(message);
                     var _ = App.ShowExceptionDialog(ex, title);
                 }
-                
-                // <start workaround>
+
+                //// <start workaround>
                 // This is work around for WebMapViewModel because OutFields is not being set 
                 // on the GeodatabaseFeatureServiceTable in the API this will be fixed after Beta.
-                foreach(var featureLayer in OperationalLayers.OfType<FeatureLayer>())
+                foreach (var featureLayer in OperationalLayers.OfType<FeatureLayer>())
                 {
                     var webMapLayer = WebMap.OperationalLayers.FirstOrDefault(wml => wml.Id == featureLayer.ID);
-                    if(webMapLayer != null && webMapLayer.PopupInfo != null && webMapLayer.PopupInfo.FieldInfos != null && webMapLayer.PopupInfo.FieldInfos.Any())
+                    if (webMapLayer != null && webMapLayer.PopupInfo != null && webMapLayer.PopupInfo.FieldInfos != null && webMapLayer.PopupInfo.FieldInfos.Any())
                     {
                         var serviceFeatureTable = featureLayer.FeatureTable as ServiceFeatureTable;
                         if (serviceFeatureTable != null && serviceFeatureTable.OutFields == null)
@@ -775,17 +775,17 @@ namespace ArcGISPortalViewer.ViewModel
                 var geo = new OnlineLocatorTask(new Uri("http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer", UriKind.Absolute), "");
 
                 boundingBox = boundingBox.Expand(1.2);
-               
+
                 _currentSearchString = text;
                 SearchResultStatus = string.Format("Searching for '{0}'...", text.Trim());
                 var result = await geo.FindAsync(new OnlineLocatorFindParameters(text)
                 {
-                    MaxLocations = 25,                    
+                    MaxLocations = 25,
                     OutSpatialReference = WebMapVM.SpatialReference,
                     SearchExtent = boundingBox,
                     Location = (MapPoint)GeometryEngine.NormalizeCentralMeridian(boundingBox.GetCenter()),
                     Distance = GetDistance(boundingBox),
-                    OutFields = new List<string>() { "PlaceName", "Type", "City", "Country" }                    
+                    OutFields = new List<string>() { "PlaceName", "Type", "City", "Country" }
                 }, cancellationToken);
 
                 // if no results, try again with larger and larger extent
@@ -802,13 +802,13 @@ namespace ArcGISPortalViewer.ViewModel
                         SearchExtent = boundingBox,
                         Location = (MapPoint)GeometryEngine.NormalizeCentralMeridian(boundingBox.GetCenter()),
                         Distance = GetDistance(boundingBox),
-                        OutFields = new List<string>() { "PlaceName", "Type", "City", "Country"}
+                        OutFields = new List<string>() { "PlaceName", "Type", "City", "Country" }
                     }, cancellationToken);
                 }
                 if (cancellationToken.IsCancellationRequested)
                     return;
 
-                if (result.Count == 0) 
+                if (result.Count == 0)
                 {
                     // atfer trying to expand the bounding box several times and finding no results, 
                     // let us try finding results without the spatial bound.
@@ -816,7 +816,7 @@ namespace ArcGISPortalViewer.ViewModel
                     {
                         MaxLocations = 25,
                         OutSpatialReference = WebMapVM.SpatialReference,
-                        OutFields = new List<string>() { "PlaceName", "Type", "City", "Country"}
+                        OutFields = new List<string>() { "PlaceName", "Type", "City", "Country" }
                     }, cancellationToken);
 
                     if (result.Any())
@@ -824,7 +824,7 @@ namespace ArcGISPortalViewer.ViewModel
                         // since the results are not bound by any spatial filter, let us show well known administrative 
                         // places e.g. countries and cities, and filter out other results e.g. restaurents and business names.
                         var typesToInclude = new List<string>()
-                        { "", "city", "community", "continent", "country", "county", "district", "locality", "municipality", "national capital", 
+                        { "", "city", "community", "continent", "country", "county", "district", "locality", "municipality", "national capital",
                           "neighborhood", "other populated place", "state capital", "state or province", "territory", "village"};
                         for (var i = result.Count - 1; i >= 0; --i)
                         {
@@ -936,13 +936,13 @@ namespace ArcGISPortalViewer.ViewModel
             // get the distance between the center of the current map extent and one of its corners
             if (extent != null && !extent.IsEmpty)
             {
-                var d = GeometryEngine.GeodesicLength(new Polyline(new PointCollection(extent.SpatialReference){ extent.GetCenter(), new MapPoint(extent.XMin, extent.YMin) },
+                var d = GeometryEngine.GeodesicLength(new Polyline(new PointCollection(extent.SpatialReference) { extent.GetCenter(), new MapPoint(extent.XMin, extent.YMin) },
                         extent.SpatialReference), GeodeticCurveType.GreatElliptic);
 
                 // to increase the chances of finding results make sure the smallest returned distance is 5 Kilometers.
                 return (d <= 5000.0) ? 5000.0 : d;
             }
-           
+
             return 5000.0; // return a default distance of 5 Kilometers
         }
 
@@ -1046,15 +1046,15 @@ namespace ArcGISPortalViewer.ViewModel
                 if (_measureAreaSymbol == null)
                 {
                     _measureAreaSymbol = new SimpleFillSymbol()
-                      {
-                          Color = Color.FromArgb(50, 255, 255, 255),
-                          Outline = new SimpleLineSymbol() { Style = SimpleLineStyle.Dot, Width = 1 }
-                      };
+                    {
+                        Color = Color.FromArgb(50, 255, 255, 255),
+                        Outline = new SimpleLineSymbol() { Style = SimpleLineStyle.Dot, Width = 1 }
+                    };
                 }
                 return _measureAreaSymbol;
             }
         }
-        
+
         private LineSymbol _measureLineSymbol;
         private LineSymbol measureLineSymbol
         {
@@ -1063,10 +1063,10 @@ namespace ArcGISPortalViewer.ViewModel
                 if (_measureLineSymbol == null)
                 {
                     _measureLineSymbol = new SimpleLineSymbol()
-                     {
-                         Color = Colors.CornflowerBlue,
-                         Width = 4
-                     };
+                    {
+                        Color = Colors.CornflowerBlue,
+                        Width = 4
+                    };
                 }
                 return _measureLineSymbol;
             }
@@ -1092,8 +1092,8 @@ namespace ArcGISPortalViewer.ViewModel
         private Esri.ArcGISRuntime.Symbology.Symbol GetVertexSymbol(int index)
         {
             return new CompositeSymbol()
-                       {
-                           Symbols = new SymbolCollection(new Esri.ArcGISRuntime.Symbology.Symbol[]                        
+            {
+                Symbols = new SymbolCollection(new Esri.ArcGISRuntime.Symbology.Symbol[]
                             {
                                 new SimpleMarkerSymbol()
                                 {
@@ -1107,7 +1107,7 @@ namespace ArcGISPortalViewer.ViewModel
                                     VerticalTextAlignment = VerticalTextAlignment.Middle
                                 }
                             })
-                       };
+            };
         }
         #endregion Measure Tool
 
@@ -1291,7 +1291,7 @@ namespace ArcGISPortalViewer.ViewModel
                     ShowDetailView = true;
                     SelectedItem = IdentifyItems.First();
                 }
-            }            
+            }
             finally
             {
                 IsIdentifying = false;
@@ -1359,7 +1359,7 @@ namespace ArcGISPortalViewer.ViewModel
             ShowDetailView = false;
         }
 
-        public  IEnumerable<PopupItem> ParseIdentifyResults(IDictionary<Layer, IEnumerable<IdentifyFeature>> identifyResults)
+        public IEnumerable<PopupItem> ParseIdentifyResults(IDictionary<Layer, IEnumerable<IdentifyFeature>> identifyResults)
         {
             if (identifyResults == null)
                 return null;
@@ -1399,7 +1399,7 @@ namespace ArcGISPortalViewer.ViewModel
             if (feature == null)
                 return null;
 
-            var selectionGraphic  = feature is GeodatabaseFeature ? ((GeodatabaseFeature)feature).AsGraphic() : new Graphic { Geometry = feature.Geometry };
+            var selectionGraphic = feature is GeodatabaseFeature ? ((GeodatabaseFeature)feature).AsGraphic() : new Graphic { Geometry = feature.Geometry };
             switch (selectionGraphic.Geometry.GeometryType)
             {
                 case GeometryType.Multipoint:
@@ -1413,7 +1413,7 @@ namespace ArcGISPortalViewer.ViewModel
                 case GeometryType.Polyline:
                     selectionGraphic.Symbol = _polylineSelectionSymbol;
                     break;
-            }            
+            }
             return selectionGraphic;
         }
     }

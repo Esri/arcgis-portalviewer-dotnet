@@ -11,13 +11,13 @@
              RequestedTheme="Light">
     <Application.Resources>
         <ResourceDictionary>
-            
+
             <!--Global View Model Locator-->
             <vm:ViewModelLocator x:Key="Locator" d:IsDataSource="True" />
 
-            <!--Orginizations-->
+            <!--Organizations-->
             <!--Set the value of OrganizationUrl to your organization url-->
-            <x:String x:Key="OrganizationUrl">https://www.arcgis.com</x:String>            
+            <x:String x:Key="OrganizationUrl">https://www.arcgis.com</x:String>
             <!--<x:String x:Key="OrganizationUrl">http://myorg.maps.arcgis.com</x:String>-->
             <!--<x:String x:Key="OrganizationUrl">https://myportal.esri.com/gis</x:String>-->
 
@@ -30,7 +30,7 @@
 
             <!--Glyphs-->
             <x:String x:Key="SetViewGlyph">&#xE12E;</x:String>
-                      
+
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Skins/MainSkin.xaml" />
                 <!-- 
