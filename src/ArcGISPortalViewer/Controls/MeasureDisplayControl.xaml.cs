@@ -301,7 +301,7 @@ namespace ArcGISPortalViewer.Controls
 
         #region Events
 
-        public event EventHandler MeasureStarted;
+        public event EventHandler<EventArgs> MeasureStarted;
         public event EventHandler<MeasureUpdatedEventArgs> MeasureUpdated;
         public event EventHandler<MeasureCompletedEventArgs> MeasureCompleted;
 
