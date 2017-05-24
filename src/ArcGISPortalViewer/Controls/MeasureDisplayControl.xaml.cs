@@ -229,13 +229,14 @@ namespace ArcGISPortalViewer.Controls
             {
                 case GeometryEditAction.AddedVertex:
                 {
-                    MeasureItemCollection.Insert(status.VertexPosition.CoordinateIndex,
-                        new MeasureItem()
-                        {
-                            Location = status.NewVertex,
-                            LinearUnitType = LinearUnitType,
-                            CoordinateFormat = CoordinateFormat
-                        });
+                    if (status.NewVertex != null)
+                        MeasureItemCollection.Insert(status.VertexPosition.CoordinateIndex,
+                            new MeasureItem()
+                            {
+                                Location = status.NewVertex,
+                                LinearUnitType = LinearUnitType,
+                                CoordinateFormat = CoordinateFormat
+                            });
                     break;
                 }
                 case GeometryEditAction.DeletedVertex:
@@ -281,7 +282,7 @@ namespace ArcGISPortalViewer.Controls
             foreach (var measureItem in MeasureItemCollection)
             {
                 measureItem.CoordinateIndex = coordinateIndex++;
-                if (previousPoint != null)
+                if (previousPoint != null && measureItem.Location != null)
                 {
                     measureItem.Length = GeometryEngine.GeodesicLength(
                         new Polyline(new MapPoint[]{ previousPoint, measureItem.Location },
@@ -474,6 +475,9 @@ namespace ArcGISPortalViewer.Controls
 
         protected string LocationToString(MapPoint location, CoordinateFormat coordinateFormat)
         {
+            if (location == null)
+                return null;
+
             switch (coordinateFormat)
             {
                 case CoordinateFormat.DecimalDegrees:
